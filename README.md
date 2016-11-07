@@ -3,7 +3,7 @@ A 2D graphics library for the PS3 that runs on top of [Tiny3D](https://github.co
 
 # Status
 - [x] Load PNG and JPEG images
-- [ ] Load TTF Fonts
+- [x] Load TTF Fonts
 - [ ] Display message dialog
 - [ ] Animate images
 - [x] Handle pad input
@@ -13,7 +13,6 @@ In order to build and install Mini 2D, you must have an up-to-date version of th
 ~~~~
 cd mini2d/libMini2D
 make
-make install
 ~~~~
 
 If you wish to compile the samples:
