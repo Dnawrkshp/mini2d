@@ -28,6 +28,10 @@ void unload();
 // Callback for system events
 static void sys_callback(uint64_t status, uint64_t param, void* userdata);
 
+
+//---------------------------------------------------------------------------
+// Init Functions
+//---------------------------------------------------------------------------
 Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f eCallback) : 
 				_padCallback(pCallback), _drawCallback(dCallback) {
 	// Init tiny3d
@@ -35,7 +39,7 @@ Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f
 	tiny3d_UserViewport(1, 0, 0, (float)Video_Resolution.width, (float)Video_Resolution.height, 0, 0);
 
 	_textureMem = tiny3d_AllocTexture(64*1024*1024);
-	_texturePointer = (unsigned int*)_textureMem;
+	TexturePointer = (unsigned int*)_textureMem;
 
 	// Init pad
 	ioPadInit(7);
@@ -61,6 +65,41 @@ Mini2D::~Mini2D() {
 	unload();
 }
 
+void unload() {
+	// Unload modules
+	if (!sysModuleIsLoaded(SYSMODULE_PNGDEC))
+		sysModuleUnload(SYSMODULE_PNGDEC);
+	if (!sysModuleIsLoaded(SYSMODULE_JPGDEC))
+		sysModuleUnload(SYSMODULE_JPGDEC);
+}
+
+static void sys_callback(uint64_t status, uint64_t param, void* userdata) {
+
+     switch (status) {
+        case SYSUTIL_EXIT_GAME: //0x0101
+            unload();
+            
+            if (_exitCallback != NULL)
+            	_exitCallback();
+
+            sysProcessExit(1);
+            break;
+      
+		case SYSUTIL_MENU_OPEN: //0x0131
+
+			break;
+		case SYSUTIL_MENU_CLOSE: //0x0132
+
+			break;
+       default:
+           break;
+         
+    }
+}
+
+//---------------------------------------------------------------------------
+// Property Get/Set Functions
+//---------------------------------------------------------------------------
 void Mini2D::SetClearColor(unsigned int color) {
 	_clearColor = color;
 }
@@ -74,9 +113,12 @@ void Mini2D::SetAnalogDeadzone(unsigned char deadzone) {
 }
 
 void Mini2D::ResetTexturePointer() {
-	_texturePointer = (unsigned int*)_textureMem;
+	TexturePointer = (unsigned int*)_textureMem;
 }
 
+//---------------------------------------------------------------------------
+// Draw Loop/Pad Functions
+//---------------------------------------------------------------------------
 void Mini2D::BeginDrawLoop() {
 	float deltaTime = 0.f;
 	struct timeval start, end;
@@ -162,26 +204,53 @@ void Mini2D::Pad() {
 	}
 }
 
+//---------------------------------------------------------------------------
+// Draw/Add Texture Functions
+//---------------------------------------------------------------------------
 unsigned int Mini2D::AddTexture(void * pixelData, int pitch, int height) {
 	unsigned int textureOff = 0;
 	// copy texture datas from pixelData to the RSX memory allocated for textures
 	if (pixelData) {
-		memcpy(_texturePointer, pixelData, pitch * height);
-		textureOff = tiny3d_TextureOffset(_texturePointer);      		// get the offset (RSX use offset instead address)
-		_texturePointer += ((pitch * height + 15) & ~15) / 4; 			// aligned to 16 bytes (it is u32) and update the pointer
+		memcpy(TexturePointer, pixelData, pitch * height);
+		textureOff = tiny3d_TextureOffset(TexturePointer);      		// get the offset (RSX use offset instead address)
+		TexturePointer += ((pitch * height + 15) & ~15) / 4; 			// aligned to 16 bytes (it is u32) and update the pointer
 	}
 	return textureOff;
 }
 
-void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float x, float y, float w, float h, unsigned int rgba, float angle) {
-	tiny3d_SetTexture(0, textureOff, width, height, pitch,  
-        TINY3D_TEX_FORMAT_A8R8G8B8, TEXTURE_LINEAR);
+void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float x, float y, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat) {
+	tiny3d_SetTextureWrap(0, textureOff, width, height, pitch,  
+        (text_format)colorFormat, TEXTWRAP_CLAMP, TEXTWRAP_CLAMP, TEXTURE_LINEAR);
     DrawSpriteRot(x, y, 0, w, h, rgba, angle);
 }
 
+void Mini2D::DrawRectangle(float x, float y, float dx, float dy, unsigned int rgba, float angle) {
+	MATRIX matrix;
+	float z = 0.f;
 
-void Mini2D::DrawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle)
-{
+	dx /= 2.0f; dy /= 2.0f;
+
+	// rotate and translate the sprite
+    matrix = MatrixRotationZ(angle);
+    matrix = MatrixMultiply(matrix, MatrixTranslation(x + dx, y + dy, 0.0f));
+
+    tiny3d_SetMatrixModelView(&matrix);
+
+	tiny3d_SetPolygon(TINY3D_QUADS);
+
+    tiny3d_VertexPos(x     , y     , z);
+    tiny3d_VertexColor(rgba);
+
+    tiny3d_VertexPos(x + dx, y     , z);
+
+    tiny3d_VertexPos(x + dx, y + dy, z);
+
+    tiny3d_VertexPos(x     , y + dy, z);
+
+    tiny3d_End();
+}
+
+void Mini2D::DrawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle) {
     dx /= 2.0f; dy /= 2.0f;
 
     MATRIX matrix;
@@ -214,34 +283,3 @@ void Mini2D::DrawSpriteRot(float x, float y, float layer, float dx, float dy, u3
 
 }
 
-void unload() {
-	// Unload modules
-	if (!sysModuleIsLoaded(SYSMODULE_PNGDEC))
-		sysModuleUnload(SYSMODULE_PNGDEC);
-	if (!sysModuleIsLoaded(SYSMODULE_JPGDEC))
-		sysModuleUnload(SYSMODULE_JPGDEC);
-}
-
-static void sys_callback(uint64_t status, uint64_t param, void* userdata) {
-
-     switch (status) {
-        case SYSUTIL_EXIT_GAME: //0x0101
-            unload();
-            
-            if (_exitCallback != NULL)
-            	_exitCallback();
-
-            sysProcessExit(1);
-            break;
-      
-		case SYSUTIL_MENU_OPEN: //0x0131
-
-			break;
-		case SYSUTIL_MENU_CLOSE: //0x0132
-
-			break;
-       default:
-           break;
-         
-    }
-}

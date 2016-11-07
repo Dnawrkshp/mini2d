@@ -39,7 +39,32 @@ public:
 	Image(Mini2D * mini);
 	virtual ~Image();
 
+	/*
+	 * Load:
+	 *		Load PNG/JPG image
+	 * 
+	 * filepath:
+	 *		Path to image
+	 * 
+	 * Return:
+	 *		Result of load operation
+	 */
 	ImageLoadStatus Load(char * filename);
+
+	/*
+	 * Load:
+	 *		Load PNG/JPG image
+	 * 
+	 * buffer:
+	 *		Buffer containing image
+	 * size:
+	 *		Size of buffer
+	 * type:
+	 *		Type of image the buffer contains
+	 * 
+	 * Return:
+	 *		Result of load operation
+	 */
 	ImageLoadStatus Load(void * buffer, unsigned int size, ImageType type);
 
 	/*
@@ -58,44 +83,8 @@ public:
 	 *		Color
 	 */
 	void Draw(float x, float y, float width, float height, unsigned int color, ImageDrawType type);
-
-	/*
-	 * Draw:
-	 * 		Draws the image onto the current frame
-	 * 
-	 * x:
-	 * 		X coordinate (0 - 1)
-	 * y:
-	 *		Y coordinate (0 - 1)
-	 * width:
-	 *		Width of image
-	 * height:
-	 *		Height of image
-	 */
 	void Draw(float x, float y, float width, float height, ImageDrawType type);
-
-	/*
-	 * Draw:
-	 * 		Draws the image onto the current frame
-	 * 
-	 * x:
-	 * 		X coordinate (0 - 1)
-	 * y:
-	 *		Y coordinate (0 - 1)
-	 * rgba:
-	 *		Color
-	 */
 	void Draw(float x, float y, unsigned int rgba, ImageDrawType type);
-
-	/*
-	 * Draw:
-	 * 		Draws the image onto the current frame
-	 * 
-	 * x:
-	 * 		X coordinate (0 - 1)
-	 * y:
-	 *		Y coordinate (0 - 1)
-	 */
 	void Draw(float x, float y, ImageDrawType type);
 
 private:

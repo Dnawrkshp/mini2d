@@ -5,7 +5,8 @@
 #---------------------------------------------------------------------------------
 all:
 	@$(MAKE) -C alphatest --no-print-directory
+	@$(MAKE) -C printtest --no-print-directory
 
 clean:
 	@$(MAKE) -C alphatest clean --no-print-directory
-	@rm -rf *~
+	@$(MAKE) -C printtest clean --no-print-directory

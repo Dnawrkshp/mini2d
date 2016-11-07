@@ -9,8 +9,10 @@
 #define MINI2D_HPP_
 
 #include <io/pad.h>							// Pad functions
-#include <sys/time.h>							// For FPS / deltaTime calculation
+#include <sys/time.h>						// For FPS / deltaTime calculation
 
+#include <ft2build.h>						// Freetype header
+#include <freetype/freetype.h> 				// FT_Library
 
 class Mini2D {
 public:
@@ -77,6 +79,10 @@ public:
 	 * 		Callback when program exits
 	 */
 	typedef void (*ExitCallback_f) ();
+
+
+	u32 * TexturePointer;					// Active pointer to unused texture vram
+
 
 	// Constructor
 	Mini2D(Mini2D::PadCallback_f pCallback, Mini2D::DrawCallback_f dCallback, Mini2D::ExitCallback_f eCallback);
@@ -168,7 +174,9 @@ public:
 	 * angle:
 	 * 		Angle to rotate image (radians)
 	 */
-	void DrawTexture(u32 textureOff, int pitch, int width, int height, float x, float y, float w, float h, unsigned int rgba, float angle);
+	void DrawTexture(unsigned int textureOff, int pitch, int width, int height, float x, float y, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat);
+
+	void DrawRectangle(float x, float y, float dx, float dy, unsigned int rgba, float angle);
 
 
 private:
@@ -178,7 +186,6 @@ private:
 	unsigned int _clearColor;				// Value to clear screen to on every draw
 	int _alphaEnabled;						// Whether alpha testing is enabled
 
-	//time_t _lastTime;						// Time of last frame
 	unsigned int _maxFrameCount;			// Max value of _frameCount before reset. Value is divisible by 10
 	unsigned int _frameCount;				// Number of frames drawn, resets on _maxFrameCount
 
@@ -186,8 +193,6 @@ private:
 	unsigned short _analogDeadzone;			// Deadzone of analog sticks
 
 	void * _textureMem;						// Pointer to vram
-	u32 * _texturePointer;					// Active pointer to unused texture vram
-
 
 	// Draw texture with rotation
 	void DrawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle);

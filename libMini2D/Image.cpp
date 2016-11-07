@@ -11,6 +11,9 @@
 #include <tiny3d.h>							// Tiny3D functions
 #include <Mini2D/Image.hpp>					// Class definition
 
+//---------------------------------------------------------------------------
+// Init Functions
+//---------------------------------------------------------------------------
 Image::Image(Mini2D * mini) :
 		_mini(mini) {
 
@@ -24,6 +27,16 @@ Image::~Image() {
 	_textureOff = 0;
 }
 
+void Image::loadModules() {
+	if (sysModuleIsLoaded(SYSMODULE_PNGDEC))
+		sysModuleLoad(SYSMODULE_PNGDEC);
+	if (sysModuleIsLoaded(SYSMODULE_JPGDEC))
+    	sysModuleLoad(SYSMODULE_JPGDEC);
+}
+
+//---------------------------------------------------------------------------
+// Load Functions
+//---------------------------------------------------------------------------
 Image::ImageLoadStatus Image::Load(char * filepath) {
 	if (_mini == NULL)
 		return IMAGE_INVALID_MINI2D;
@@ -69,6 +82,9 @@ Image::ImageLoadStatus Image::Load(void * buffer, unsigned int size, ImageType t
 	return IMAGE_SUCCESS;
 }
 
+//---------------------------------------------------------------------------
+// Draw Functions
+//---------------------------------------------------------------------------
 void Image::Draw(float x, float y, float width, float height, unsigned int rgba, Image::ImageDrawType type) {
 	if (_mini == NULL || !_textureOff)
 		return;
@@ -93,7 +109,7 @@ void Image::Draw(float x, float y, float width, float height, unsigned int rgba,
 			break;
 	}
 
-	_mini->DrawTexture(_textureOff, _pitch, _width, _height, nx, ny, width, height, rgba, 0);
+	_mini->DrawTexture(_textureOff, _pitch, _width, _height, nx, ny, width, height, rgba, 0, TINY3D_TEX_FORMAT_A8R8G8B8);
 }
 
 void Image::Draw(float x, float y, float width, float height, Image::ImageDrawType type) {
@@ -108,10 +124,3 @@ void Image::Draw(float x, float y, Image::ImageDrawType type) {
 	Draw(x,y,_sWidth,_sHeight,0xFFFFFFFF,type);
 }
 
-
-void Image::loadModules() {
-	if (sysModuleIsLoaded(SYSMODULE_PNGDEC))
-		sysModuleLoad(SYSMODULE_PNGDEC);
-	if (sysModuleIsLoaded(SYSMODULE_JPGDEC))
-    	sysModuleLoad(SYSMODULE_JPGDEC);
-}
