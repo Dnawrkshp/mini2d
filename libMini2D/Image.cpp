@@ -33,7 +33,7 @@ void Image::loadModules() {
 	if (sysModuleIsLoaded(SYSMODULE_PNGDEC))
 		sysModuleLoad(SYSMODULE_PNGDEC);
 	if (sysModuleIsLoaded(SYSMODULE_JPGDEC))
-    	sysModuleLoad(SYSMODULE_JPGDEC);
+		sysModuleLoad(SYSMODULE_JPGDEC);
 }
 
 //---------------------------------------------------------------------------
