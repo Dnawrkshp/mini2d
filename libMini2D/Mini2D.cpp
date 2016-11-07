@@ -36,7 +36,7 @@ Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f
 				_padCallback(pCallback), _drawCallback(dCallback) {
 	// Init tiny3d
 	tiny3d_Init(1024*1024);
-	tiny3d_UserViewport(1, 0, 0, (float)Video_Resolution.width, (float)Video_Resolution.height, 0, 0);
+	tiny3d_UserViewport(1, (float)Video_Resolution.width/2.f, (float)Video_Resolution.height/2.f, (float)Video_Resolution.width/2.f, (float)Video_Resolution.height/2.f, 0, 0);
 
 	_textureMem = tiny3d_AllocTexture(64*1024*1024);
 	TexturePointer = (unsigned int*)_textureMem;

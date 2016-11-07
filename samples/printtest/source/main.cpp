@@ -29,9 +29,9 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	font1->Print((char*)"Left align.", 0, 0, 0.04, 0.04, 0x000000FF, Font::PRINT_ALIGN_LEFT);	
+	font1->Print((char*)"Left align.", -1, -1, 0.04, 0.04, 0x000000FF, Font::PRINT_ALIGN_LEFT);	
 	font1->Print((char*)"Right align.", 1, 0.96, 0.04, 0.04, 0x000000FF, Font::PRINT_ALIGN_RIGHT);	
-	font1->Print((char*)"Center.", 0.5, 0.5, 0.04, 0.04, 0x000000FF, Font::PRINT_ALIGN_CENTER);
+	font1->Print((char*)"Center.", 0, 0, 0.04, 0.04, 0x000000FF, Font::PRINT_ALIGN_CENTER);
 
 	return doExit;
 }
