@@ -35,6 +35,8 @@ public:
 		DRAW_CENTER
 	} ImageDrawType;
 
+	unsigned int * TexturePointer;			// Pointer to texture in RSX memory
+
 	// Constructors
 	Image(Mini2D * mini);
 	virtual ~Image();

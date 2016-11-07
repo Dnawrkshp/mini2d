@@ -20,6 +20,8 @@ Image::Image(Mini2D * mini) :
 	if (_mini == NULL)
 		return;
 	loadModules();
+
+	TexturePointer = 0;
 }
 
 Image::~Image() {
@@ -55,7 +57,7 @@ Image::ImageLoadStatus Image::Load(void * buffer, unsigned int size, ImageType t
 		case IMAGE_TYPE_PNG:
 			if (pngLoadFromBuffer(buffer, size, &png))
 				return IMAGE_INVALID_ARG;
-
+			TexturePointer = _mini->TexturePointer;
 			_textureOff = _mini->AddTexture(png.bmp_out, png.pitch, png.height);
 			free(png.bmp_out);
 
@@ -66,6 +68,7 @@ Image::ImageLoadStatus Image::Load(void * buffer, unsigned int size, ImageType t
 		case IMAGE_TYPE_JPG:
 			if (jpgLoadFromBuffer(buffer, size, &jpg))
 				return IMAGE_INVALID_ARG;
+			TexturePointer = _mini->TexturePointer;
 			_textureOff = _mini->AddTexture(jpg.bmp_out, jpg.pitch, jpg.height);
 			free(jpg.bmp_out);
 
