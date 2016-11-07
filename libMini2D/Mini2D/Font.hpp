@@ -86,11 +86,11 @@ private:
 	Mini2D * _mini;
 
 	// Load font
-	FontLoadStatus LoadFont(char * path, void * buffer, int size);
+	FontLoadStatus loadFont(char * path, void * buffer, int size);
 	// Draw character to frame
-	float PrintChar(char c, float x, float y, unsigned int rgba);
+	float printChar(char c, float x, float y, unsigned int rgba);
 	// Get width of string
-	float GetWidth(char * string);
+	float getWidth(char * string);
 };
 
 #endif /* FONT_HPP_ */

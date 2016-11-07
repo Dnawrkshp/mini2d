@@ -195,7 +195,7 @@ private:
 	void * _textureMem;						// Pointer to vram
 
 	// Draw texture with rotation
-	void DrawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle);
+	void drawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle);
 };
 
 #endif /* MINI2D_HPP_ */

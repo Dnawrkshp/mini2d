@@ -221,7 +221,7 @@ unsigned int Mini2D::AddTexture(void * pixelData, int pitch, int height) {
 void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float x, float y, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat) {
 	tiny3d_SetTextureWrap(0, textureOff, width, height, pitch,  
         (text_format)colorFormat, TEXTWRAP_CLAMP, TEXTWRAP_CLAMP, TEXTURE_LINEAR);
-    DrawSpriteRot(x, y, 0, w, h, rgba, angle);
+    drawSpriteRot(x, y, 0, w, h, rgba, angle);
 }
 
 void Mini2D::DrawRectangle(float x, float y, float dx, float dy, unsigned int rgba, float angle) {
@@ -250,7 +250,7 @@ void Mini2D::DrawRectangle(float x, float y, float dx, float dy, unsigned int rg
     tiny3d_End();
 }
 
-void Mini2D::DrawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle) {
+void Mini2D::drawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle) {
     dx /= 2.0f; dy /= 2.0f;
 
     MATRIX matrix;

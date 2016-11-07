@@ -71,15 +71,15 @@ void Font::Print(char * string, float x, float y, float fw, float fh, unsigned i
 		case PRINT_ALIGN_LEFT:
 			break;
 		case PRINT_ALIGN_RIGHT:
-			x -= GetWidth(string);
+			x -= getWidth(string);
 			break;
 		case PRINT_ALIGN_CENTER:
-			x -= GetWidth(string) / 2.f;
+			x -= getWidth(string) / 2.f;
 			break;
 	}
 
 	for (i=0;i<(int)strlen(string);i++) {
-		x += PrintChar(string[i], x, y, rgba);
+		x += printChar(string[i], x, y, rgba);
 	}
 }
 void Font::Print(char * string, float x, float y, float fw, float fh, Font::FontPrintAlign align) {
@@ -98,7 +98,7 @@ void Font::Print(char * string, float x, float y) {
 	Print(string, x, y, FontData.sx, FontData.sy, FontData.color, PRINT_ALIGN_LEFT);
 }
 
-float Font::PrintChar(char c, float x, float y, unsigned int rgba) {
+float Font::printChar(char c, float x, float y, unsigned int rgba) {
 	float dx2 = FontData.sx * ((float)FontData.font.fw[(int)c] / (float)FontData.font.w);  
     if (!_mini)
 		return 0;
@@ -126,7 +126,7 @@ float Font::PrintChar(char c, float x, float y, unsigned int rgba) {
 	return dx2;
 }
 
-float Font::GetWidth(char * string) {
+float Font::getWidth(char * string) {
 	if (!string)
 		return 0.f;
 
@@ -148,7 +148,7 @@ Font::FontLoadStatus Font::Load(char * filepath) {
 	if (!_mini)
 		return FONT_INVALID_MINI2D;
 
-	return LoadFont(filepath, NULL, 0);
+	return loadFont(filepath, NULL, 0);
 }
 
 Font::FontLoadStatus Font::Load(void * buffer, unsigned int size) {
@@ -157,11 +157,11 @@ Font::FontLoadStatus Font::Load(void * buffer, unsigned int size) {
 	if (!_mini)
 		return FONT_INVALID_MINI2D;
 
-	return LoadFont(NULL, buffer, size);
+	return loadFont(NULL, buffer, size);
 }
 
 
-Font::FontLoadStatus Font::LoadFont(char * path, void * buffer, int size)
+Font::FontLoadStatus Font::loadFont(char * path, void * buffer, int size)
 {
 	FT_Face face;
 	FT_Library freetype;

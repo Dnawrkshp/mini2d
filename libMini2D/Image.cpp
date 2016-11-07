@@ -55,6 +55,7 @@ Image::ImageLoadStatus Image::Load(void * buffer, unsigned int size, ImageType t
 		case IMAGE_TYPE_PNG:
 			if (pngLoadFromBuffer(buffer, size, &png))
 				return IMAGE_INVALID_ARG;
+
 			_textureOff = _mini->AddTexture(png.bmp_out, png.pitch, png.height);
 			free(png.bmp_out);
 
