@@ -46,7 +46,7 @@ CXXFLAGS	:=	$(CFLAGS)
 VPATH		:=	$(BASEDIR)
 
 #---------------------------------------------------------------------------------
-OBJS		:= 	Mini2D.o Image.o
+OBJS		:= 	Mini2D.o Image.o Font.o
 
 #---------------------------------------------------------------------------------
 all: install-headers ppu install clean

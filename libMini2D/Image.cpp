@@ -63,8 +63,8 @@ Image::ImageLoadStatus Image::Load(void * buffer, unsigned int size, ImageType t
 	if (!_textureOff)
 		return IMAGE_NO_MEM;
 
-	_sWidth = (float)_width / 848.f;
-	_sHeight = (float)_height / 512.f;
+	_sWidth = (float)_width / (float)Video_Resolution.width;
+	_sHeight = (float)_height / (float)Video_Resolution.height;
 
 	return IMAGE_SUCCESS;
 }

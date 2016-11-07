@@ -101,10 +101,11 @@ public:
 private:
 	Mini2D * _mini;
 
-	int _width, _height, _pitch;
-	float _sWidth, _sHeight;
-	unsigned int _textureOff;
+	int _width, _height, _pitch;			// Width, height, and pitch of loaded image
+	float _sWidth, _sHeight;				// Width and height in terms of screen scale
+	unsigned int _textureOff;				// RSX offset to texture
 
+	// Load PNG and JPG dec modules
 	void loadModules();
 };
 
