@@ -98,6 +98,8 @@ private:
 
 	// Load PNG and JPG dec modules
 	void loadModules();
+	// Move loaded image to RSX
+	void toRSX(void * buffer);
 };
 
 #endif /* IMAGE_HPP_ */
