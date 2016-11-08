@@ -28,7 +28,6 @@ void unload();
 // Callback for system events
 static void sys_callback(uint64_t status, uint64_t param, void* userdata);
 
-
 //---------------------------------------------------------------------------
 // Init Functions
 //---------------------------------------------------------------------------
@@ -50,7 +49,7 @@ Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f
 	sysModuleLoad(SYSMODULE_JPGDEC);
 
 	// Setup sysUtil callback
-	sysUtilRegisterCallback(SYSUTIL_EVENT_SLOT0, sys_callback, NULL);
+	sysUtilRegisterCallback(SYSUTIL_EVENT_SLOT0, sys_callback, this);
 
 	// Private variables
 	_maxFrameCount = 0xFFFFFFFA;
@@ -74,26 +73,35 @@ void unload() {
 }
 
 static void sys_callback(uint64_t status, uint64_t param, void* userdata) {
-
-	 switch (status) {
+	Mini2D * mini = NULL;
+	if (userdata)
+		mini = (Mini2D *)userdata;
+	printf("sys_callback: %ld, %ld\n", status, param);
+	switch (status) {
 		case SYSUTIL_EXIT_GAME: //0x0101
 			unload();
-			
+				
 			if (_exitCallback != NULL)
 				_exitCallback();
 
 			sysProcessExit(1);
-			break;
-	  
+			break;  
 		case SYSUTIL_MENU_OPEN: //0x0131
 
 			break;
 		case SYSUTIL_MENU_CLOSE: //0x0132
 
 			break;
-	   default:
-		   break;
-		 
+		case SYSUTIL_DRAW_BEGIN:
+			if (mini)
+				mini->XMB = 1;
+			break;
+		case SYSUTIL_DRAW_END:
+			if (mini)
+				mini->XMB = 0;
+			break;
+		default:
+			break; 
 	}
 }
 
@@ -120,17 +128,11 @@ void Mini2D::ResetTexturePointer() {
 // Draw Loop/Pad Functions
 //---------------------------------------------------------------------------
 void Mini2D::BeginDrawLoop() {
-	float deltaTime = 0.f;
-	struct timeval start, end;
-
 	if (_drawCallback == NULL)
 		return;
 
-	gettimeofday(&end, NULL);
+	gettimeofday(&_start, NULL);
 	while (1) {
-		gettimeofday(&start, NULL);
-		deltaTime = (start.tv_sec - end.tv_sec) * 1.f + (start.tv_usec - end.tv_usec) / 1000000.f;
-		memcpy(&end, &start, sizeof(timeval));
 
 		// Setup frame
 		tiny3d_Clear(_clearColor, TINY3D_CLEAR_ALL);
@@ -149,16 +151,25 @@ void Mini2D::BeginDrawLoop() {
 			Pad();
 
 		// Call user draw
-		if (_drawCallback(deltaTime==0?(1/60.f):deltaTime, _frameCount) < 0)
+		if (_drawCallback(_deltaTime==0?(1/60.f):_deltaTime, _frameCount) < 0)
 			break;
 
-		// Flip frame
-		tiny3d_Flip();
-
-		_frameCount++;
-		if (_frameCount >= _maxFrameCount)
-			_frameCount = 0;
+		Flip();
 	}
+}
+
+void Mini2D::Flip() {
+	// Flip frame
+	tiny3d_Flip();
+
+	// Calculate deltaTime
+	gettimeofday(&_end, NULL);
+	_deltaTime = (_end.tv_sec - _start.tv_sec) * 1.f + (_end.tv_usec - _start.tv_usec) / 1000000.f;
+	memcpy(&_start, &_end, sizeof(timeval));
+
+	_frameCount++;
+	if (_frameCount >= _maxFrameCount)
+		_frameCount = 0;
 }
 
 void Mini2D::Pad() {

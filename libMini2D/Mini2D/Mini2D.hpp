@@ -82,6 +82,7 @@ public:
 
 
 	u32 * TexturePointer;					// Active pointer to unused texture vram
+	bool XMB;								// Whether or not the in-game XMB is currently being displayed
 
 
 	// Constructor
@@ -93,6 +94,12 @@ public:
 	 * 		Begins the draw loop. Loops endlessly until your DrawCallback_f function returns a value less than 0
 	 */
 	void BeginDrawLoop();
+
+	/*
+	 * Flip:
+	 * 		Flips the frame and calculates deltaTime
+	 */
+	void Flip();
 
 	/*
 	 * Pad:
@@ -176,6 +183,23 @@ public:
 	 */
 	void DrawTexture(unsigned int textureOff, int pitch, int width, int height, float x, float y, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat);
 
+	/*
+	 * DrawRectangle:
+	 *		Draws the rectangle onto the current frame
+	 * 
+	 * x:
+	 * 		X coordinate
+	 * y:
+	 * 		Y coordinate
+	 * dx:
+	 * 		Width
+	 * dy:
+	 * 		Height
+	 * rgba:
+	 * 		Color
+	 * angle:
+	 * 		Angle of rotation (radians)
+	 */
 	void DrawRectangle(float x, float y, float dx, float dy, unsigned int rgba, float angle);
 
 
@@ -188,6 +212,9 @@ private:
 
 	unsigned int _maxFrameCount;			// Max value of _frameCount before reset. Value is divisible by 10
 	unsigned int _frameCount;				// Number of frames drawn, resets on _maxFrameCount
+	struct timeval _start;					// Start of draw
+	struct timeval _end;						// End of draw
+	float _deltaTime;						// Time between start and end of draw
 
 	padData _padData[MAX_PORT_NUM];			// Pad data
 	unsigned short _analogDeadzone;			// Deadzone of analog sticks

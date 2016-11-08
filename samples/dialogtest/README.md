@@ -1,5 +1,5 @@
-# alphatest
-Alpha Test draws an image with alpha blending enabled.
+# dialogtest
+Dialog Test displays a message dialog using the Dialog class.
 
 # Build
 ~~~~
