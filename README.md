@@ -2,11 +2,14 @@
 A 2D graphics library for the PS3 that runs on top of [Tiny3D](https://github.com/wargio/tiny3d).
 
 # Status
-- [x] Load PNG and JPEG images
-- [x] Load TTF Fonts
-- [ ] Display message dialog
-- [ ] Animate images
-- [x] Handle pad input
+- [x] Draw Image (PNG/JPG)
+- [ ] Draw Drop Shadow
+- [ ] Draw Particles
+- [x] Draw Text (TTF)
+- [x] Display Message Dialog
+- [ ] Animate Images
+- [x] Handle Pad
+- [x] Play Audio (MP3/OGG)
 
 # Installation
 In order to build and install Mini 2D, you must have an up-to-date version of the PSL1GHT SDK.
