@@ -11,7 +11,10 @@
 #include <io/pad.h>							// Pad functions
 #include <sys/time.h>						// For FPS / deltaTime calculation
 #include <sys/spu.h>						// sysSpuImage type
-#include <soundlib/audioplayer.h>			// SPU sound playback
+
+extern "C" {
+	#include <soundlib/audioplayer.h>		// SPU sound playback
+}
 
 #include <ft2build.h>						// Freetype header
 #include <freetype/freetype.h> 				// FT_Library
