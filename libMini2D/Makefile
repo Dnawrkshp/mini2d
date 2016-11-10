@@ -12,6 +12,7 @@ include	$(PSL1GHT)/ppu_rules
 
 #---------------------------------------------------------------------------------
 BUILD		:=	build
+SOURCES		:=	$(wildcard $(BASEDIR)/*.cpp)
 
 #---------------------------------------------------------------------------------
 ifeq ($(strip $(PLATFORM)),)
@@ -37,6 +38,7 @@ DEFINCS		:=	-I$(PORTLIBS)/include/freetype2 -I$(PORTLIBS)/include/
 DEFINCS     +=  -I$(PORTLIBS)/include/Mini2D -I$(PORTLIBS)/include/
 DEFINCS     +=  -I$(PSL1GHT)/ppu/include -I$(PSL1GHT)/ppu/include/rsx 
 DEFINCS     +=  -I$(PSL1GHT)/ppu/include/lv2 -I$(PSL1GHT)/ppu/include/sys
+DEFINCS		+=	-I$(BASEDIR)/ppu
 INCLUDES	:=	$(DEFINCS)
 
 CFLAGS		:=	-O2 -mregnames -Wall -mcpu=cell $(MACHDEP) $(INCLUDES) -Wl,-mcell
@@ -46,7 +48,7 @@ CXXFLAGS	:=	$(CFLAGS)
 VPATH		:=	$(BASEDIR)
 
 #---------------------------------------------------------------------------------
-OBJS		:= 	Mini2D.o Image.o Font.o Dialog.o
+OBJS		:= 	spu_soundmodule.bin.o $(SOURCES:.cpp=.o)
 
 #---------------------------------------------------------------------------------
 all: install-headers ppu install clean
@@ -96,6 +98,7 @@ clean:
 	@rm -rf $(DEPS)
 	@rm -rf $(LIBS)
 	@rm -rf *~ */*~
+	@rm -rf *.o
 
 #---------------------------------------------------------------------------------
 -include $(DEPSDIR)/*.d

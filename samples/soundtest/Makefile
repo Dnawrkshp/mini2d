@@ -22,8 +22,8 @@ DATA		:=	data
 INCLUDES	:=	include
 PKGFILES 	:= $(CURDIR)/pkgdata
 
-TITLE		:=	Mini2D printtest
-APPID		:=	M2DPRINTT
+TITLE		:=	Mini2D soundtest
+APPID		:=	M2DSOUNDT
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 #---------------------------------------------------------------------------------
@@ -70,9 +70,8 @@ CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 sFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
-PNGFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.png)))
-JPGFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.jpg)))
-BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
+MP3FILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.mp3)))
+OGGFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.ogg)))
 TTFFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.ttf)))
 
 #---------------------------------------------------------------------------------
@@ -84,9 +83,8 @@ else
 	export LD	:=	$(CXX)
 endif
 
-export OFILES	:=	$(addsuffix .o,$(PNGFILES)) \
-					$(addsuffix .o,$(JPGFILES)) \
-					$(addsuffix .o,$(BINFILES)) \
+export OFILES	:=	$(addsuffix .o,$(MP3FILES)) \
+					$(addsuffix .o,$(OGGFILES)) \
 					$(addsuffix .o,$(TTFFILES)) \
 					$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
 					$(sFILES:.s=.o) $(SFILES:.S=.o)
@@ -142,24 +140,19 @@ $(OUTPUT).self: $(OUTPUT).elf
 $(OUTPUT).elf:	$(OFILES)
 
 #---------------------------------------------------------------------------------
-# This rule links in binary data with the .bin extension
-#---------------------------------------------------------------------------------
-%.bin.o	:	%.bin
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	@$(bin2o)
-#---------------------------------------------------------------------------------
-%.jpg.o	:	%.jpg
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	@$(bin2o)
-#---------------------------------------------------------------------------------
-%.png.o	:	%.png
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	@$(bin2o)
+# This rule links in binary data with the .ttf extension
 #---------------------------------------------------------------------------------
 %.ttf.o	:	%.ttf
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@$(bin2o)
+#---------------------------------------------------------------------------------
+%.mp3.o	:	%.mp3
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@$(bin2o)
+#---------------------------------------------------------------------------------
+%.ogg.o	:	%.ogg
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	@$(bin2o)

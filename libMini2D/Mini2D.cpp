@@ -7,17 +7,26 @@
 
 #include <string.h>							// memcpy
 #include <stdio.h>							// printf
-#include <sys/time.h>
+#include <sys/time.h>						// gettimeofday
+#include <malloc.h>							// memalign
 
 #include <sysutil/sysutil.h>				// Register sysutil callback (when program exits, xmb menu opens/closes, etc)
 #include <sysmodule/sysmodule.h>			// Load and unload PNG,JPG modules
 #include <lv2/process.h>					// sysProcessExit()
+
+#include <lv2/spu.h>						// SPU related
+#include "spu_soundmodule_bin.h"			// Sound module from PSL1GHT
 
 #include <tiny3d.h>							// Tiny3D functions
 #include <Mini2D/Mini2D.hpp>				// Class definition
 
 
 #define ANA_DIF_SHIFT(a,b,d,r) ((a==b) ? 0 : ((a<b) ? ((b-a)>=d ? r : 0) : (((a-b)>=d ? r : 0))))
+
+#define INITED_CALLBACK     1
+#define INITED_SPU          2
+#define INITED_SOUNDLIB     4
+#define INITED_AUDIOPLAYER  8
 
 // Exit callback
 static Mini2D::ExitCallback_f _exitCallback;
@@ -48,6 +57,9 @@ Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f
 	sysModuleLoad(SYSMODULE_PNGDEC);
 	sysModuleLoad(SYSMODULE_JPGDEC);
 
+	// Init SPU
+	initSPU();
+
 	// Setup sysUtil callback
 	sysUtilRegisterCallback(SYSUTIL_EVENT_SLOT0, sys_callback, this);
 
@@ -60,7 +72,46 @@ Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f
 	_exitCallback = eCallback;
 }
 
+void Mini2D::initSPU() {
+	//Initialize SPU
+    u32 entry = 0;
+    u32 segmentcount = 0;
+    sysSpuSegment* segments;
+    
+    sysSpuInitialize(6, 5);
+    sysSpuRawCreate(&_spu, NULL);
+    sysSpuElfGetInformation(spu_soundmodule_bin, &entry, &segmentcount);
+    
+    size_t segmentsize = sizeof(sysSpuSegment) * segmentcount;
+    segments = (sysSpuSegment*)memalign(128, SPU_SIZE(segmentsize)); // must be aligned to 128 or it break malloc() allocations
+    memset(segments, 0, segmentsize);
+
+    sysSpuElfGetSegments(spu_soundmodule_bin, segments, segmentcount);
+
+    sysSpuImageImport(&_spuImage, spu_soundmodule_bin, 0);
+
+    sysSpuRawImageLoad(_spu, &_spuImage);
+    
+    _spuInited |= INITED_SPU;
+    if(SND_Init(_spu) == 0)
+        _spuInited |= INITED_SOUNDLIB;
+
+    SND_Pause(0);
+}
+
 Mini2D::~Mini2D() {
+	if(_spuInited & INITED_AUDIOPLAYER)
+        StopAudio();
+    
+    if(_spuInited & INITED_SOUNDLIB)
+        SND_End();
+
+    if(_spuInited & INITED_SPU) {
+        sysSpuRawDestroy(_spu);
+        sysSpuImageClose(&_spuImage);
+    }
+    _spuInited = 0;
+
 	unload();
 }
 

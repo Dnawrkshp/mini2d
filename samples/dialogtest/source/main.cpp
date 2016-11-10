@@ -39,9 +39,6 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	int i;
-	char buffer[5];
-
 	font1->Print((char*)"Press Triangle to open Message Dialog", 0, -0.5f, 0.06f, 0.06f, 0x000000FF, Font::PRINT_ALIGN_CENTER);
 	font1->Print((char*)"Press Square to open Error Dialog", 0, -0.4f, 0.06f, 0.06f, 0x000000FF, Font::PRINT_ALIGN_CENTER);
 	font1->Print((char*)"Press Circle to open Single Progress Dialog", 0, -0.3f, 0.06f, 0.06f, 0x000000FF, Font::PRINT_ALIGN_CENTER);

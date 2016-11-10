@@ -10,9 +10,13 @@
 
 #include <io/pad.h>							// Pad functions
 #include <sys/time.h>						// For FPS / deltaTime calculation
+#include <sys/spu.h>						// sysSpuImage type
+#include <soundlib/audioplayer.h>			// SPU sound playback
 
 #include <ft2build.h>						// Freetype header
 #include <freetype/freetype.h> 				// FT_Library
+
+#define SPU_SIZE(x) (((x)+127) & ~127)
 
 class Mini2D {
 public:
@@ -221,8 +225,15 @@ private:
 
 	void * _textureMem;						// Pointer to vram
 
+	u32 _spu;								// 
+	u32 _spuInited;							// SPU Init status
+	sysSpuImage _spuImage;					// Image holding sound module
+
 	// Draw texture with rotation
 	void drawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle);
+
+	// Initialize SPU and sound modules
+	void initSPU();
 };
 
 #endif /* MINI2D_HPP_ */

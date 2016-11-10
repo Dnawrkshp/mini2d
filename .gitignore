@@ -6,6 +6,8 @@
 *.elf
 *.pkg
 build/
+ppu/
+lib/
 
 # OS generated files #
 ######################
