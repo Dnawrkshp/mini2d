@@ -29,7 +29,7 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	img1->Draw(0, 0, 1, 1, doSaturate ? 0xFFFFFFFF : 0xFFFFFFC0, Image::DRAW_CENTER);
+	img1->Draw(1, 1, doSaturate ? 0xFFFFFFFF : 0xFFFFFFC0, Image::DRAW_CENTER);
 	return doExit;
 }
 
