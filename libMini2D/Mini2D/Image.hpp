@@ -12,6 +12,7 @@
 #include <jpgdec/jpgdec.h>					// JPG load functions
 
 #include <Mini2D/Mini2D.hpp>				// Mini2D class
+#include <Mini2D/Units.hpp>					// PointF
 
 class Image {
 public:
@@ -36,6 +37,8 @@ public:
 	} ImageDrawType;
 
 	unsigned int * TexturePointer;			// Pointer to texture in RSX memory
+
+	PointF Location;						// Last used draw point. Used as default if no point is specified
 
 	// Constructors
 	Image(Mini2D * mini);
@@ -73,21 +76,19 @@ public:
 	 * Draw:
 	 * 		Draws the image onto the current frame
 	 * 
-	 * x:
-	 * 		X coordinate (0 - 1)
-	 * y:
-	 *		Y coordinate (0 - 1)
 	 * width:
 	 *		Width of image
 	 * height:
 	 *		Height of image
-	 * color:
+	 * rgba:
 	 *		Color
+	 * type:
+	 *		Alignment of image
+	 * angle:
+	 *		Rotation in degrees
 	 */
-	void Draw(float x, float y, float width, float height, unsigned int color, ImageDrawType type);
-	void Draw(float x, float y, float width, float height, ImageDrawType type);
-	void Draw(float x, float y, unsigned int rgba, ImageDrawType type);
-	void Draw(float x, float y, ImageDrawType type);
+	void Draw(float width, float height, unsigned int rgba = 0xFFFFFFFF, ImageDrawType type = DRAW_TOPLEFT, float angle = 0);
+	void Draw(unsigned int rgba = 0xFFFFFFFF, ImageDrawType type = DRAW_TOPLEFT, float angle = 0);
 
 private:
 	Mini2D * _mini;

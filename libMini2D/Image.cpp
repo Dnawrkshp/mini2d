@@ -135,15 +135,14 @@ void Image::toRSX(void * buffer) {
 	_width = img.width;
 	_height = img.height;
 }
-
 //---------------------------------------------------------------------------
 // Draw Functions
 //---------------------------------------------------------------------------
-void Image::Draw(float x, float y, float width, float height, unsigned int rgba, Image::ImageDrawType type) {
+void Image::Draw(float width, float height, unsigned int rgba, ImageDrawType type, float angle) {
 	if (_mini == NULL || !_textureOff)
 		return;
 
-	float nx = x, ny = y;
+	float nx = Location.X, ny = Location.Y;
 	switch (type) {
 		case DRAW_TOPRIGHT:
 			nx -= width;
@@ -163,18 +162,10 @@ void Image::Draw(float x, float y, float width, float height, unsigned int rgba,
 			break;
 	}
 
-	_mini->DrawTexture(_textureOff, _pitch, _width, _height, nx, ny, width, height, rgba, 0, TINY3D_TEX_FORMAT_A8R8G8B8);
+	_mini->DrawTexture(_textureOff, _pitch, _width, _height, nx, ny, width, height, rgba, angle, TINY3D_TEX_FORMAT_A8R8G8B8);
 }
 
-void Image::Draw(float x, float y, float width, float height, Image::ImageDrawType type) {
-	Draw(x,y,width,height,0xFFFFFFFF,type);
-}
-
-void Image::Draw(float x, float y, unsigned int rgba, Image::ImageDrawType type) {
-	Draw(x,y,_sWidth,_sHeight,rgba,type);
-}
-
-void Image::Draw(float x, float y, Image::ImageDrawType type) {
-	Draw(x,y,_sWidth,_sHeight,0xFFFFFFFF,type);
+void Image::Draw(unsigned int rgba, ImageDrawType type, float angle) {
+	Draw(_sWidth, _sHeight, rgba, type, angle);
 }
 
