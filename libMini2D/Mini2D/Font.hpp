@@ -9,6 +9,7 @@
 #define FONT_HPP_
 
 #include <Mini2D/Mini2D.hpp>				// Class definition
+#include <Mini2D/Units.hpp>					// SizeF
 
 class Font {
 public:
@@ -62,25 +63,16 @@ public:
 	 * 
 	 * string:
 	 *		Buffer containing string to print
-	 * x:
-	 * 		X coordinate
-	 * y:
-	 * 		Y coordinate
-	 * fw:
-	 * 		Width to scale font to
-	 * fh:
-	 * 		Height to scale font to
+	 * location:
+	 * 		Where to print text
+	 * size:
+	 * 		Width and height of each character
 	 * rgba:
 	 * 		RGBA color
 	 * align:
 	 * 		Text alignment
 	 */
-	void Print(char * string, float x, float y, float fw, float fh, unsigned int rgba, FontPrintAlign align);
-	void Print(char * string, float x, float y, float fw, float fh, FontPrintAlign align);
-	void Print(char * string, float x, float y, unsigned int rgba, FontPrintAlign align);
-	void Print(char * string, float x, float y, float fw, float fh);
-	void Print(char * string, float x, float y, unsigned int rgba);
-	void Print(char * string, float x, float y);
+	void Print(char * string, PointF location, SizeF size, unsigned int rgba = 0x000000FF, FontPrintAlign align = PRINT_ALIGN_LEFT);
 
 private:
 	Mini2D * _mini;

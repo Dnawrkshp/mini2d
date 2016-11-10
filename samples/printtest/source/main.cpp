@@ -13,6 +13,12 @@ void exit();
 int doExit = 0;
 Font *font1;
 
+const SizeF FONT_SMALL(0.04, 0.04);
+
+const PointF PRINT_TOPLEFT(-1, -1);
+const PointF PRINT_CENTER(0, 0);
+const PointF PRINT_BOTTOMRIGHT(1, 1 - FONT_SMALL.H);
+
 int main(s32 argc, const char* argv[]) {
 	Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
 	
@@ -29,9 +35,9 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	font1->Print((char*)"Left align.", -1, -1, 0.04, 0.04, 0x000000FF, Font::PRINT_ALIGN_LEFT);	
-	font1->Print((char*)"Right align.", 1, 0.96, 0.04, 0.04, 0x000000FF, Font::PRINT_ALIGN_RIGHT);	
-	font1->Print((char*)"Center.", 0, 0, 0.04, 0.04, 0x000000FF, Font::PRINT_ALIGN_CENTER);
+	font1->Print((char*)"Left align.", PRINT_TOPLEFT, FONT_SMALL);	
+	font1->Print((char*)"Right align.", PRINT_BOTTOMRIGHT, FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_RIGHT);	
+	font1->Print((char*)"Center.", PRINT_CENTER, FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_CENTER);
 
 	return doExit;
 }

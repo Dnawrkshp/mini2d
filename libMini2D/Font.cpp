@@ -56,46 +56,29 @@ Font::~Font() {
 //---------------------------------------------------------------------------
 // Print Functions
 //---------------------------------------------------------------------------
-void Font::Print(char * string, float x, float y, float fw, float fh, unsigned int rgba, Font::FontPrintAlign align) {
+void Font::Print(char * string, PointF location, SizeF size, unsigned int rgba, FontPrintAlign align) {
 	int i;
-	if (!_mini)
+	if (!_mini || !string)
 		return;
-	if (!string)
-		return;
+	if (rgba)
+		FontData.color = rgba;
 
-	FontData.sx = fw;
-	FontData.sy = fh;
-	FontData.color = rgba;
-
+	FontData.sx = size.W;
+	FontData.sy = size.H;
 	switch (align) {
 		case PRINT_ALIGN_LEFT:
 			break;
 		case PRINT_ALIGN_RIGHT:
-			x -= getWidth(string);
+			location.X -= getWidth(string);
 			break;
 		case PRINT_ALIGN_CENTER:
-			x -= getWidth(string) / 2.f;
+			location.X -= getWidth(string) / 2.f;
 			break;
 	}
 
 	for (i=0;i<(int)strlen(string);i++) {
-		x += printChar(string[i], x, y, rgba);
+		location.X += printChar(string[i], location.X, location.Y, FontData.color);
 	}
-}
-void Font::Print(char * string, float x, float y, float fw, float fh, Font::FontPrintAlign align) {
-	Print(string, x, y, fw, fh, FontData.color, align);
-}
-void Font::Print(char * string, float x, float y, unsigned int rgba, Font::FontPrintAlign align) {
-	Print(string, x, y, FontData.sx, FontData.sy, rgba, align);
-}
-void Font::Print(char * string, float x, float y, float fw, float fh) {
-	Print(string, x, y, fw, fh, FontData.color, PRINT_ALIGN_LEFT);
-}
-void Font::Print(char * string, float x, float y, unsigned int rgba) {
-	Print(string, x, y, FontData.sx, FontData.sy, rgba, PRINT_ALIGN_LEFT);
-}
-void Font::Print(char * string, float x, float y) {
-	Print(string, x, y, FontData.sx, FontData.sy, FontData.color, PRINT_ALIGN_LEFT);
 }
 
 float Font::printChar(char c, float x, float y, unsigned int rgba) {

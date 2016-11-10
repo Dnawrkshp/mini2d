@@ -16,9 +16,9 @@ SizeF::SizeF() {
 	H = 0;
 }
 
-SizeF::SizeF(float W, float H) {
-	W = W;
-	H = H;
+SizeF::SizeF(float w, float h) {
+	W = w;
+	H = h;
 }
 
 SizeF::~SizeF() {

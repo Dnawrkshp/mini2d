@@ -19,6 +19,13 @@ float doProgress[2];
 Dialog *dialog1;
 Font *font1;
 
+const SizeF FONT_MEDIUM(0.07, 0.07);
+
+const PointF PRINT_0(-0.75, -0.15);
+const PointF PRINT_1(-0.75, -0.05);
+const PointF PRINT_2(-0.75,  0.05);
+const PointF PRINT_3(-0.75,  0.15);
+
 int main(s32 argc, const char* argv[]) {
 	Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
 
@@ -39,10 +46,10 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	font1->Print((char*)"Press Triangle to open Message Dialog", 0, -0.5f, 0.06f, 0.06f, 0x000000FF, Font::PRINT_ALIGN_CENTER);
-	font1->Print((char*)"Press Square to open Error Dialog", 0, -0.4f, 0.06f, 0.06f, 0x000000FF, Font::PRINT_ALIGN_CENTER);
-	font1->Print((char*)"Press Circle to open Single Progress Dialog", 0, -0.3f, 0.06f, 0.06f, 0x000000FF, Font::PRINT_ALIGN_CENTER);
-	font1->Print((char*)"Press Cross to open Double Progress Dialog", 0, -0.2f, 0.06f, 0.06f, 0x000000FF, Font::PRINT_ALIGN_CENTER);
+	font1->Print((char*)"Press Triangle to open Message Dialog", PRINT_0, FONT_MEDIUM);
+	font1->Print((char*)"Press Square to open Error Dialog", PRINT_1, FONT_MEDIUM);
+	font1->Print((char*)"Press Circle to open Single Progress Dialog", PRINT_2, FONT_MEDIUM);
+	font1->Print((char*)"Press Cross to open Double Progress Dialog", PRINT_3, FONT_MEDIUM);
 
 	switch (doDialog) {
 		case 0:

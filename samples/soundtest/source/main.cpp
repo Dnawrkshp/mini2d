@@ -21,6 +21,11 @@ Sound *sound1, *sound2;
 int infiniteVoice = -1;
 int status;
 
+const SizeF FONT_MEDIUM(0.07, 0.07);
+
+const PointF PRINT_0(0, 0);
+const PointF PRINT_1(0, 0.1);
+
 
 int main(s32 argc, const char* argv[]) {
 	srand (time(NULL));
@@ -49,13 +54,13 @@ int main(s32 argc, const char* argv[]) {
 
 int drawUpdate(float deltaTime, unsigned int frame) {
 	if (infiniteVoice >= 0 && status == Sound::VOICE_RUNNING)
-		font1->Print((char*)"Press Triangle to pause audio.", 0, 0, 0.07, 0.07, 0x800000FF, Font::PRINT_ALIGN_CENTER);
+		font1->Print((char*)"Press Triangle to pause audio.", PRINT_0, FONT_MEDIUM, 0x800000FF, Font::PRINT_ALIGN_CENTER);
 	else if (infiniteVoice < 0)
-		font1->Print((char*)"Press Triangle to start infinite audio.", 0, 0, 0.07, 0.07, 0x000080FF, Font::PRINT_ALIGN_CENTER);
+		font1->Print((char*)"Press Triangle to start infinite audio.", PRINT_0, FONT_MEDIUM, 0x000080FF, Font::PRINT_ALIGN_CENTER);
 	else
-		font1->Print((char*)"Press Triangle to resume audio.", 0, 0, 0.07, 0.07, 0x000080FF, Font::PRINT_ALIGN_CENTER);
+		font1->Print((char*)"Press Triangle to resume audio.", PRINT_0, FONT_MEDIUM, 0x000080FF, Font::PRINT_ALIGN_CENTER);
 
-	font1->Print((char*)"Press Square for snare.", 0, 0.1, 0.07, 0.07, 0x000000FF, Font::PRINT_ALIGN_CENTER);	
+	font1->Print((char*)"Press Square for snare.", PRINT_1, FONT_MEDIUM, 0x000000FF, Font::PRINT_ALIGN_CENTER);	
 
 	return doExit;
 }
