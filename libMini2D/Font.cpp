@@ -56,15 +56,15 @@ Font::~Font() {
 //---------------------------------------------------------------------------
 // Print Functions
 //---------------------------------------------------------------------------
-void Font::Print(char * string, PointF location, SizeF size, unsigned int rgba, FontPrintAlign align, float layer) {
+void Font::Print(char * string, Vector2 location, Vector2 size, unsigned int rgba, FontPrintAlign align, float layer) {
 	int i;
 	if (!_mini || !string)
 		return;
 	if (rgba)
 		FontData.color = rgba;
 
-	FontData.sx = size.W;
-	FontData.sy = size.H;
+	FontData.sx = size.X;
+	FontData.sy = size.Y;
 	switch (align) {
 		case PRINT_ALIGN_LEFT:
 			break;

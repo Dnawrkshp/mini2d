@@ -74,7 +74,7 @@ public:
 	 * layer:
 	 *		Z coordinate
 	 */
-	void Print(char * string, PointF location, SizeF size, unsigned int rgba = 0x000000FF, FontPrintAlign align = PRINT_ALIGN_LEFT, float layer = 0);
+	void Print(char * string, Vector2 location, Vector2 size, unsigned int rgba = 0x000000FF, FontPrintAlign align = PRINT_ALIGN_LEFT, float layer = 0);
 
 private:
 	Mini2D * _mini;

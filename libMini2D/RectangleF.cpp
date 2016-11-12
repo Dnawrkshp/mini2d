@@ -19,18 +19,11 @@ RectangleF::RectangleF(float x, float y, float w, float h) {
 	Init(x,y,w,h);
 }
 
-RectangleF::RectangleF(PointF point1, PointF point2) {
-	Init(point1.X<point2.X?point1.X:point2.X,
-		point1.Y<point2.Y?point1.Y:point2.Y,
-		point1.X<point2.X?point2.X-point1.X:point2.X-point1.X,
-		point1.Y<point2.Y?point2.Y-point1.Y:point2.Y-point1.Y);
+RectangleF::RectangleF(Vector2 point, Vector2 dimension) {
+	Init(point.X, point.Y, dimension.X, dimension.Y);
 }
 
-RectangleF::RectangleF(PointF point, SizeF size) {
-	Init(point.X, point.Y, size.W, size.H);
-}
-
-RectangleF::RectangleF(PointF point, float w, float h) {
+RectangleF::RectangleF(Vector2 point, float w, float h) {
 	Init(point.X, point.Y, w, h);
 }
 
@@ -45,8 +38,8 @@ RectangleF::~RectangleF() {
 void RectangleF::Init(float x, float y, float w, float h) {
 	Location.X = x;
 	Location.Y = y;
-	Dimension.W = w;
-	Dimension.H = h;
+	Dimension.X = w;
+	Dimension.Y = h;
 }
 
 //---------------------------------------------------------------------------
@@ -69,29 +62,46 @@ void RectangleF::Y(float y) {
 }
 
 float RectangleF::W() {
-	return Dimension.W;
+	return Dimension.X;
 }
 
 void RectangleF::W(float w) {
-	Dimension.W = w;
+	Dimension.X = w;
 }
 
 float RectangleF::H() {
-	return Dimension.H;
+	return Dimension.Y;
 }
 
 void RectangleF::H(float h) {
-	Dimension.H = h;
+	Dimension.Y = h;
+}
+
+void RectangleF::FromCorners(Vector2 point1, Vector2 point2) {
+	Init(point1.X<point2.X?point1.X:point2.X,
+		point1.Y<point2.Y?point1.Y:point2.Y,
+		point1.X<point2.X?point2.X-point1.X:point2.X-point1.X,
+		point1.Y<point2.Y?point2.Y-point1.Y:point2.Y-point1.Y);
 }
 
 //---------------------------------------------------------------------------
 // Misc Functions
 //---------------------------------------------------------------------------
-bool RectangleF::Intersect(RectangleF rectangle) {
-	if (Location.X < (rectangle.X() + rectangle.W()) &&
-		(Location.X+Dimension.W) > rectangle.X() &&
-		Location.Y < (rectangle.Y()+rectangle.H()) &&
-		(Location.Y+Dimension.H) > rectangle.Y())
+bool RectangleF::Intersect(RectangleF * rectangle) {
+	if (Location.X < (rectangle->X() + rectangle->W()) &&
+		(Location.X+Dimension.X) > rectangle->X() &&
+		Location.Y < (rectangle->Y()+rectangle->H()) &&
+		(Location.Y+Dimension.Y) > rectangle->Y())
+		return 1;
+
+    return 0;
+}
+
+bool RectangleF::Intersect(Vector2 * location, Vector2 * dimension) {
+	if (Location.X < (location->X + dimension->X) &&
+		(Location.X+Dimension.X) > location->X &&
+		Location.Y < (location->Y+dimension->Y) &&
+		(Location.Y+Dimension.Y) > location->Y)
 		return 1;
 
     return 0;

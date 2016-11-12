@@ -154,13 +154,13 @@ void Image::toRSX(void * buffer) {
 //---------------------------------------------------------------------------
 // Draw Functions
 //---------------------------------------------------------------------------
-void Image::Draw(float width, float height, unsigned int rgba, ImageDrawType type, float angle, ImageDrawRotateType rotate) {
+void Image::Draw(unsigned int rgba, ImageDrawType type, float angle, ImageDrawRotateType rotate) {
 	if (_mini == NULL || !_textureOff)
 		return;
 
-	float w = width, h = height, w2 = w/2, h2 = h/2;
+	float w = DrawRegion.W(), h = DrawRegion.H(), w2 = w/2, h2 = h/2;
 
-	float nx = Location.X, ny = Location.Y;
+	float nx = DrawRegion.X(), ny = DrawRegion.Y();
 	switch (type) {
 		case DRAW_TOPRIGHT:
 			nx += w2;
@@ -220,8 +220,4 @@ void Image::Draw(float width, float height, unsigned int rgba, ImageDrawType typ
 	}
 
 	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, angle, TINY3D_TEX_FORMAT_A8R8G8B8);
-}
-
-void Image::Draw(unsigned int rgba, ImageDrawType type, float angle, ImageDrawRotateType rotate) {
-	Draw(_sWidth, _sHeight, rgba, type, angle, rotate);
 }

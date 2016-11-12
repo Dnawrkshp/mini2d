@@ -51,8 +51,8 @@ public:
 
 	unsigned int * TexturePointer;			// Pointer to texture in RSX memory
 
-	PointF Location;						// Last used draw point. Used as default if no point is specified
-	PointF Anchor;							// Point to rotate image around if DRAW_ROTATE_USERDEFINED is passed to Draw()
+	RectangleF DrawRegion;					// Where to draw image to
+	Vector2 Anchor;							// Point to rotate image around if DRAW_ROTATE_USERDEFINED is passed to Draw()
 	float ZIndex;							// Z coordinate (lower numbers are drawn over higher numbers)
 
 	// Constructors
@@ -104,10 +104,6 @@ public:
 	 * Draw:
 	 * 		Draws the image onto the current frame
 	 * 
-	 * width:
-	 *		Width of image
-	 * height:
-	 *		Height of image
 	 * rgba:
 	 *		Color
 	 * type:
@@ -117,7 +113,6 @@ public:
 	 * rotate:
 	 *		How to calculate the anchor point to rotate the image around
 	 */
-	void Draw(float width, float height, unsigned int rgba = 0xFFFFFFFF, ImageDrawType type = DRAW_TOPLEFT, float angle = 0, ImageDrawRotateType rotate = DRAW_ROTATE_CENTER);
 	void Draw(unsigned int rgba = 0xFFFFFFFF, ImageDrawType type = DRAW_TOPLEFT, float angle = 0, ImageDrawRotateType rotate = DRAW_ROTATE_CENTER);
 
 private:

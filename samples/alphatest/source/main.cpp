@@ -14,9 +14,9 @@ int doExit = 0;
 int doSaturate = 0;
 Image *img1;
 
+Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+
 int main(s32 argc, const char* argv[]) {
-	Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
-	
 	img1 = new Image(&mini);
 	img1->Load((void*)alphatest_png, alphatest_png_size, Image::IMAGE_TYPE_PNG);
 

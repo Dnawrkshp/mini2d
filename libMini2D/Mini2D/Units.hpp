@@ -8,80 +8,58 @@
 #ifndef UNITS_HPP_
 #define UNITS_HPP_
 
-class SizeF {
-public:
-	// Variables
-	float W;
-	float H;
-
-	// Constructors
-	SizeF();
-	SizeF(float w, float h);
-	virtual ~SizeF();
-
-	// Comparison Operators
-	bool operator==(const SizeF& s) const;
-	bool operator!=(const SizeF& s) const;
-	bool operator<(const SizeF& s) const;
-	bool operator>(const SizeF& s) const;
-	bool operator<=(const SizeF& s) const;
-	bool operator>=(const SizeF& s) const;
-	
-	// Compound Operators
-	SizeF& operator+=(const SizeF& s);
-	SizeF& operator-=(const SizeF& s);
-	SizeF& operator*=(const SizeF& s);
-	SizeF& operator/=(const SizeF& s);
-	SizeF& operator=(const SizeF& s);
-
-	// Arithmetic Operators
-	const SizeF operator+(const SizeF& s) const;
-	const SizeF operator-(const SizeF& s) const;
-	const SizeF operator*(const SizeF& s) const;
-	const SizeF operator/(const SizeF& s) const;
-};
-
-class PointF {
+class Vector2 {
 public:
 	// Variables
 	float X;
 	float Y;
 
 	// Constructors
-	PointF();
-	PointF(float x, float y);
-	virtual ~PointF();
+	Vector2();
+	Vector2(float x, float y);
+	virtual ~Vector2();
+
+	// Operations
+	float Magnitude();
+	void Normalize();
 
 	// Comparison Operators
-	bool operator==(const PointF& p) const;
-	bool operator!=(const PointF& p) const;
+	bool operator==(const Vector2& s) const;
+	bool operator!=(const Vector2& s) const;
 	
 	// Compound Operators
-	PointF& operator+=(const PointF& p);
-	PointF& operator-=(const PointF& p);
-	PointF& operator*=(const PointF& p);
-	PointF& operator/=(const PointF& p);
-	PointF& operator=(const PointF& p);
+	Vector2& operator+=(const Vector2& s);
+	Vector2& operator-=(const Vector2& s);
+	Vector2& operator*=(const Vector2& s);
+	Vector2& operator/=(const Vector2& s);
+	Vector2& operator+=(const float& s);
+	Vector2& operator-=(const float& s);
+	Vector2& operator*=(const float& s);
+	Vector2& operator/=(const float& s);
+	Vector2& operator=(const Vector2& s);
 
 	// Arithmetic Operators
-	const PointF operator+(const PointF& p) const;
-	const PointF operator-(const PointF& p) const;
-	const PointF operator*(const PointF& p) const;
-	const PointF operator/(const PointF& p) const;
+	const Vector2 operator+(const Vector2& s) const;
+	const Vector2 operator-(const Vector2& s) const;
+	const Vector2 operator*(const Vector2& s) const;
+	const Vector2 operator/(const Vector2& s) const;
+	const Vector2 operator+(const float& s) const;
+	const Vector2 operator-(const float& s) const;
+	const Vector2 operator*(const float& s) const;
+	const Vector2 operator/(const float& s) const;
 };
 
 class RectangleF {
 public:
 	// Variables
-	PointF Location;
-	SizeF Dimension;
+	Vector2 Location;
+	Vector2 Dimension;
 
 	// Constructors
 	RectangleF();
 	RectangleF(float x, float y, float w, float h);
-	RectangleF(PointF point1, PointF point2);
-	RectangleF(PointF point, SizeF size);
-	RectangleF(PointF point, float w, float h);
+	RectangleF(Vector2 point, Vector2 dimension);
+	RectangleF(Vector2 point, float w, float h);
 	RectangleF(RectangleF * rectangle);
 	virtual ~RectangleF();
 
@@ -96,9 +74,11 @@ public:
 	void Y(float y);
 	void W(float w);
 	void H(float h);
+	void FromCorners(Vector2 point1, Vector2 point2);
 
 	// Determines if the rectangles intersects
-	bool Intersect(RectangleF rectangle);
+	bool Intersect(RectangleF * rectangle);
+	bool Intersect(Vector2 * location, Vector2 * dimension);
 
 	// Comparison Operators
 	bool operator==(const RectangleF& r) const;
