@@ -12,7 +12,7 @@
 #include <jpgdec/jpgdec.h>					// JPG load functions
 
 #include <Mini2D/Mini2D.hpp>				// Mini2D class
-#include <Mini2D/Units.hpp>					// PointF
+#include <Mini2D/Units.hpp>					// Vector2
 
 class Image {
 public:

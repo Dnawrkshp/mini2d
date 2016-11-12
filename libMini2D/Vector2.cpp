@@ -7,7 +7,7 @@
 
 #include <math.h>							// pow()
 
-#include <Mini2D/Units.Hpp>
+#include <Mini2D/Units.hpp>
 
 
 //---------------------------------------------------------------------------

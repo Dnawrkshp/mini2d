@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <io/pad.h>
 
 #include <Mini2D/Mini2D.hpp>
@@ -30,8 +29,6 @@ const Vector2 PRINT_ITEM1(PRINT_ITEM0.X, 0.55*mini.MAXH);
 
 
 int main(s32 argc, const char* argv[]) {
-	srand (time(NULL));
-	
 	font1 = new Font(&mini);
 	if (font1->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size))
 		printf("error loading font\n");

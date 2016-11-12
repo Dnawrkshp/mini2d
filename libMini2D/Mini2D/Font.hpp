@@ -9,7 +9,7 @@
 #define FONT_HPP_
 
 #include <Mini2D/Mini2D.hpp>				// Class definition
-#include <Mini2D/Units.hpp>					// SizeF
+#include <Mini2D/Units.hpp>					// Vector2
 
 class Font {
 public:
