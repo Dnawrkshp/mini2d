@@ -51,7 +51,7 @@ VPATH		:=	$(BASEDIR)
 OBJS		:= 	spu_soundmodule.bin.o $(SOURCES:.cpp=.o)
 
 #---------------------------------------------------------------------------------
-all: install-headers ppu install clean
+all: install-headers ppu install
 #---------------------------------------------------------------------------------
 
 

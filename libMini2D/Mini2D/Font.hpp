@@ -71,8 +71,10 @@ public:
 	 * 		RGBA color
 	 * align:
 	 * 		Text alignment
+	 * layer:
+	 *		Z coordinate
 	 */
-	void Print(char * string, PointF location, SizeF size, unsigned int rgba = 0x000000FF, FontPrintAlign align = PRINT_ALIGN_LEFT);
+	void Print(char * string, PointF location, SizeF size, unsigned int rgba = 0x000000FF, FontPrintAlign align = PRINT_ALIGN_LEFT, float layer = 0);
 
 private:
 	Mini2D * _mini;
@@ -80,7 +82,7 @@ private:
 	// Load font
 	FontLoadStatus loadFont(char * path, void * buffer, int size);
 	// Draw character to frame
-	float printChar(char c, float x, float y, unsigned int rgba);
+	float printChar(char c, float x, float y, float z, unsigned int rgba);
 	// Get width of string
 	float getWidth(char * string);
 };

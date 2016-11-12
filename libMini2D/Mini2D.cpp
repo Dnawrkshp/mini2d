@@ -9,6 +9,7 @@
 #include <stdio.h>							// printf
 #include <sys/time.h>						// gettimeofday
 #include <malloc.h>							// memalign
+#include <math.h>							// Trig functions
 
 #include <sysutil/sysutil.h>				// Register sysutil callback (when program exits, xmb menu opens/closes, etc)
 #include <sysmodule/sysmodule.h>			// Load and unload PNG,JPG modules
@@ -41,10 +42,17 @@ static void sys_callback(uint64_t status, uint64_t param, void* userdata);
 // Init Functions
 //---------------------------------------------------------------------------
 Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f eCallback) : 
-				_padCallback(pCallback), _drawCallback(dCallback) {
+				MAXW(_maxW), MINW(_minW), MAXH(_maxH), MINH(_minH),
+				_padCallback(pCallback), _drawCallback(dCallback)
+				 {
+
 	// Init tiny3d
-	tiny3d_Init(1024*1024);
-	tiny3d_UserViewport(1, (float)Video_Resolution.width/2.f, (float)Video_Resolution.height/2.f, (float)Video_Resolution.width/2.f, (float)Video_Resolution.height/2.f, 0, 0);
+	tiny3d_Init(1024*1024*1);
+	tiny3d_UserViewport(1, 0, 0, 1, 1, 0, 0);
+	_maxW = Video_Resolution.width;
+	_minW = 0;
+	_maxH = Video_Resolution.height;
+	_minH = 0;
 
 	_textureMem = tiny3d_AllocTexture(64*1024*1024);
 	TexturePointer = (unsigned int*)_textureMem;
@@ -68,6 +76,9 @@ Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f
 	_clearColor = 0xFF000000;
 	_alphaEnabled = 0;
 	_analogDeadzone = 0;
+
+	memset(&_padData[0], 0, sizeof(padData));
+	memset(&_padData[1], 0, sizeof(padData));
 
 	_exitCallback = eCallback;
 }
@@ -198,7 +209,7 @@ void Mini2D::BeginDrawLoop() {
 		tiny3d_Project2D();
 
 		// Process pad
-		if (_padCallback != NULL)
+		if (_padCallback)
 			Pad();
 
 		// Call user draw
@@ -280,74 +291,82 @@ unsigned int Mini2D::AddTexture(void * pixelData, int pitch, int height) {
 	// copy texture datas from pixelData to the RSX memory allocated for textures
 	if (pixelData) {
 		memcpy(TexturePointer, pixelData, pitch * height);
-		textureOff = tiny3d_TextureOffset(TexturePointer);	  		// get the offset (RSX use offset instead address)
+		textureOff = tiny3d_TextureOffset(TexturePointer);	  			// get the offset (RSX use offset instead address)
 		TexturePointer += ((pitch * height + 15) & ~15) / 4; 			// aligned to 16 bytes (it is u32) and update the pointer
 	}
 	return textureOff;
 }
 
-void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float x, float y, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat) {
+void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat) {
 	tiny3d_SetTextureWrap(0, textureOff, width, height, pitch,  
 		(text_format)colorFormat, TEXTWRAP_CLAMP, TEXTWRAP_CLAMP, TEXTURE_LINEAR);
-	drawSpriteRot(x, y, 0, w, h, rgba, angle);
+	drawSpriteRot(xAnchor, yAnchor, x, y, z, w, h, rgba, angle);
 }
 
-void Mini2D::DrawRectangle(float x, float y, float dx, float dy, unsigned int rgba, float angle) {
-	MATRIX matrix;
-	float z = 0.f;
+void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat) {
+	DrawTexture(textureOff, pitch, width, height, x+(w/2), y+(h/2), x, y, z, w, h, rgba, angle, colorFormat);
+}
 
-	dx /= 2.0f; dy /= 2.0f;
+void Mini2D::DrawRectangle(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, unsigned int rgba, float angle) {
+	MATRIX matrix;
 
 	// rotate and translate the sprite
+	angle = (angle * 3.14159f) / 180.f;
 	matrix = MatrixRotationZ(angle);
-	matrix = MatrixMultiply(matrix, MatrixTranslation(x + dx, y + dy, 0.0f));
+	matrix = MatrixMultiply(matrix, MatrixTranslation(xAnchor, yAnchor, 0.0f));
+	
+	// Translate relative to anchor point based on angle
+	x-=xAnchor;
+	y-=yAnchor;
 
 	tiny3d_SetMatrixModelView(&matrix);
 
 	tiny3d_SetPolygon(TINY3D_QUADS);
 
-	tiny3d_VertexPos(x	 , y	 , z);
+	tiny3d_VertexPos(x-dx	 , y-dy	 , layer);
 	tiny3d_VertexColor(rgba);
 
-	tiny3d_VertexPos(x + dx, y	 , z);
+	tiny3d_VertexPos(x + dx, y-dy	 , layer);
 
-	tiny3d_VertexPos(x + dx, y + dy, z);
+	tiny3d_VertexPos(x + dx, y + dy, layer);
 
-	tiny3d_VertexPos(x	 , y + dy, z);
+	tiny3d_VertexPos(x-dx	 , y + dy, layer);
 
 	tiny3d_End();
 }
 
-void Mini2D::drawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle) {
-	dx /= 2.0f; dy /= 2.0f;
-
+void Mini2D::drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, u32 rgba, float angle) {
 	MATRIX matrix;
-	
+
 	// rotate and translate the sprite
+	angle = (angle * 3.14159f) / 180.f;
 	matrix = MatrixRotationZ(angle);
-	matrix = MatrixMultiply(matrix, MatrixTranslation(x + dx, y + dy, 0.0f));
-	
+	matrix = MatrixMultiply(matrix, MatrixTranslation(xAnchor, yAnchor, 0.0f));
+
+	// Translate relative to anchor point based on angle
+	x-=xAnchor;
+	y-=yAnchor;
+
 	// fix ModelView Matrix
 	tiny3d_SetMatrixModelView(&matrix);
    
 	tiny3d_SetPolygon(TINY3D_QUADS);
 
-	tiny3d_VertexPos(-dx, -dy, layer);
+	tiny3d_VertexPos(x-dx, y-dy, layer);
 	tiny3d_VertexColor(rgba);
-	tiny3d_VertexTexture(0.0f , 0.0f);
+	tiny3d_VertexTexture(0.0f, 0.0f);
 
-	tiny3d_VertexPos(dx , -dy, layer);
+	tiny3d_VertexPos(x+dx, y-dy, layer);
 	tiny3d_VertexTexture(0.99f, 0.0f);
 
-	tiny3d_VertexPos(dx , dy , layer);
+	tiny3d_VertexPos(x+dx, y+dy, layer);
 	tiny3d_VertexTexture(0.99f, 0.99f);
 
-	tiny3d_VertexPos(-dx, dy , layer);
-	tiny3d_VertexTexture(0.0f , 0.99f);
+	tiny3d_VertexPos(x-dx, y+dy, layer);
+	tiny3d_VertexTexture(0.0f, 0.99f);
 
 	tiny3d_End();
 
 	tiny3d_SetMatrixModelView(NULL); // set matrix identity
 
 }
-

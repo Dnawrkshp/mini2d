@@ -3,7 +3,6 @@ A 2D graphics library for the PS3 that runs on top of [Tiny3D](https://github.co
 
 # Status
 - [x] Draw Image (PNG/JPG)
-- [ ] Draw Drop Shadow
 - [ ] Draw Particles
 - [x] Draw Text (TTF)
 - [x] Display Message Dialog

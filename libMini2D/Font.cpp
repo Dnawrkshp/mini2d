@@ -56,7 +56,7 @@ Font::~Font() {
 //---------------------------------------------------------------------------
 // Print Functions
 //---------------------------------------------------------------------------
-void Font::Print(char * string, PointF location, SizeF size, unsigned int rgba, FontPrintAlign align) {
+void Font::Print(char * string, PointF location, SizeF size, unsigned int rgba, FontPrintAlign align, float layer) {
 	int i;
 	if (!_mini || !string)
 		return;
@@ -77,11 +77,11 @@ void Font::Print(char * string, PointF location, SizeF size, unsigned int rgba, 
 	}
 
 	for (i=0;i<(int)strlen(string);i++) {
-		location.X += printChar(string[i], location.X, location.Y, FontData.color);
+		location.X += printChar(string[i], location.X, location.Y, layer, FontData.color);
 	}
 }
 
-float Font::printChar(char c, float x, float y, unsigned int rgba) {
+float Font::printChar(char c, float x, float y, float z, unsigned int rgba) {
 	float dx2 = FontData.sx * ((float)FontData.font.fw[(int)c] / (float)FontData.font.w);  
 	if (!_mini)
 		return 0;
@@ -90,7 +90,7 @@ float Font::printChar(char c, float x, float y, unsigned int rgba) {
 
 	// Draw background
 	if (FontData.bColor)
-		_mini->DrawRectangle(x, y, dx2, FontData.sy, FontData.bColor, 0);
+		_mini->DrawRectangle(x, y, x, y, z, dx2, FontData.sy, FontData.bColor, 0);
 
 	y += (float)FontData.font.fy[(int)c] * (FontData.sy / (float)FontData.font.h);
 
@@ -100,6 +100,7 @@ float Font::printChar(char c, float x, float y, unsigned int rgba) {
 					FontData.font.h,
 					x,
 					y,
+					z,
 					dx2,
 					FontData.sy,
 					rgba,
@@ -237,11 +238,9 @@ u8 * AddFontFromTTF(FT_Face face, u8 *texture, u8 firstChar, u8 lastChar, short 
 
 		if(n == firstChar) {
 			FontData.font.rsxOffset = tiny3d_TextureOffset(texture);
-			printf("rsxOffset=0x%08x\n", FontData.font.rsxOffset);
 		}
 		if(n == firstChar+1) {
 			FontData.font.bytesPerChar = tiny3d_TextureOffset(texture) - FontData.font.rsxOffset;
-			printf("bytesPerChar=0x%08x\n", FontData.font.bytesPerChar);
 		}
 
 

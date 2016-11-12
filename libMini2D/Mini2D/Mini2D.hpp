@@ -91,6 +91,10 @@ public:
 	u32 * TexturePointer;					// Active pointer to unused texture vram
 	bool XMB;								// Whether or not the in-game XMB is currently being displayed
 
+	const float &MAXW;						// Max width of screen
+	const float &MINW;						// Min width of screen
+	const float &MAXH;						// Max height of screen
+	const float &MINH;						// Min height of screen
 
 	// Constructor
 	Mini2D(Mini2D::PadCallback_f pCallback, Mini2D::DrawCallback_f dCallback, Mini2D::ExitCallback_f eCallback);
@@ -175,29 +179,44 @@ public:
 	 * 		Width of image
 	 * height:
 	 * 		Height of image
-	 * x:
-	 * 		X coordinate (0 - 1)
-	 * y:
-	 * 		Y coordinate (0 - 1)
-	 * w:
-	 * 		New width (0 - 1)
-	 * h:
-	 * 		New height (0 - 1)
-	 * rgba:
-	 * 		RGBA color
-	 * angle:
-	 * 		Angle to rotate image (radians)
-	 */
-	void DrawTexture(unsigned int textureOff, int pitch, int width, int height, float x, float y, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat);
-
-	/*
-	 * DrawRectangle:
-	 *		Draws the rectangle onto the current frame
-	 * 
+	 * xAnchor:
+	 *		X coordinate to rotate around
+	 * yAnchor:
+	 *		Y coordinate to rotate around
 	 * x:
 	 * 		X coordinate
 	 * y:
 	 * 		Y coordinate
+	 * z:
+	 *		Z coordinate
+	 * w:
+	 * 		New width
+	 * h:
+	 * 		New height
+	 * rgba:
+	 * 		RGBA color
+	 * angle:
+	 * 		Angle to rotate image (degrees)
+	 * colorFormat:
+	 *		Tiny3D pixel format
+	 */
+	void DrawTexture(unsigned int textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat);
+	void DrawTexture(unsigned int textureOff, int pitch, int width, int height, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat);
+	
+	/*
+	 * DrawRectangle:
+	 *		Draws the rectangle onto the current frame
+	 * 
+	 * xAnchor:
+	 *		X coordinate to rotate around
+	 * yAnchor:
+	 *		Y coordinate to rotate around
+	 * x:
+	 * 		X coordinate
+	 * y:
+	 * 		Y coordinate
+	 * layer:
+	 *		Z coordinate
 	 * dx:
 	 * 		Width
 	 * dy:
@@ -205,9 +224,9 @@ public:
 	 * rgba:
 	 * 		Color
 	 * angle:
-	 * 		Angle of rotation (radians)
+	 * 		Angle of rotation (degrees)
 	 */
-	void DrawRectangle(float x, float y, float dx, float dy, unsigned int rgba, float angle);
+	void DrawRectangle(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, unsigned int rgba, float angle);
 
 
 private:
@@ -216,6 +235,11 @@ private:
 
 	unsigned int _clearColor;				// Value to clear screen to on every draw
 	int _alphaEnabled;						// Whether alpha testing is enabled
+
+	float _maxW;							// MAXW refers to
+	float _minW;							// MINW refers to
+	float _maxH;							// MAXH refers to
+	float _minH;							// MINH refers to
 
 	unsigned int _maxFrameCount;			// Max value of _frameCount before reset. Value is divisible by 10
 	unsigned int _frameCount;				// Number of frames drawn, resets on _maxFrameCount
@@ -233,8 +257,8 @@ private:
 	sysSpuImage _spuImage;					// Image holding sound module
 
 	// Draw texture with rotation
-	void drawSpriteRot(float x, float y, float layer, float dx, float dy, u32 rgba, float angle);
-
+	void drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, u32 rgba, float angle);
+	
 	// Initialize SPU and sound modules
 	void initSPU();
 };

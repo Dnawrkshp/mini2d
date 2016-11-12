@@ -7,9 +7,14 @@
 
 #include <sysmodule/sysmodule.h>			// Load and unload PNG,JPG modules
 #include <string.h>							// memcpy, memset
+#include <math.h>							// Trig functions
 
 #include <tiny3d.h>							// Tiny3D functions
 #include <Mini2D/Image.hpp>					// Class definition
+
+#define PI 3.14159265
+#define DEG2RAD(x) ((x*PI)/180.0)
+#define RAD2DEG(x) ((x*180.0)/PI)
 
 //---------------------------------------------------------------------------
 // Init Functions
@@ -125,6 +130,17 @@ Image::ImageLoadStatus Image::Load(void * buffer, unsigned int size, ImageType t
 	return IMAGE_SUCCESS;
 }
 
+void Image::Load(void * argbBuffer, int w, int h) {
+	_textureOff = _mini->AddTexture(argbBuffer, w * 4, h);
+
+	_pitch = w * 4;
+	_width = w;
+	_height = h;
+
+	_sWidth = (float)w / (float)Video_Resolution.width;
+	_sHeight = (float)h / (float)Video_Resolution.height;
+}
+
 void Image::toRSX(void * buffer) {
 	jpgData img = *(jpgData*)buffer;
 	TexturePointer = _mini->TexturePointer;
@@ -138,34 +154,74 @@ void Image::toRSX(void * buffer) {
 //---------------------------------------------------------------------------
 // Draw Functions
 //---------------------------------------------------------------------------
-void Image::Draw(float width, float height, unsigned int rgba, ImageDrawType type, float angle) {
+void Image::Draw(float width, float height, unsigned int rgba, ImageDrawType type, float angle, ImageDrawRotateType rotate) {
 	if (_mini == NULL || !_textureOff)
 		return;
+
+	float w = width, h = height, w2 = w/2, h2 = h/2;
 
 	float nx = Location.X, ny = Location.Y;
 	switch (type) {
 		case DRAW_TOPRIGHT:
-			nx -= width;
+			nx += w2;
+			ny -= h2;
 			break;
 		case DRAW_BOTTOMLEFT:
-			ny -= height;
+			nx -= w2;
+			ny += h2;
 			break;
 		case DRAW_BOTTOMRIGHT:
-			nx -= width;
-			ny -= height;
+			nx += w2;
+			ny += h2;
 			break;
 		case DRAW_CENTER:
-			nx -= width/2;
-			ny -= height/2;
 			break;
 		case DRAW_TOPLEFT:
+			nx -= w2;
+			ny -= h2;
 			break;
 	}
 
-	_mini->DrawTexture(_textureOff, _pitch, _width, _height, nx, ny, width, height, rgba, angle, TINY3D_TEX_FORMAT_A8R8G8B8);
+	float ax = nx, ay = ny;
+	switch (rotate) {
+		case DRAW_ROTATE_TOPLEFT:
+			ax -= w;
+			ay -= h;
+			break;
+		case DRAW_ROTATE_TOPCENTER:
+			ay -= h;
+			break;
+		case DRAW_ROTATE_TOPRIGHT:
+			ax += w;
+			ay -= h;
+			break;
+		case DRAW_ROTATE_CENTERLEFT:
+			ax -= w;
+			break;
+		case DRAW_ROTATE_CENTER:
+			break;
+		case DRAW_ROTATE_CENTERRIGHT:
+			ax += w;
+			break;
+		case DRAW_ROTATE_BOTTOMLEFT:
+			ax -= w;
+			ay += h;
+			break;
+		case DRAW_ROTATE_BOTTOMCENTER:
+			ay += h;
+			break;
+		case DRAW_ROTATE_BOTTOMRIGHT:
+			ax += w;
+			ay += h;
+			break;
+		case DRAW_ROTATE_USERDEFINED:
+			ax = Anchor.X;
+			ay = Anchor.Y;
+	}
+
+	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, angle, TINY3D_TEX_FORMAT_A8R8G8B8);
 }
 
-void Image::Draw(unsigned int rgba, ImageDrawType type, float angle) {
-	Draw(_sWidth, _sHeight, rgba, type, angle);
+void Image::Draw(unsigned int rgba, ImageDrawType type, float angle, ImageDrawRotateType rotate) {
+	Draw(_sWidth, _sHeight, rgba, type, angle, rotate);
 }
-
