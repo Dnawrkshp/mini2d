@@ -14,21 +14,21 @@ void exit();
 void ProgressSingle(float deltaTime);
 void ProgressDouble(float deltaTime);
 
+Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+
 int doExit = 0, doDialog = 0;
 float doProgress[2];
 Dialog *dialog1;
 Font *font1;
 
-const SizeF FONT_MEDIUM(0.07, 0.07);
+const Vector2 FONT_MEDIUM(0.04*mini.MAXW, 0.04*mini.MAXH);
 
-const PointF PRINT_0(-0.75, -0.15);
-const PointF PRINT_1(-0.75, -0.05);
-const PointF PRINT_2(-0.75,  0.05);
-const PointF PRINT_3(-0.75,  0.15);
+const Vector2 PRINT_ITEM0(0.15*mini.MAXW, 0.45*mini.MAXH);
+const Vector2 PRINT_ITEM1(PRINT_ITEM0.X,  0.50*mini.MAXH);
+const Vector2 PRINT_ITEM2(PRINT_ITEM0.X,  0.55*mini.MAXH);
+const Vector2 PRINT_ITEM3(PRINT_ITEM0.X,  0.60*mini.MAXH);
 
 int main(s32 argc, const char* argv[]) {
-	Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
-
 	doProgress[0] = -1.f;
 	doProgress[1] = -1.f;
 
@@ -46,20 +46,20 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	font1->Print((char*)"Press Triangle to open Message Dialog", PRINT_0, FONT_MEDIUM);
-	font1->Print((char*)"Press Square to open Error Dialog", PRINT_1, FONT_MEDIUM);
-	font1->Print((char*)"Press Circle to open Single Progress Dialog", PRINT_2, FONT_MEDIUM);
-	font1->Print((char*)"Press Cross to open Double Progress Dialog", PRINT_3, FONT_MEDIUM);
+	font1->Print((char*)"Press Triangle to open Message Dialog", PRINT_ITEM0, FONT_MEDIUM);
+	font1->Print((char*)"Press Square to open Error Dialog", PRINT_ITEM1, FONT_MEDIUM);
+	font1->Print((char*)"Press Circle to open Single Progress Dialog", PRINT_ITEM2, FONT_MEDIUM);
+	font1->Print((char*)"Press Cross to open Double Progress Dialog", PRINT_ITEM3, FONT_MEDIUM);
 
 	switch (doDialog) {
 		case 0:
 			break;
 		case 1:
-			// Display a message dialog with yes/no options
+			// Display a message dialog with yes/no options and wait for it to exit
 			printf ("Pop: %d\n", dialog1->Pop((msgType)(MSG_DIALOG_NORMAL | MSG_DIALOG_BTN_TYPE_YESNO | MSG_DIALOG_DISABLE_CANCEL_ON), "Would you rather select 'Yes' or 'No'?", 1));
 			break;
 		case 2:
-			// Display an error message that will close in 5000 milliseconds
+			// Display an error message that will close in 5000 milliseconds and wait for it to exit
 			printf ("Pop: %d\n", dialog1->PopError(0x1337C0DE, 1, 5000));
 			break;
 		case 3:

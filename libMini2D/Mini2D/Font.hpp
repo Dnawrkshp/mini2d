@@ -22,9 +22,15 @@ public:
 	} FontLoadStatus;
 
 	typedef enum _fontPrintAlign_t {
-		PRINT_ALIGN_LEFT = 0,
-		PRINT_ALIGN_RIGHT,
-		PRINT_ALIGN_CENTER
+		PRINT_ALIGN_TOPLEFT = 0,
+		PRINT_ALIGN_TOPCENTER,
+		PRINT_ALIGN_TOPRIGHT,
+		PRINT_ALIGN_CENTERLEFT,
+		PRINT_ALIGN_CENTER,
+		PRINT_ALIGN_CENTERRIGHT,
+		PRINT_ALIGN_BOTTOMLEFT,
+		PRINT_ALIGN_BOTTOMCENTER,
+		PRINT_ALIGN_BOTTOMRIGHT
 	} FontPrintAlign;
 
 	// Constructors
@@ -74,7 +80,7 @@ public:
 	 * layer:
 	 *		Z coordinate
 	 */
-	void Print(char * string, Vector2 location, Vector2 size, unsigned int rgba = 0x000000FF, FontPrintAlign align = PRINT_ALIGN_LEFT, float layer = 0);
+	void Print(char * string, Vector2 location, Vector2 size, unsigned int rgba = 0x000000FF, FontPrintAlign align = PRINT_ALIGN_TOPLEFT, float layer = 0);
 
 private:
 	Mini2D * _mini;

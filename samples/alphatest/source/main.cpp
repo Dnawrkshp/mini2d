@@ -16,9 +16,14 @@ Image *img1;
 
 Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
 
+Vector2 ALPHATEST_LOC(0.5*mini.MAXW,0.5*mini.MAXH);
+Vector2 ALPHATEST_SIZE(0.5*mini.MAXW,0.5*mini.MAXH);
+
 int main(s32 argc, const char* argv[]) {
 	img1 = new Image(&mini);
 	img1->Load((void*)alphatest_png, alphatest_png_size, Image::IMAGE_TYPE_PNG);
+	img1->DrawRegion.Location = ALPHATEST_LOC;
+	img1->DrawRegion.Dimension = ALPHATEST_SIZE;
 
 	mini.SetAnalogDeadzone(15);
 	mini.SetClearColor(0x23B2D7FF);
@@ -29,7 +34,7 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	img1->Draw(1, 1, doSaturate ? 0xFFFFFFFF : 0xFFFFFFC0, Image::DRAW_CENTER);
+	img1->Draw(doSaturate ? 0xFFFFFFFF : 0xFFFFFFC0, Image::DRAW_CENTER, 0, Image::DRAW_ROTATE_TOPCENTER);
 	return doExit;
 }
 

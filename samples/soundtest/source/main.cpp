@@ -15,22 +15,22 @@ int drawUpdate(float deltaTime, unsigned int frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
+Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+
 int doExit = 0;
 Font *font1;
 Sound *sound1, *sound2;
 int infiniteVoice = -1;
 int status;
 
-const SizeF FONT_MEDIUM(0.07, 0.07);
+const Vector2 FONT_MEDIUM(0.04*mini.MAXW, 0.04*mini.MAXH);
 
-const PointF PRINT_0(0, 0);
-const PointF PRINT_1(0, 0.1);
+const Vector2 PRINT_ITEM0(0.5*mini.MAXW, 0.5*mini.MAXH);
+const Vector2 PRINT_ITEM1(PRINT_ITEM0.X, 0.55*mini.MAXH);
 
 
 int main(s32 argc, const char* argv[]) {
 	srand (time(NULL));
-
-	Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
 	
 	font1 = new Font(&mini);
 	if (font1->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size))
@@ -54,13 +54,13 @@ int main(s32 argc, const char* argv[]) {
 
 int drawUpdate(float deltaTime, unsigned int frame) {
 	if (infiniteVoice >= 0 && status == Sound::VOICE_RUNNING)
-		font1->Print((char*)"Press Triangle to pause audio.", PRINT_0, FONT_MEDIUM, 0x800000FF, Font::PRINT_ALIGN_CENTER);
+		font1->Print((char*)"Press Triangle to pause audio.", PRINT_ITEM0, FONT_MEDIUM, 0x800000FF, Font::PRINT_ALIGN_CENTER);
 	else if (infiniteVoice < 0)
-		font1->Print((char*)"Press Triangle to start infinite audio.", PRINT_0, FONT_MEDIUM, 0x000080FF, Font::PRINT_ALIGN_CENTER);
+		font1->Print((char*)"Press Triangle to start infinite audio.", PRINT_ITEM0, FONT_MEDIUM, 0x000080FF, Font::PRINT_ALIGN_CENTER);
 	else
-		font1->Print((char*)"Press Triangle to resume audio.", PRINT_0, FONT_MEDIUM, 0x000080FF, Font::PRINT_ALIGN_CENTER);
+		font1->Print((char*)"Press Triangle to resume audio.", PRINT_ITEM0, FONT_MEDIUM, 0x000080FF, Font::PRINT_ALIGN_CENTER);
 
-	font1->Print((char*)"Press Square for snare.", PRINT_1, FONT_MEDIUM, 0x000000FF, Font::PRINT_ALIGN_CENTER);	
+	font1->Print((char*)"Press Square for snare.", PRINT_ITEM1, FONT_MEDIUM, 0x000000FF, Font::PRINT_ALIGN_CENTER);	
 
 	return doExit;
 }

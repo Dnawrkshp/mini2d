@@ -185,34 +185,34 @@ void Image::Draw(unsigned int rgba, ImageDrawType type, float angle, ImageDrawRo
 	float ax = nx, ay = ny;
 	switch (rotate) {
 		case DRAW_ROTATE_TOPLEFT:
-			ax -= w;
-			ay -= h;
+			ax -= w2;
+			ay -= h2;
 			break;
 		case DRAW_ROTATE_TOPCENTER:
-			ay -= h;
+			ay -= h2;
 			break;
 		case DRAW_ROTATE_TOPRIGHT:
-			ax += w;
-			ay -= h;
+			ax += w2;
+			ay -= h2;
 			break;
 		case DRAW_ROTATE_CENTERLEFT:
-			ax -= w;
+			ax -= w2;
 			break;
 		case DRAW_ROTATE_CENTER:
 			break;
 		case DRAW_ROTATE_CENTERRIGHT:
-			ax += w;
+			ax += w2;
 			break;
 		case DRAW_ROTATE_BOTTOMLEFT:
-			ax -= w;
-			ay += h;
+			ax -= w2;
+			ay += h2;
 			break;
 		case DRAW_ROTATE_BOTTOMCENTER:
-			ay += h;
+			ay += h2;
 			break;
 		case DRAW_ROTATE_BOTTOMRIGHT:
-			ax += w;
-			ay += h;
+			ax += w2;
+			ay += h2;
 			break;
 		case DRAW_ROTATE_USERDEFINED:
 			ax = Anchor.X;

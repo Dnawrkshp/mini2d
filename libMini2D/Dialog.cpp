@@ -138,7 +138,6 @@ static void msgDialogHandler(msgButton button, void *usrdata) {
 	if (!usrdata)
 		return;
 
-	printf("button=%d\n", button);
 	Dialog * dlg = (Dialog *)usrdata;
 	dlg->DialogResponse = button;
 	if (button)

@@ -66,13 +66,35 @@ void Font::Print(char * string, Vector2 location, Vector2 size, unsigned int rgb
 	FontData.sx = size.X;
 	FontData.sy = size.Y;
 	switch (align) {
-		case PRINT_ALIGN_LEFT:
+		case PRINT_ALIGN_TOPLEFT:
 			break;
-		case PRINT_ALIGN_RIGHT:
+		case PRINT_ALIGN_TOPCENTER:
+			location.X -= getWidth(string) / 2.f;
+			break;
+		case PRINT_ALIGN_TOPRIGHT:
 			location.X -= getWidth(string);
 			break;
+		case PRINT_ALIGN_CENTERLEFT:
+			location.Y -= FontData.sy/2;
+			break;
 		case PRINT_ALIGN_CENTER:
+			location.Y -= FontData.sy/2;
 			location.X -= getWidth(string) / 2.f;
+			break;
+		case PRINT_ALIGN_CENTERRIGHT:
+			location.Y -= FontData.sy/2;
+			location.X -= getWidth(string);
+			break;
+		case PRINT_ALIGN_BOTTOMLEFT:
+			location.Y -= FontData.sy;
+			break;
+		case PRINT_ALIGN_BOTTOMCENTER:
+			location.Y -= FontData.sy;
+			location.X -= getWidth(string) / 2.f;
+			break;
+		case PRINT_ALIGN_BOTTOMRIGHT:
+			location.Y -= FontData.sy;
+			location.X -= getWidth(string);
 			break;
 	}
 
@@ -94,6 +116,8 @@ float Font::printChar(char c, float x, float y, float z, unsigned int rgba) {
 
 	y += (float)FontData.font.fy[(int)c] * (FontData.sy / (float)FontData.font.h);
 
+	x+=dx2/2;
+	y+=FontData.sy/2;
 	_mini->DrawTexture(FontData.font.rsxOffset + FontData.font.bytesPerChar * (c - FontData.font.firstChar),
 					FontData.font.w * (FontData.font.colorFormat == TINY3D_TEX_FORMAT_A8R8G8B8 ? 4 : 2),
 					FontData.font.fw[(int)c],

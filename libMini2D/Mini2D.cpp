@@ -309,6 +309,8 @@ void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float
 
 void Mini2D::DrawRectangle(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, unsigned int rgba, float angle) {
 	MATRIX matrix;
+	dx/=2;
+	dy/=2;
 
 	// rotate and translate the sprite
 	angle = (angle * 3.14159f) / 180.f;
@@ -337,6 +339,8 @@ void Mini2D::DrawRectangle(float xAnchor, float yAnchor, float x, float y, float
 
 void Mini2D::drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, u32 rgba, float angle) {
 	MATRIX matrix;
+	dx/=2;
+	dy/=2;
 
 	// rotate and translate the sprite
 	angle = (angle * 3.14159f) / 180.f;
