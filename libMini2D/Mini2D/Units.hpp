@@ -76,9 +76,15 @@ public:
 	void H(float h);
 	void FromCorners(Vector2 point1, Vector2 point2);
 
-	// Determines if the rectangles intersects
+	// Determines if the rectangles intersect
 	bool Intersect(RectangleF * rectangle);
 	bool Intersect(Vector2 * location, Vector2 * dimension);
+	// Determines if this rectangle contains the passed rectangle
+	bool Contain(RectangleF * rectangle);
+	bool Contain(Vector2 * location, Vector2 * dimension);
+
+	// Compound Operators
+	RectangleF& operator=(const RectangleF& r);
 
 	// Comparison Operators
 	bool operator==(const RectangleF& r) const;

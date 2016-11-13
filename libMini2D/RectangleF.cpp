@@ -88,13 +88,7 @@ void RectangleF::FromCorners(Vector2 point1, Vector2 point2) {
 // Misc Functions
 //---------------------------------------------------------------------------
 bool RectangleF::Intersect(RectangleF * rectangle) {
-	if (Location.X < (rectangle->X() + rectangle->W()) &&
-		(Location.X+Dimension.X) > rectangle->X() &&
-		Location.Y < (rectangle->Y()+rectangle->H()) &&
-		(Location.Y+Dimension.Y) > rectangle->Y())
-		return 1;
-
-    return 0;
+	return Intersect(&rectangle->Location, &rectangle->Dimension);
 }
 
 bool RectangleF::Intersect(Vector2 * location, Vector2 * dimension) {
@@ -106,6 +100,23 @@ bool RectangleF::Intersect(Vector2 * location, Vector2 * dimension) {
 
     return 0;
 }
+
+bool RectangleF::Contain(RectangleF * rectangle) {
+	return Contain(&rectangle->Location, &rectangle->Dimension);
+}
+
+bool RectangleF::Contain(Vector2 * location, Vector2 * dimension) {
+	if (location->X <= Location.X || (location->X+dimension->X)>=(Location.X+Dimension.X) ||
+		location->Y <= Location.Y || (location->Y+dimension->Y)>=(Location.Y+Dimension.Y))
+		return 0;
+
+    return 1;
+}
+
+//---------------------------------------------------------------------------
+// Compound Assignment Operator Overloads
+//---------------------------------------------------------------------------
+RectangleF& RectangleF::operator=(const RectangleF& r) { Location=r.Location;Dimension=r.Dimension;return *this; }
 
 //---------------------------------------------------------------------------
 // Comparison Operator Overloads

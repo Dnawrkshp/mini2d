@@ -163,22 +163,22 @@ void Image::Draw(unsigned int rgba, ImageDrawType type, float angle, ImageDrawRo
 	float nx = DrawRegion.X(), ny = DrawRegion.Y();
 	switch (type) {
 		case DRAW_TOPRIGHT:
-			nx += w2;
-			ny -= h2;
-			break;
-		case DRAW_BOTTOMLEFT:
 			nx -= w2;
 			ny += h2;
 			break;
-		case DRAW_BOTTOMRIGHT:
+		case DRAW_BOTTOMLEFT:
 			nx += w2;
-			ny += h2;
+			ny -= h2;
+			break;
+		case DRAW_BOTTOMRIGHT:
+			nx -= w2;
+			ny -= h2;
 			break;
 		case DRAW_CENTER:
 			break;
 		case DRAW_TOPLEFT:
-			nx -= w2;
-			ny -= h2;
+			nx += w2;
+			ny += h2;
 			break;
 	}
 
