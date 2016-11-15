@@ -32,8 +32,8 @@ int main(s32 argc, const char* argv[]) {
 	emitter1 = new Emitter(&mini, 1000);										// Initialize new emitter with 1000 max particles
 	emitter1->RangeDimensionW = 	Vector2(1,4);								// Range for width (default is 10-50)
 	emitter1->RangeDimensionH = 	Vector2(1,4);								// Range for height (default is 10-50)
-	emitter1->RangeVelocity = 		Vector2(-1,1) * 100;						// Range for X velocity per second (default is -10 to 10)
-	emitter1->RangeVelocity = 		Vector2(-1,1) * 100;						// Range for Y velocity per second (default is -10 to 10)
+	emitter1->RangeVelocity = 		Vector2(-1,1) * 100;						// Range for X velocity per second (default is 0 to 10)
+	emitter1->RangeVelocity = 		Vector2(-1,1) * 100;						// Range for Y velocity per second (default is 0 to 10)
 	emitter1->RangeVelocityTheta =	Vector2(0,360);								// Range for particle velocity direction (default is 0-360)
 	emitter1->RangeRotation =		Vector2(-60,60);							// Range for particle angle rotation per second
 	emitter1->RangeTTL =			Vector2(5,10);								// Range for time to live (seconds)

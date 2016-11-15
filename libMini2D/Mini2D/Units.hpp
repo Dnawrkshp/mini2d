@@ -19,8 +19,16 @@ public:
 	Vector2(float x, float y);
 	virtual ~Vector2();
 
-	// Operations
+	/*
+	 * Magnitude:
+	 *		Returns the magnitude of the vector
+	 */
 	float Magnitude();
+
+	/*
+	 * Normalize:
+	 *		Normalizes the vector by dividing itself by its magnitude
+	 */
 	void Normalize();
 
 	// Set
@@ -77,6 +85,11 @@ public:
 	float W();
 	float H();
 
+	/*
+	 * GetRotatedCenter:
+	 *		Returns a pointer to the position of the rectangle after rotation has been calculated.
+	 *		If UseAnchor is false, this will be the same value as Location.
+	 */
 	Vector2 *GetRotatedCenter();
 
 	// Set X,Y,W,H
@@ -84,11 +97,40 @@ public:
 	void Y(float y);
 	void W(float w);
 	void H(float h);
+
+	/*
+	 * FromCorners:
+	 *		Set the X, Y, Width, and Height of the rectangle from 2 corners
+	 * 
+	 * point1:
+	 *		First corner
+	 * point2:
+	 *		Second corner
+	 */
 	void FromCorners(Vector2 point1, Vector2 point2);
 
-	// Determines if the rectangles intersect
+	/*
+	 * Intersect:
+	 *		Determines if the passed rectangle intersects with this rectangle
+	 * 
+	 * rectangle:
+	 *		Rectangle to compare with
+	 * 
+	 * Return:
+	 *		1 if they intersect. 0 if not.
+	 */
 	bool Intersect(RectangleF * rectangle);
-	// Determines if this rectangle contains the passed rectangle
+	
+	/*
+	 * Contain:
+	 *		Determines if the passed rectangle is contained within this rectangle
+	 * 
+	 * rectangle:
+	 *		Rectangle to compare with
+	 * 
+	 * Return:
+	 *		1 if rectangle is within container. 0 if not.
+	 */
 	bool Contain(RectangleF * rectangle);
 
 	// Compound Operators

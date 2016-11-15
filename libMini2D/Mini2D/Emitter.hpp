@@ -54,7 +54,9 @@ public:
 	 * location:
 	 *		Location to start spawning particles
 	 * timeToLive:
-	 *		How long this emission lasts. If 0, uses RangeTTL max (Y). If < 0, lasts until Stop() is called.
+	 *		How long this emission lasts.
+	 *		If 0, uses RangeTTL max (Y).
+	 *		If < 0, lasts until Stop() is called.
 	 *
 	 * Return:
 	 *		Returns 0 if invalid arguments/setup parameters
