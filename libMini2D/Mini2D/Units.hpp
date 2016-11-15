@@ -31,6 +31,17 @@ public:
 	 */
 	void Normalize();
 
+	/*
+	 * RotateAroundPoint:
+	 *		Rotates the current vector around a point
+	 *
+	 * point:
+	 *		The X,Y position of which to rotate this X,Y position around
+	 * angle:
+	 *		The number of degrees to rotate
+	 */
+	void RotateAroundPoint(Vector2 * point, float angle);
+
 	// Set
 	void SetX(float x);
 	void SetY(float y);
@@ -127,13 +138,27 @@ public:
 	 * 
 	 * rectangle:
 	 *		Rectangle to compare with
-	 * normal
+	 * normal:
 	 *		The resulting normal of the intersected segment (can be null)
+	 * points:
+	 *		The number of points contained within this rectangle
 	 * 
 	 * Return:
 	 *		1 if they intersect. 0 if not.
 	 */
-	bool Intersect(RectangleF * rectangle, Vector2 * normal);
+	bool Intersect(RectangleF * rectangle, Vector2 * normal = NULL, int * points = NULL);
+
+	/*
+	 * IntersectFast:
+	 *		Determines if the passed rectangle intersects with this rectangle.
+	 * 
+	 * rectangle:
+	 *		Rectangle to compare with
+	 * 
+	 * Return:
+	 *		1 if they intersect. 0 if not.
+	 */
+	bool IntersectFast(RectangleF * rectangle);
 	
 	/*
 	 * Contain:

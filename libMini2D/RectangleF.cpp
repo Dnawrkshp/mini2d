@@ -63,8 +63,6 @@ void RectangleF::Init(float x, float y, float w, float h) {
 }
 
 void RectangleF::Update() {
-	float c,s,x,y;
-
 	if (_lastX == Location.X && _lastY == Location.Y &&
 		_lastAX == Anchor.X && _lastAY == Anchor.Y &&
 		_lastA == AnchorAngle && _lastUA == UseAnchor)
@@ -79,13 +77,7 @@ void RectangleF::Update() {
 
 	_rCenter->Set(Location.X, Location.Y);
 	if (AnchorAngle && UseAnchor) {
-		c = cos(DEG2RAD(-AnchorAngle));
-		s = sin(DEG2RAD(-AnchorAngle));
-		x = _rCenter->X-Anchor.X;
-		y = _rCenter->Y-Anchor.Y;
-
-		_rCenter->X = (c*x + s*y) + Anchor.X;
-		_rCenter->Y = (c*y - s*x) + Anchor.Y;
+		_rCenter->RotateAroundPoint(&Anchor, AnchorAngle);
 	}
 }
 
@@ -144,9 +136,24 @@ Vector2 * RectangleF::GetRotatedCenter() {
 //---------------------------------------------------------------------------
 // Misc Functions
 //---------------------------------------------------------------------------
-bool RectangleF::Intersect(RectangleF * rectangle, Vector2 * normal) {
+bool RectangleF::IntersectFast(RectangleF * rectangle) {
+
+	if ((Location.X-Dimension.X/2) < (rectangle->X()+rectangle->W()/2) &&
+		(Location.X+Dimension.X/2) > (rectangle->X()-rectangle->W()/2) &&
+		(Location.Y-Dimension.Y/2) < (rectangle->Y()+rectangle->H()/2) &&
+		(Location.Y+Dimension.Y/2) > (rectangle->Y()-rectangle->H()/2))
+		return 1;
+	return 0;
+}
+
+bool RectangleF::Intersect(RectangleF * rectangle, Vector2 * normal, int * points) {
 	int contains;
 	Vector2 * slopes[4];
+
+	// Check if they intersect quickly
+	// If they do, find the normal
+	if (!IntersectFast(rectangle))
+		return 0;
 
 	if (normal) {
 		slopes[0] = new Vector2();
@@ -156,21 +163,25 @@ bool RectangleF::Intersect(RectangleF * rectangle, Vector2 * normal) {
 
 		contains = CheckCollision(rectangle, slopes);
 
-		// Convert slope to normal (make perpendicular) and average them
-		normal->Set(0,0);
-		for (int x = 0; x < 4; x++) {
-			if (slopes[x]->X != 0 && slopes[x]->Y != 0) {
-				normal->X += slopes[x]->Y;
+		// Convert slope to normal (make perpendicular)
+		if (contains > 0 && contains < 4)
+		{
+			for (int x = 0; x < 4; x++) {
+				normal->X -= slopes[x]->Y;
 				normal->Y += slopes[x]->X;
+				delete slopes[x];
 			}
+			// If normal is invalid, return 0
+			if (normal->Magnitude() == 0)
+				return 0;
+			normal->Normalize();
 		}
-		normal->X /= (float)contains;
-		normal->Y /= (float)contains;
-		normal->Normalize();
 	}
 	else
 		contains = CheckCollision(rectangle, NULL);
 
+	if (points)
+		*points = contains;
 	return contains > 0 && contains < 4;
 }
 
@@ -250,12 +261,12 @@ bool polyContainPoint(Vector2 * p, Vector2 *poly[], int polyCount, Vector2 * slo
     	}
     	else if (slope) {
     		temp = poly[((x==polyCount-1)?0:x+1)];
-    		distances[x] = Vector2::CrossProduct(temp,poly[x],p)/Vector2::DistanceFrom(temp,poly[x]);
+    		distances[x] = abs(Vector2::CrossProduct(poly[x],temp,p))/Vector2::DistanceFrom(temp,poly[x]);
     	}
     }
     
     if (slope) {
-    	distances[0] = Vector2::CrossProduct(poly[1],poly[0],p)/Vector2::DistanceFrom(poly[1],poly[0]);
+    	distances[0] = abs(Vector2::CrossProduct(poly[0],poly[1],p))/Vector2::DistanceFrom(poly[1],poly[0]);
 	    distance = distances[0];
 	    o = 0;
 

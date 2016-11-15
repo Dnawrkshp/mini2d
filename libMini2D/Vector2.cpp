@@ -9,6 +9,9 @@
 
 #include <Mini2D/Units.hpp>					// class definition
 
+#define PI 3.14159265
+#define DEG2RAD(x) ((x*PI)/180.0)
+#define RAD2DEG(x) ((x*180.0)/PI)
 
 //---------------------------------------------------------------------------
 // Init Functions
@@ -37,6 +40,16 @@ void Vector2::Normalize() {
 	float m = Magnitude();
 	X/=m;
 	Y/=m;
+}
+
+void Vector2::RotateAroundPoint(Vector2 * point, float angle) {
+	float c = cos(DEG2RAD(-angle));
+	float s = sin(DEG2RAD(-angle));
+	float x = X-point->X;
+	float y = Y-point->Y;
+
+	X = (c*x + s*y) + point->X;
+	Y = (c*y - s*x) + point->Y;
 }
 
 //---------------------------------------------------------------------------
