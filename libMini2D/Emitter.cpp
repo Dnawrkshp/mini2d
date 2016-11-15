@@ -95,7 +95,7 @@ bool Emitter::Start(Vector2 location, float timeToLive) {
 			for (float t=0; t <= RangeTTL.Y*2; t+=dt) {
 				if (_particles[i].TTL > 0) {
 					_particles[i].rect.Location += (_particles[i].velocity * dt);
-					_particles[i].rect.Angle += _particles[i].angleVelocity * dt;
+					_particles[i].rect.RectangleAngle += _particles[i].angleVelocity * dt;
 					_particles[i].TTL-=dt;
 				}
 				else {
@@ -112,14 +112,14 @@ void Emitter::Draw(float deltaTime) {
 	int i,alive;
 
 	// If we're using an image, save all the data values we are about to change
-	float z=0,ix=0,iy=0,iw=0,ih=0,ia=0,ua=0;
+	float z=0,ix=0,iy=0,iw=0,ih=0,ua=0,ra=0;
 	if (ParticleImage) {
 		z = ParticleImage->ZIndex;
 		ix = ParticleImage->DrawRegion.X();
 		iy = ParticleImage->DrawRegion.Y();
 		iw = ParticleImage->DrawRegion.W();
 		ih = ParticleImage->DrawRegion.H();
-		ia = ParticleImage->DrawRegion.Angle;
+		ra = ParticleImage->DrawRegion.RectangleAngle;
 		ua = ParticleImage->DrawRegion.UseAnchor;
 	}
 
@@ -128,7 +128,7 @@ void Emitter::Draw(float deltaTime) {
 		if (_particles[i].TTL > 0 && _particles[i].spawn) {
 			if (!_pause) {
 				_particles[i].rect.Location += (_particles[i].velocity * deltaTime);
-				_particles[i].rect.Angle += _particles[i].angleVelocity * deltaTime;
+				_particles[i].rect.RectangleAngle += _particles[i].angleVelocity * deltaTime;
 				_particles[i].TTL -= deltaTime;
 			}
 
@@ -138,7 +138,7 @@ void Emitter::Draw(float deltaTime) {
 				ParticleImage->DrawRegion.Y(_particles[i].rect.Y());
 				ParticleImage->DrawRegion.W(_particles[i].rect.W());
 				ParticleImage->DrawRegion.H(_particles[i].rect.H());
-				ParticleImage->DrawRegion.Angle = _particles[i].rect.Angle;
+				ParticleImage->DrawRegion.RectangleAngle = _particles[i].rect.RectangleAngle;
 				ParticleImage->DrawRegion.UseAnchor = 0;
 				ParticleImage->Draw(_particles[i].RGBA);
 			}
@@ -146,7 +146,7 @@ void Emitter::Draw(float deltaTime) {
 				_mini->DrawRectangle(_particles[i].rect.X(), _particles[i].rect.Y(),
 									_particles[i].rect.X(), _particles[i].rect.Y(), ZIndex,
 									_particles[i].rect.W(), _particles[i].rect.H(),
-									_particles[i].RGBA, _particles[i].rect.Angle);
+									_particles[i].RGBA, _particles[i].rect.RectangleAngle);
 			}
 
 			alive++;
@@ -171,7 +171,7 @@ void Emitter::Draw(float deltaTime) {
 		ParticleImage->DrawRegion.Y(iy);
 		ParticleImage->DrawRegion.W(iw);
 		ParticleImage->DrawRegion.H(ih);
-		ParticleImage->DrawRegion.Angle = ia;
+		ParticleImage->DrawRegion.RectangleAngle = ra;
 		ParticleImage->DrawRegion.UseAnchor = ua;
 	}
 }

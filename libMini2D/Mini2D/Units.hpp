@@ -68,7 +68,10 @@ public:
 	Vector2 Location;						// Center of rectangle
 	Vector2 Dimension;						// Size of rectangle
 	Vector2 Anchor;							// Point to rotate around
-	float Angle;							// Angle of rotation (degrees)
+
+	float AnchorAngle;						// Angle of rotation around anchor point (degrees)
+	float RectangleAngle;					// Angle of rotation around rectangle center (degrees)
+
 	bool UseAnchor;							// Whether or not to use anchor point in rotation calculation
 
 	// Constructors
@@ -144,11 +147,10 @@ private:
 
 	float _lastX;							// X value from last Update()
 	float _lastY;							// Y value from last Update()
-	float _lastW;							// Width from last Update()
-	float _lastH;							// Height from last Update()
-	float _lastA;							// Angle from last Update()
+	float _lastA;							// AnchorAngle from last Update()
 	float _lastAX;							// Anchor X value from last Update()
 	float _lastAY;							// Anchor Y value from last Update()
+	float _lastUA;							// UseAnchor value from last Update()
 
 	// Load
 	void Init(float x, float y, float w, float h);

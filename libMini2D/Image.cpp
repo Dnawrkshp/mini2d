@@ -160,7 +160,13 @@ void Image::Draw(unsigned int rgba) {
 
 	float w = DrawRegion.W(), h = DrawRegion.H();
 	float nx = DrawRegion.X(), ny = DrawRegion.Y();
-	float ax = DrawRegion.UseAnchor?DrawRegion.Anchor.X:nx, ay = DrawRegion.UseAnchor?DrawRegion.Anchor.Y:ny;
+	if (DrawRegion.UseAnchor) {
+		Vector2 * pos = DrawRegion.GetRotatedCenter();
+		nx = pos->X;
+		ny = pos->Y;
+	}
+
+	float ax = nx, ay = ny;
 	
-	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, DrawRegion.Angle, TINY3D_TEX_FORMAT_A8R8G8B8);
+	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, DrawRegion.RectangleAngle, TINY3D_TEX_FORMAT_A8R8G8B8);
 }

@@ -64,23 +64,21 @@ void RectangleF::Init(float x, float y, float w, float h) {
 
 void RectangleF::Update() {
 	if (_lastX == Location.X && _lastY == Location.Y &&
-		_lastW == Dimension.X && _lastH == Dimension.Y &&
 		_lastAX == Anchor.X && _lastAY == Anchor.Y &&
-		_lastA == Angle)
+		_lastA == AnchorAngle && _lastUA == UseAnchor)
 		return;
 
 	_lastX = Location.X;
 	_lastY = Location.Y;
-	_lastW = Dimension.X;
-	_lastH = Dimension.Y;
-	_lastA = Angle;
+	_lastA = AnchorAngle;
 	_lastAX = Anchor.X;
 	_lastAY = Anchor.Y;
+	_lastUA = UseAnchor;
 
 	_rCenter->Set(Location.X, Location.Y);
-	if (Angle && UseAnchor) {
-		float c = cos(DEG2RAD(Angle));
-		float s = sin(DEG2RAD(Angle));
+	if (AnchorAngle && UseAnchor) {
+		float c = cos(DEG2RAD(AnchorAngle));
+		float s = sin(DEG2RAD(AnchorAngle));
 
 		_rCenter->X-=Anchor.X;
 		_rCenter->Y-=Anchor.Y;
@@ -154,10 +152,10 @@ bool RectangleF::Intersect(RectangleF * rectangle) {
 	Update();
 	center = rectangle->GetRotatedCenter();
 
-	cA = cos(DEG2RAD(Angle));
-	sA = sin(DEG2RAD(Angle));
-	cB = cos(DEG2RAD(rectangle->Angle));
-	sB = sin(DEG2RAD(rectangle->Angle));
+	cA = cos(DEG2RAD(RectangleAngle));
+	sA = sin(DEG2RAD(RectangleAngle));
+	cB = cos(DEG2RAD(rectangle->RectangleAngle));
+	sB = sin(DEG2RAD(rectangle->RectangleAngle));
 
 	rect1 = new Vector2*[4];
 	rect2 = new Vector2*[4];
@@ -196,10 +194,10 @@ bool RectangleF::Contain(RectangleF * rectangle) {
 	Update();
 	center = rectangle->GetRotatedCenter();
 
-	cA = cos(DEG2RAD(Angle));
-	sA = sin(DEG2RAD(Angle));
-	cB = cos(DEG2RAD(rectangle->Angle));
-	sB = sin(DEG2RAD(rectangle->Angle));
+	cA = cos(DEG2RAD(RectangleAngle));
+	sA = sin(DEG2RAD(RectangleAngle));
+	cB = cos(DEG2RAD(rectangle->RectangleAngle));
+	sB = sin(DEG2RAD(rectangle->RectangleAngle));
 
 	rect1 = new Vector2*[4];
 	rect2 = new Vector2*[4];
