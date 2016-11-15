@@ -47,6 +47,11 @@ void Vector2::Set(float x, float y) {
 	Y = y;
 }
 
+void Vector2::Set(const Vector2& v) {
+	X = v.X;
+	Y = v.Y;
+}
+
 void Vector2::SetX(float x) {
 	Set(x,Y);
 }
@@ -85,3 +90,36 @@ const Vector2 Vector2::operator+(const float& s) const { Vector2 s1 = *this;s1 +
 const Vector2 Vector2::operator-(const float& s) const { Vector2 s1 = *this;s1 -= s;return s1; }
 const Vector2 Vector2::operator*(const float& s) const { Vector2 s1 = *this;s1 *= s;return s1; }
 const Vector2 Vector2::operator/(const float& s) const { Vector2 s1 = *this;s1 /= s;return s1; }
+
+//---------------------------------------------------------------------------
+// Static Functions
+//-------------------------------------------------------------------------
+float Vector2::Determinant(Vector2 * u, Vector2 * v) {
+	return u->X*v->Y - u->Y*v->X;
+}
+
+float Vector2::CrossProduct(Vector2 * p, Vector2 * q, Vector2 * r) {
+	return (q->Y - p->Y) * (r->X - q->X) - 
+		   (q->X - p->X) * (r->Y - q->Y);
+}
+
+float Vector2::DotProduct(Vector2 * a, Vector2 * b) {
+	return a->X*b->X + a->Y*b->Y;
+}
+
+float Vector2::DistanceFrom(Vector2 * a, Vector2 * b) {
+	return pow(pow(a->X-b->X,2) + pow(a->Y-b->Y,2), 0.5);
+}
+
+float Vector2::Magnitude(Vector2 * a) {
+	return pow(pow(a->X,2) + pow(a->Y,2), 0.5);
+}
+
+void Vector2::Reflect(Vector2 * out, Vector2 * direction, Vector2 * normal) {
+	if (!out || !direction || !normal)
+		return;
+
+	Vector2 n = (*normal);
+	n.Normalize();
+	out->Set(*direction - (n * 2.0f * DotProduct(direction,&n)));
+}

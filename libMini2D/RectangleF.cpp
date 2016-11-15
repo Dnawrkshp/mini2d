@@ -16,7 +16,7 @@
 #define RAD2DEG(x) ((x*180.0)/PI)
 
 // Determine if point exists within polygon
-bool polyContainPoint(Vector2 * p, Vector2 * poly[], int polyCount);
+bool polyContainPoint(Vector2 * p, Vector2 * poly[], int polyCount, Vector2 * slope);
 
 //---------------------------------------------------------------------------
 // Init Functions
@@ -143,50 +143,41 @@ Vector2 * RectangleF::GetRotatedCenter() {
 //---------------------------------------------------------------------------
 // Misc Functions
 //---------------------------------------------------------------------------
-bool RectangleF::Intersect(RectangleF * rectangle) {
-	int x,i;
-	float cA,sA,cB,sB;
-	Vector2 *center;
-	Vector2 ** rect1, ** rect2;
+bool RectangleF::Intersect(RectangleF * rectangle, Vector2 * normal) {
+	int contains;
+	Vector2 * slopes[4];
 
-	Update();
-	center = rectangle->GetRotatedCenter();
+	if (normal) {
+		slopes[0] = new Vector2();
+		slopes[1] = new Vector2();
+		slopes[2] = new Vector2();
+		slopes[3] = new Vector2();
 
-	cA = cos(DEG2RAD(RectangleAngle));
-	sA = sin(DEG2RAD(RectangleAngle));
-	cB = cos(DEG2RAD(rectangle->RectangleAngle));
-	sB = sin(DEG2RAD(rectangle->RectangleAngle));
+		contains = CheckCollision(rectangle, slopes);
 
-	rect1 = new Vector2*[4];
-	rect2 = new Vector2*[4];
-
-	rect1[0] = new Vector2(cA*Dimension.X* 0.5 + sA*Dimension.Y* 0.5 + _rCenter->X, cA*Dimension.Y* 0.5 + sA*Dimension.X* 0.5 + _rCenter->Y);
-	rect1[1] = new Vector2(cA*Dimension.X*-0.5 + sA*Dimension.Y* 0.5 + _rCenter->X, cA*Dimension.Y* 0.5 + sA*Dimension.X*-0.5 + _rCenter->Y);
-	rect1[2] = new Vector2(cA*Dimension.X*-0.5 + sA*Dimension.Y*-0.5 + _rCenter->X, cA*Dimension.Y*-0.5 + sA*Dimension.X*-0.5 + _rCenter->Y);
-	rect1[3] = new Vector2(cA*Dimension.X* 0.5 + sA*Dimension.Y*-0.5 + _rCenter->X, cA*Dimension.Y*-0.5 + sA*Dimension.X* 0.5 + _rCenter->Y);
-
-	rect2[0] = new Vector2(cB*rectangle->W()* 0.5 + sB*rectangle->H()* 0.5 + center->X, cB*rectangle->H()* 0.5 + sB*rectangle->W()* 0.5 + center->Y);
-	rect2[1] = new Vector2(cB*rectangle->W()*-0.5 + sB*rectangle->H()* 0.5 + center->X, cB*rectangle->H()* 0.5 + sB*rectangle->W()*-0.5 + center->Y);
-	rect2[2] = new Vector2(cB*rectangle->W()*-0.5 + sB*rectangle->H()*-0.5 + center->X, cB*rectangle->H()*-0.5 + sB*rectangle->W()*-0.5 + center->Y);
-	rect2[3] = new Vector2(cB*rectangle->W()* 0.5 + sB*rectangle->H()*-0.5 + center->X, cB*rectangle->H()*-0.5 + sB*rectangle->W()* 0.5 + center->Y);
-
-	for (x=0;x<4;x++) {
-		if (polyContainPoint(rect2[x], rect1, 4))
-			break;
+		// Convert slope to normal (make perpendicular) and average them
+		normal->Set(0,0);
+		for (int x = 0; x < 4; x++) {
+			if (slopes[x]->X != 0 && slopes[x]->Y != 0) {
+				normal->X += slopes[x]->Y;
+				normal->Y += slopes[x]->X;
+			}
+		}
+		normal->X /= (float)contains;
+		normal->Y /= (float)contains;
 	}
+	else
+		contains = CheckCollision(rectangle, NULL);
 
-	for (i=0;i<4;i++) {
-		delete rect1[i];
-		delete rect2[i];
-	}
-	delete[] rect1;
-	delete[] rect2;
-
-	return x!=4;
+	return contains > 0 && contains < 4;
 }
 
 bool RectangleF::Contain(RectangleF * rectangle) {
-	int x,i;
+	return CheckCollision(rectangle, NULL) == 4;
+}
+
+int RectangleF::CheckCollision(RectangleF * rectangle, Vector2 * slopes[]) {
+	int x,c=0;
 	float cA,sA,cB,sB;
 	Vector2 *center;
 	Vector2 ** rect1, ** rect2;
@@ -213,18 +204,18 @@ bool RectangleF::Contain(RectangleF * rectangle) {
 	rect2[3] = new Vector2(cB*rectangle->W()* 0.5 + sB*rectangle->H()*-0.5 + center->X, cB*rectangle->H()*-0.5 + sB*rectangle->W()* 0.5 + center->Y);
 
 	for (x=0;x<4;x++) {
-		if (!polyContainPoint(rect2[x], rect1, 4))
-			break;
+		if (polyContainPoint(rect2[x], rect1, 4, (slopes==NULL?NULL:slopes[x])))
+			c++;
 	}
 
-	for (i=0;i<4;i++) {
-		delete rect1[i];
-		delete rect2[i];
+	for (x=0;x<4;x++) {
+		delete rect1[x];
+		delete rect2[x];
 	}
 	delete[] rect1;
 	delete[] rect2;
 
-	return x==4;
+	return c;	
 }
 
 /*
@@ -232,31 +223,50 @@ bool RectangleF::Contain(RectangleF * rectangle) {
  */
 int orientation(Vector2 *p, Vector2 *q, Vector2 *r)
 {
-    int val = (q->Y - p->Y) * (r->X - q->X) - 
-              (q->X - p->X) * (r->Y - q->Y);
- 
-    if (0 == val)
-        return 0;
-    return val > 0 ? 1: 2;
+    int val = Vector2::CrossProduct(p,q,r);
+	if (0 == val)
+		return 0;
+	return val > 0 ? 1: 2;
 }
 
-bool polyContainPoint(Vector2 * p, Vector2 *poly[], int polyCount) {
+bool polyContainPoint(Vector2 * p, Vector2 *poly[], int polyCount, Vector2 * slope) {
 	int x,o;
-	Vector2 * rp;
+	float distances[4], distance;
+	Vector2 * temp;
 	if (polyCount < 2)
 		return 0;
 
-	rp = poly[0];
     // orientation
-    o = orientation(poly[0], poly[1], p);
+	o = orientation(poly[0], poly[1], p);
 
-    if (o == 0)
-        return 1;
+	if (o == 0)
+		return 1;
 
     for (x=1;x<polyCount;x++) {
-    	if (o != orientation(poly[x], poly[((x==polyCount-1)?0:x+1)], p))
+    	if (o != orientation(poly[x], poly[((x==polyCount-1)?0:x+1)], p)) {
     		return 0;
+    	}
+    	else if (slope) {
+    		temp = poly[((x==polyCount-1)?0:x+1)];
+    		distances[x] = Vector2::CrossProduct(temp,poly[x],p)/Vector2::DistanceFrom(temp,poly[x]);
+    	}
     }
+    
+    if (slope) {
+    	distances[0] = Vector2::CrossProduct(poly[1],poly[0],p)/Vector2::DistanceFrom(poly[1],poly[0]);
+	    distance = distances[0];
+	    o = 0;
+
+	    for (x=1;x<4;x++) {
+	    	if (distances[x]<distance) {
+	    		distance = distances[x];
+	    		o = x;
+	    	}
+	    }
+
+	    slope->Set(*poly[((o==polyCount-1)?0:o+1)]-*poly[o]);
+	}
+
     return 1;
 }
 

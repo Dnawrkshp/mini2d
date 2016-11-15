@@ -35,6 +35,7 @@ public:
 	void SetX(float x);
 	void SetY(float y);
 	void Set(float x, float y);
+	void Set(const Vector2& v);
 
 	// Comparison Operators
 	bool operator==(const Vector2& s) const;
@@ -60,6 +61,13 @@ public:
 	const Vector2 operator-(const float& s) const;
 	const Vector2 operator*(const float& s) const;
 	const Vector2 operator/(const float& s) const;
+
+	static float Determinant(Vector2 * u, Vector2 * v);
+	static float CrossProduct(Vector2 * p, Vector2 * q, Vector2 * r);
+	static float DotProduct(Vector2 * a, Vector2 * b);
+	static float DistanceFrom(Vector2 * a, Vector2 * b);
+	static float Magnitude(Vector2 * a);
+	static void Reflect(Vector2 * out, Vector2 * direction, Vector2 * normal);
 };
 
 class RectangleF {
@@ -114,15 +122,18 @@ public:
 
 	/*
 	 * Intersect:
-	 *		Determines if the passed rectangle intersects with this rectangle
+	 *		Determines if the passed rectangle intersects with this rectangle.
+	 *		If one is contained within the other, this returns 0
 	 * 
 	 * rectangle:
 	 *		Rectangle to compare with
+	 * normal
+	 *		The resulting normal of the intersected segment (can be null)
 	 * 
 	 * Return:
 	 *		1 if they intersect. 0 if not.
 	 */
-	bool Intersect(RectangleF * rectangle);
+	bool Intersect(RectangleF * rectangle, Vector2 * normal);
 	
 	/*
 	 * Contain:
@@ -157,6 +168,8 @@ private:
 
 	// Calculate Center
 	void Update();
+	// Determine how many points from rectangle are within this rectangle
+	int CheckCollision(RectangleF * rectangle, Vector2 * slopes[]);
 };
 
 #endif /* UNITS_HPP_ */

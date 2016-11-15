@@ -132,21 +132,23 @@ void Emitter::Draw(float deltaTime) {
 				_particles[i].TTL -= deltaTime;
 			}
 
-			if (ParticleImage) {
-				ParticleImage->ZIndex = ZIndex;
-				ParticleImage->DrawRegion.X(_particles[i].rect.X());
-				ParticleImage->DrawRegion.Y(_particles[i].rect.Y());
-				ParticleImage->DrawRegion.W(_particles[i].rect.W());
-				ParticleImage->DrawRegion.H(_particles[i].rect.H());
-				ParticleImage->DrawRegion.RectangleAngle = _particles[i].rect.RectangleAngle;
-				ParticleImage->DrawRegion.UseAnchor = 0;
-				ParticleImage->Draw(_particles[i].RGBA);
-			}
-			else {
-				_mini->DrawRectangle(_particles[i].rect.X(), _particles[i].rect.Y(),
-									_particles[i].rect.X(), _particles[i].rect.Y(), ZIndex,
-									_particles[i].rect.W(), _particles[i].rect.H(),
-									_particles[i].RGBA, _particles[i].rect.RectangleAngle);
+			if (Clip.Contain(&_particles[i].rect)) {
+				if (ParticleImage) {
+					ParticleImage->ZIndex = ZIndex;
+					ParticleImage->DrawRegion.X(_particles[i].rect.X());
+					ParticleImage->DrawRegion.Y(_particles[i].rect.Y());
+					ParticleImage->DrawRegion.W(_particles[i].rect.W());
+					ParticleImage->DrawRegion.H(_particles[i].rect.H());
+					ParticleImage->DrawRegion.RectangleAngle = _particles[i].rect.RectangleAngle;
+					ParticleImage->DrawRegion.UseAnchor = 0;
+					ParticleImage->Draw(_particles[i].RGBA);
+				}
+				else {
+					_mini->DrawRectangle(_particles[i].rect.X(), _particles[i].rect.Y(),
+										_particles[i].rect.X(), _particles[i].rect.Y(), ZIndex,
+										_particles[i].rect.W(), _particles[i].rect.H(),
+										_particles[i].RGBA, _particles[i].rect.RectangleAngle);
+				}
 			}
 
 			alive++;
