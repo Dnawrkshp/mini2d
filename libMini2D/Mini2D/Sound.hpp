@@ -16,7 +16,8 @@ public:
 		SOUND_SUCCESS = 0,
 		SOUND_INVALID_ARG,
 		SOUND_DECODE_FAILED,
-		SOUND_INVALID_MINI2D
+		SOUND_INVALID_MINI2D,
+		SOUND_INVALID_FILE
 	} SoundLoadStatus;
 
 	typedef enum _soundVoiceStatus_t {
@@ -52,11 +53,13 @@ public:
 	 * 
 	 * filepath:
 	 * 		Path to MP3/OGG
+	 * seconds:
+	 * 		How many seconds of the audio to load
 	 * 
 	 * Return:
 	 * 		Result of the load operation
 	 */
-	SoundLoadStatus Load(const char * filepath);
+	SoundLoadStatus Load(const char * filepath, float seconds);
 
 	/*
 	 * PlayOnce:

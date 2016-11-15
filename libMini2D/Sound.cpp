@@ -78,8 +78,43 @@ Sound::SoundLoadStatus Sound::Load(const void * buffer, unsigned int size, float
 	return SOUND_SUCCESS;
 }
 
-Sound::SoundLoadStatus Sound::Load(const char * filepath) {
-	return SOUND_SUCCESS;
+Sound::SoundLoadStatus Sound::Load(const char * filepath, float seconds) {
+	char * buffer = NULL;
+	int bufferSize = 0;
+	Sound::SoundLoadStatus result;
+
+	FILE *fp = fopen(filepath, "r");
+	if (fp != NULL) {
+	    if (fseek(fp, 0L, SEEK_END) == 0) {
+	        bufferSize = ftell(fp);
+	        if (bufferSize <= 0) {
+	        	return SOUND_INVALID_FILE;
+	        }
+
+	        buffer = new char[bufferSize+1];
+
+	        if (fseek(fp, 0L, SEEK_SET) != 0) {
+	        	delete [] buffer;
+	        	return SOUND_INVALID_FILE;
+	        }
+
+	        fread(buffer, sizeof(char), bufferSize, fp);
+	        if (ferror(fp) != 0) {
+	        	delete [] buffer;
+	        	return SOUND_INVALID_FILE;
+	        }
+	    }
+	    fclose(fp);
+	}
+
+	if (!buffer || bufferSize < 0)
+		return SOUND_INVALID_FILE;
+
+	result = Load(buffer, bufferSize, seconds);
+
+	delete [] buffer;
+
+	return result;
 }
 
 //---------------------------------------------------------------------------
