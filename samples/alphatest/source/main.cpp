@@ -39,7 +39,7 @@ int drawUpdate(float deltaTime, unsigned int frame) {
 }
 
 void padUpdate(int changed, int port, padData pData) {
-	if (pData.BTN_START)
+	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
 		doExit = -1;
 
 	if (pData.BTN_LEFT && changed & Mini2D::BTN_CHANGED_LEFT)

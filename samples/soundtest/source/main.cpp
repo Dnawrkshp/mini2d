@@ -65,7 +65,7 @@ int drawUpdate(float deltaTime, unsigned int frame) {
 void padUpdate(int changed, int port, padData pData) {
 	status = sound1->Status(infiniteVoice);
 
-	if (pData.BTN_START)
+	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
 		doExit = -1;
 
 	if (pData.BTN_TRIANGLE && changed & Mini2D::BTN_CHANGED_TRIANGLE) {

@@ -77,7 +77,7 @@ void padUpdate(int changed, int port, padData pData) {
 	short x,y,dead=15;
 	float theta, d=5;
 
-	if (pData.BTN_START)
+	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
 		doExit = -1;
 
 	if (pData.BTN_CROSS && changed & Mini2D::BTN_CHANGED_CROSS) {

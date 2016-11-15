@@ -67,7 +67,7 @@ void padUpdate(int changed, int port, padData pData) {
 	float theta;
 	short x,y,dead=10;
 
-	if (pData.BTN_START)
+	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
 		doExit = -1;
 
 	// Direct cannon
