@@ -25,6 +25,7 @@ bool BallCollisionCheck(Ball * ball, Vector2 * normal);
 Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
 
 int doExit = 0;
+int count = 0;
 Image *paper;
 Image *ball;
 Image *cannon;
@@ -76,12 +77,11 @@ int main(s32 argc, const char* argv[]) {
 	return 0;
 }
 
-static int count = 0;
 int drawUpdate(float deltaTime, unsigned int frame) {
 	paper->Draw(0xFFFFFFFF);
 	cannon->Draw(0xFFFFFFFF);
 
-	int i = 0;
+	count = 0;
 	for(std::vector<Ball*>::iterator it = balls.begin(); it != balls.end();) {
     	if (!((*it)->Draw(deltaTime))) {
     		delete *it;
@@ -91,11 +91,7 @@ int drawUpdate(float deltaTime, unsigned int frame) {
     		it++;
     	}
 
-    	i++;
- 	}
- 	if (i != count) {
- 		count = i;
- 		printf("Drew %d balls\n", i);
+    	count++;
  	}
 
 	return doExit;
@@ -123,7 +119,8 @@ void padUpdate(int changed, int port, padData pData) {
 		cannon->DrawRegion.AnchorAngle = CannonAngle;
 	}
 
-	if (pData.BTN_CROSS && changed & Mini2D::BTN_CHANGED_CROSS) {
+	// If CROSS is pressed and we haven't hit the max number of balls
+	if (pData.BTN_CROSS && changed & Mini2D::BTN_CHANGED_CROSS && count < 50) {
 		Ball * newBall = new Ball(&mini, ball, BallCollisionCheck);										// Create new ball
 		newBall->MinSpeed = BALL_MINSPEED;																// Set minimum speed
 		newBall->DrawRegion.Location.Set(BALL_START);													// Set location to start location
@@ -149,8 +146,7 @@ bool BallCollisionCheck(Ball * ball, Vector2 * normal) {
 	if (paper->DrawRegion.Intersect(&ball->DrawRegion, normal, &points))
 		return 1;
 	// If the ball is fully out of bounds (velocity must be too high)
-	if (points <= 0) {
-		printf("outside bounds\n");
+	if (points == 0) {
 		normal->Set(0,0);
 		return 1;
 	}

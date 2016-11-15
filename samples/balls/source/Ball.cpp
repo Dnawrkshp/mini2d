@@ -20,19 +20,13 @@ bool Ball::Draw(float deltaTime) {
 	float x,y;
 	Vector2 normal;
 
-	if (!_mini || !_image || !_ballCollision){
-		printf("AAA\n");
+	if (!_mini || !_image || !_ballCollision)
 		return 0;
-	}
 
 	x = DrawRegion.X();
 	y = DrawRegion.Y();
 
 	DrawRegion.Location += Velocity * deltaTime;
-	if (isnan(DrawRegion.Location.X) || isnan(DrawRegion.Location.Y)) {
-		printf("1 isnan from (%.2f, %.2f) += (%.2f, %.2f) * %f\n", x,y,Velocity.X,Velocity.Y,deltaTime);
-		return 0;
-	}
 
 	// If there was a collision then we must go back to before the collision
 	// Then we must calculate the new velocity using the normal
@@ -42,11 +36,8 @@ bool Ball::Draw(float deltaTime) {
 			Vector2::Reflect(&Velocity, &Velocity, &normal);
 			Velocity *= Friction;			// reduce the velocity after a collision
 		}
-		else {								// If out of bounds
-			printf("out of bounds\n");
-			//DrawRegion.Location.Set(_mini->MAXW*0.5,_mini->MAXH*0.5);
-			Velocity *= -Friction;
-		}
+		else								// If out of bounds
+			return 0;
 
 		_lastMove += deltaTime;
 	}
