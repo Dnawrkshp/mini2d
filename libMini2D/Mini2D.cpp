@@ -35,6 +35,9 @@ static Mini2D::ExitCallback_f _exitCallback;
 // Called when program unload
 void unload();
 
+// Convert degree angle to radians
+float degToRad(float d);
+
 // Callback for system events
 static void sys_callback(uint64_t status, uint64_t param, void* userdata);
 
@@ -313,7 +316,7 @@ void Mini2D::DrawRectangle(float xAnchor, float yAnchor, float x, float y, float
 	dy/=2;
 
 	// rotate and translate the sprite
-	angle = (angle * 3.14159f) / 180.f;
+	angle = degToRad(angle);
 	matrix = MatrixRotationZ(angle);
 	matrix = MatrixMultiply(matrix, MatrixTranslation(xAnchor, yAnchor, 0.0f));
 	
@@ -343,7 +346,7 @@ void Mini2D::drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float
 	dy/=2;
 
 	// rotate and translate the sprite
-	angle = (angle * 3.14159f) / 180.f;
+	angle = degToRad(angle);
 	matrix = MatrixRotationZ(angle);
 	matrix = MatrixMultiply(matrix, MatrixTranslation(xAnchor, yAnchor, 0.0f));
 
@@ -374,3 +377,5 @@ void Mini2D::drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float
 	tiny3d_SetMatrixModelView(NULL); // set matrix identity
 
 }
+
+float degToRad(float d) { while(d>180){d-=360;}while(d<-180){d+=360;} return (d*3.14159f)/180.f; }

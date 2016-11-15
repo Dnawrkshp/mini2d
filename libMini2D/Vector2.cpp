@@ -7,7 +7,7 @@
 
 #include <math.h>							// pow()
 
-#include <Mini2D/Units.hpp>
+#include <Mini2D/Units.hpp>					// class definition
 
 
 //---------------------------------------------------------------------------
@@ -24,7 +24,6 @@ Vector2::Vector2(float x, float y) {
 }
 
 Vector2::~Vector2() {
-
 }
 
 //---------------------------------------------------------------------------
@@ -38,6 +37,22 @@ void Vector2::Normalize() {
 	float m = Magnitude();
 	X/=m;
 	Y/=m;
+}
+
+//---------------------------------------------------------------------------
+// Set Functions
+//---------------------------------------------------------------------------
+void Vector2::Set(float x, float y) {
+	X = x;
+	Y = y;
+}
+
+void Vector2::SetX(float x) {
+	Set(x,Y);
+}
+
+void Vector2::SetY(float y) {
+	Set(X,y);
 }
 
 //---------------------------------------------------------------------------

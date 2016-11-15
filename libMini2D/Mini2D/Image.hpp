@@ -28,31 +28,9 @@ public:
 		IMAGE_INVALID_MINI2D
 	} ImageLoadStatus;
 
-	typedef enum _imageDrawType_t {
-		DRAW_TOPLEFT = 0,
-		DRAW_TOPRIGHT,
-		DRAW_BOTTOMLEFT,
-		DRAW_BOTTOMRIGHT,
-		DRAW_CENTER
-	} ImageDrawType;
-
-	typedef enum _imageDrawRotateType_t {
-		DRAW_ROTATE_CENTER = 0,
-		DRAW_ROTATE_TOPLEFT,
-		DRAW_ROTATE_TOPCENTER,
-		DRAW_ROTATE_TOPRIGHT,
-		DRAW_ROTATE_CENTERLEFT,
-		DRAW_ROTATE_CENTERRIGHT,
-		DRAW_ROTATE_BOTTOMLEFT,
-		DRAW_ROTATE_BOTTOMCENTER,
-		DRAW_ROTATE_BOTTOMRIGHT,
-		DRAW_ROTATE_USERDEFINED
-	} ImageDrawRotateType;
-
 	unsigned int * TexturePointer;			// Pointer to texture in RSX memory
 
 	RectangleF DrawRegion;					// Where to draw image to
-	Vector2 Anchor;							// Point to rotate image around if DRAW_ROTATE_USERDEFINED is passed to Draw()
 	float ZIndex;							// Z coordinate (lower numbers are drawn over higher numbers)
 
 	// Constructors
@@ -106,14 +84,8 @@ public:
 	 * 
 	 * rgba:
 	 *		Color
-	 * type:
-	 *		Alignment of image
-	 * angle:
-	 *		Rotation in degrees
-	 * rotate:
-	 *		How to calculate the anchor point to rotate the image around
 	 */
-	void Draw(unsigned int rgba = 0xFFFFFFFF, ImageDrawType type = DRAW_TOPLEFT, float angle = 0, ImageDrawRotateType rotate = DRAW_ROTATE_CENTER);
+	void Draw(unsigned int rgba = 0xFFFFFFFF);
 
 private:
 	Mini2D * _mini;

@@ -154,70 +154,13 @@ void Image::toRSX(void * buffer) {
 //---------------------------------------------------------------------------
 // Draw Functions
 //---------------------------------------------------------------------------
-void Image::Draw(unsigned int rgba, ImageDrawType type, float angle, ImageDrawRotateType rotate) {
+void Image::Draw(unsigned int rgba) {
 	if (_mini == NULL || !_textureOff)
 		return;
 
-	float w = DrawRegion.W(), h = DrawRegion.H(), w2 = w/2, h2 = h/2;
-
+	float w = DrawRegion.W(), h = DrawRegion.H();
 	float nx = DrawRegion.X(), ny = DrawRegion.Y();
-	switch (type) {
-		case DRAW_TOPRIGHT:
-			nx -= w2;
-			ny += h2;
-			break;
-		case DRAW_BOTTOMLEFT:
-			nx += w2;
-			ny -= h2;
-			break;
-		case DRAW_BOTTOMRIGHT:
-			nx -= w2;
-			ny -= h2;
-			break;
-		case DRAW_CENTER:
-			break;
-		case DRAW_TOPLEFT:
-			nx += w2;
-			ny += h2;
-			break;
-	}
-
-	float ax = nx, ay = ny;
-	switch (rotate) {
-		case DRAW_ROTATE_TOPLEFT:
-			ax -= w2;
-			ay -= h2;
-			break;
-		case DRAW_ROTATE_TOPCENTER:
-			ay -= h2;
-			break;
-		case DRAW_ROTATE_TOPRIGHT:
-			ax += w2;
-			ay -= h2;
-			break;
-		case DRAW_ROTATE_CENTERLEFT:
-			ax -= w2;
-			break;
-		case DRAW_ROTATE_CENTER:
-			break;
-		case DRAW_ROTATE_CENTERRIGHT:
-			ax += w2;
-			break;
-		case DRAW_ROTATE_BOTTOMLEFT:
-			ax -= w2;
-			ay += h2;
-			break;
-		case DRAW_ROTATE_BOTTOMCENTER:
-			ay += h2;
-			break;
-		case DRAW_ROTATE_BOTTOMRIGHT:
-			ax += w2;
-			ay += h2;
-			break;
-		case DRAW_ROTATE_USERDEFINED:
-			ax = Anchor.X;
-			ay = Anchor.Y;
-	}
-
-	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, angle, TINY3D_TEX_FORMAT_A8R8G8B8);
+	float ax = DrawRegion.UseAnchor?DrawRegion.Anchor.X:nx, ay = DrawRegion.UseAnchor?DrawRegion.Anchor.Y:ny;
+	
+	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, DrawRegion.Angle, TINY3D_TEX_FORMAT_A8R8G8B8);
 }

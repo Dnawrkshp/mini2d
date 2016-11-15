@@ -11,8 +11,11 @@
 #include <Mini2D/Emitter.hpp>				// Class definition
 #include <Mini2D/Units.hpp>					// vector2
 
+#define PI 3.14159265
+#define DEG2RAD(x) ((x*PI)/180.0)
+#define RAD2DEG(x) ((x*180.0)/PI)
+
 float randomRange(float min, float max);
-float degToRad(float d);
 
 //---------------------------------------------------------------------------
 // Init Functions
@@ -20,33 +23,28 @@ float degToRad(float d);
 Emitter::Emitter(Mini2D * mini, unsigned int maxParticles) : _mini(mini) {
 	_maxP = maxParticles;
 
-	RangeVelocityTheta.X = 0;
-	RangeVelocityTheta.Y = 360;
+	// Full range dispersion
+	RangeVelocityTheta.Set(0,360);
 
-	RangeVelocity.X = -10;
-	RangeVelocity.Y = 10;
+	// Velocity from 0 to 10
+	RangeVelocity.Set(0, 10);
 
-	RangeDimensionW.X = 10;
-	RangeDimensionW.Y = 50;
-	RangeDimensionH.X = 10;
-	RangeDimensionH.Y = 50;
+	// Width/Height dimensions from 10 to 50
+	RangeDimensionW.Set(10, 50);
+	RangeDimensionH.Set(10, 50);
 
-	RangeTTL.X = 5;
-	RangeTTL.Y = 20;
+	// Particle life time for 5 to 20 seconds
+	RangeTTL.Set(5,20);
 
-	RangeColorRed.X = 0;
-	RangeColorRed.Y = 255;
-	RangeColorGreen.X = 0;
-	RangeColorGreen.Y = 255;
-	RangeColorBlue.X = 0;
-	RangeColorBlue.Y = 255;
-	RangeColorAlpha.X = 255;
-	RangeColorAlpha.Y = 255;
+	// Color range RGB (0-255), Alpha (255)
+	RangeColorRed.Set(0,255);
+	RangeColorGreen.Set(0,255);
+	RangeColorBlue.Set(0,255);
+	RangeColorAlpha.Set(255,255);
 
-	Clip.X(0);
-	Clip.Y(0);
-	Clip.W(mini->MAXW);
-	Clip.H(mini->MAXH);
+	// Set draw region to entire screen
+	Clip.Dimension.Set(mini->MAXW, mini->MAXH);
+	Clip.Location.Set(Clip.Dimension.X/2,Clip.Dimension.Y/2);
 
 	ParticleImage = NULL;
 
@@ -72,8 +70,7 @@ bool Emitter::Start(Vector2 location, float timeToLive) {
 	if (!_maxP || RangeTTL.Y <= 0 || RangeDimensionW.Y <= 0 || RangeDimensionH.Y <= 0 || RangeColorAlpha.Y <= 0)
 		return 0;
 
-	_startLocation.X = location.X;
-	_startLocation.Y = location.Y;
+	_startLocation.Set(location.X, location.Y);
 
 	_pause = 0;
 	_loop = 0;
@@ -98,7 +95,7 @@ bool Emitter::Start(Vector2 location, float timeToLive) {
 			for (float t=0; t <= RangeTTL.Y*2; t+=dt) {
 				if (_particles[i].TTL > 0) {
 					_particles[i].rect.Location += (_particles[i].velocity * dt);
-					_particles[i].angle += _particles[i].angleVelocity * dt;
+					_particles[i].rect.Angle += _particles[i].angleVelocity * dt;
 					_particles[i].TTL-=dt;
 				}
 				else {
@@ -115,13 +112,15 @@ void Emitter::Draw(float deltaTime) {
 	int i,alive;
 
 	// If we're using an image, save all the data values we are about to change
-	float z=0,ix=0,iy=0,iw=0,ih=0;
+	float z=0,ix=0,iy=0,iw=0,ih=0,ia=0,ua=0;
 	if (ParticleImage) {
 		z = ParticleImage->ZIndex;
 		ix = ParticleImage->DrawRegion.X();
 		iy = ParticleImage->DrawRegion.Y();
 		iw = ParticleImage->DrawRegion.W();
 		ih = ParticleImage->DrawRegion.H();
+		ia = ParticleImage->DrawRegion.Angle;
+		ua = ParticleImage->DrawRegion.UseAnchor;
 	}
 
 	alive = 0;
@@ -129,27 +128,25 @@ void Emitter::Draw(float deltaTime) {
 		if (_particles[i].TTL > 0 && _particles[i].spawn) {
 			if (!_pause) {
 				_particles[i].rect.Location += (_particles[i].velocity * deltaTime);
-				_particles[i].angle += _particles[i].angleVelocity * deltaTime;
+				_particles[i].rect.Angle += _particles[i].angleVelocity * deltaTime;
 				_particles[i].TTL -= deltaTime;
 			}
 
-			// Ensure we draw within bounds
-			Vector2 topLeft = _particles[i].rect.Location - (_particles[i].rect.Dimension/2);
-			if (Clip.Contain(&topLeft, &_particles[i].rect.Dimension)) {
-				if (ParticleImage) {
-					ParticleImage->ZIndex = ZIndex;
-					ParticleImage->DrawRegion.X(_particles[i].rect.X());
-					ParticleImage->DrawRegion.Y(_particles[i].rect.Y());
-					ParticleImage->DrawRegion.W(_particles[i].rect.W());
-					ParticleImage->DrawRegion.H(_particles[i].rect.H());
-					ParticleImage->Draw(_particles[i].RGBA, Image::DRAW_CENTER, _particles[i].angle);
-				}
-				else {
-					_mini->DrawRectangle(_particles[i].rect.X(), _particles[i].rect.Y(),
-										_particles[i].rect.X(), _particles[i].rect.Y(), ZIndex,
-										_particles[i].rect.W(), _particles[i].rect.H(),
-										_particles[i].RGBA, _particles[i].angle);
-				}
+			if (ParticleImage) {
+				ParticleImage->ZIndex = ZIndex;
+				ParticleImage->DrawRegion.X(_particles[i].rect.X());
+				ParticleImage->DrawRegion.Y(_particles[i].rect.Y());
+				ParticleImage->DrawRegion.W(_particles[i].rect.W());
+				ParticleImage->DrawRegion.H(_particles[i].rect.H());
+				ParticleImage->DrawRegion.Angle = _particles[i].rect.Angle;
+				ParticleImage->DrawRegion.UseAnchor = 0;
+				ParticleImage->Draw(_particles[i].RGBA);
+			}
+			else {
+				_mini->DrawRectangle(_particles[i].rect.X(), _particles[i].rect.Y(),
+									_particles[i].rect.X(), _particles[i].rect.Y(), ZIndex,
+									_particles[i].rect.W(), _particles[i].rect.H(),
+									_particles[i].RGBA, _particles[i].rect.Angle);
 			}
 
 			alive++;
@@ -174,6 +171,8 @@ void Emitter::Draw(float deltaTime) {
 		ParticleImage->DrawRegion.Y(iy);
 		ParticleImage->DrawRegion.W(iw);
 		ParticleImage->DrawRegion.H(ih);
+		ParticleImage->DrawRegion.Angle = ia;
+		ParticleImage->DrawRegion.UseAnchor = ua;
 	}
 }
 
@@ -199,14 +198,14 @@ void Emitter::createParticle(Vector2 location, int i) {
 	_particles[i].rect.H(randomRange(RangeDimensionH.X, RangeDimensionH.Y));
 
 
-	t = degToRad(randomRange(RangeVelocityTheta.X, RangeVelocityTheta.Y));
+	t = DEG2RAD(randomRange(RangeVelocityTheta.X, RangeVelocityTheta.Y));
 	c = cos(t);
 	s = sin(t);
 	x = abs(randomRange(RangeVelocity.X, RangeVelocity.Y));
 	y = -x;
 
-	_particles[i].velocity.X = c * x;
-	_particles[i].velocity.Y = s * x;
+
+	_particles[i].velocity.Set(c*x, s*x);
 
 	_particles[i].angleVelocity = randomRange(RangeRotation.X, RangeRotation.Y);
 }
@@ -253,5 +252,3 @@ void Emitter::Stop() {
 float randomRange(float min, float max) {
 	return min + static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(max-min)));
 }
-
-float degToRad(float d) { while(d>180){d-=360;}while(d<-180){d+=360;} return (d*3.14159f)/180.f; }

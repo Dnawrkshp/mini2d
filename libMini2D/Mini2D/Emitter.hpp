@@ -97,7 +97,6 @@ private:
 		Vector2 velocity;
 		float angleVelocity;
 
-		float angle;
 		float TTL;
 		unsigned int RGBA;
 		bool spawn;

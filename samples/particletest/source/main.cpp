@@ -43,7 +43,7 @@ int main(s32 argc, const char* argv[]) {
 	emitter1->MinParticles =		750;										// Minimum number of particles to spawn (will spawn between this and max)
 	emitter1->Revive =				1;											// Revive particles that die part way through emission session
 	emitter1->SkipExplosion =		1;											// Skip sequence from start point to outer reaches (smooths loop)
-	emitter1->Clip =				RectangleF(CENTER/2, CENTER);				// Particles outside this box will not be drawn. Default is (x:0, y:0, w:MAXW, h:MAXH)
+	emitter1->Clip =				RectangleF(CENTER, CENTER);					// Particles outside this box will not be drawn. Default is (x:0, y:0, w:MAXW, h:MAXH)
 
 	emitterBackground = new Image(&mini);
 	emitterBackground->Load((void*)&emitterBackgroundPixel, 1, 1);
@@ -66,7 +66,7 @@ int drawUpdate(float deltaTime, unsigned int frame) {
 	comfortaa->Print((char*)"Press CIRCLE to stop the emission", PRINT_ITEM + (PRINT_INC*2.f), FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_CENTER);
 	comfortaa->Print((char*)"Use the analog stick to direct the emission", PRINT_ITEM + (PRINT_INC * 3.f), FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_CENTER);
 
-	emitterBackground->Draw(0xFFFFFFFF, Image::DRAW_TOPLEFT);
+	emitterBackground->Draw(0xFFFFFFFF);
 	if (emitter1->Status())
 		emitter1->Draw(deltaTime);
 

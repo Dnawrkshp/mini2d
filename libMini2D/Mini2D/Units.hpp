@@ -23,6 +23,11 @@ public:
 	float Magnitude();
 	void Normalize();
 
+	// Set
+	void SetX(float x);
+	void SetY(float y);
+	void Set(float x, float y);
+
 	// Comparison Operators
 	bool operator==(const Vector2& s) const;
 	bool operator!=(const Vector2& s) const;
@@ -52,14 +57,17 @@ public:
 class RectangleF {
 public:
 	// Variables
-	Vector2 Location;
-	Vector2 Dimension;
+	Vector2 Location;						// Center of rectangle
+	Vector2 Dimension;						// Size of rectangle
+	Vector2 Anchor;							// Point to rotate around
+	float Angle;							// Angle of rotation (degrees)
+	bool UseAnchor;							// Whether or not to use anchor point in rotation calculation
 
 	// Constructors
 	RectangleF();
 	RectangleF(float x, float y, float w, float h);
-	RectangleF(Vector2 point, Vector2 dimension);
-	RectangleF(Vector2 point, float w, float h);
+	RectangleF(Vector2 center, Vector2 dimension);
+	RectangleF(Vector2 center, float w, float h);
 	RectangleF(RectangleF * rectangle);
 	virtual ~RectangleF();
 
@@ -68,6 +76,8 @@ public:
 	float Y();
 	float W();
 	float H();
+
+	Vector2 *GetRotatedCenter();
 
 	// Set X,Y,W,H
 	void X(float x);
@@ -78,10 +88,8 @@ public:
 
 	// Determines if the rectangles intersect
 	bool Intersect(RectangleF * rectangle);
-	bool Intersect(Vector2 * location, Vector2 * dimension);
 	// Determines if this rectangle contains the passed rectangle
 	bool Contain(RectangleF * rectangle);
-	bool Contain(Vector2 * location, Vector2 * dimension);
 
 	// Compound Operators
 	RectangleF& operator=(const RectangleF& r);
@@ -90,7 +98,21 @@ public:
 	bool operator==(const RectangleF& r) const;
 	bool operator!=(const RectangleF& r) const;
 private:
+	Vector2 * _rCenter;						// Center of rotated rectangle
+
+	float _lastX;							// X value from last Update()
+	float _lastY;							// Y value from last Update()
+	float _lastW;							// Width from last Update()
+	float _lastH;							// Height from last Update()
+	float _lastA;							// Angle from last Update()
+	float _lastAX;							// Anchor X value from last Update()
+	float _lastAY;							// Anchor Y value from last Update()
+
+	// Load
 	void Init(float x, float y, float w, float h);
+
+	// Calculate Center
+	void Update();
 };
 
 #endif /* UNITS_HPP_ */
