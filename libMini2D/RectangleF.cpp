@@ -165,6 +165,7 @@ bool RectangleF::Intersect(RectangleF * rectangle, Vector2 * normal) {
 		}
 		normal->X /= (float)contains;
 		normal->Y /= (float)contains;
+		normal->Normalize();
 	}
 	else
 		contains = CheckCollision(rectangle, NULL);
