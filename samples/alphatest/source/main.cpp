@@ -34,7 +34,7 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	img1->Draw(doSaturate ? 0xFFFFFFFF : 0xFFFFFFC0, Image::DRAW_CENTER, 0, Image::DRAW_ROTATE_TOPCENTER);
+	img1->Draw(doSaturate ? 0xFFFFFFFF : 0xFFFFFFC0);
 	return doExit;
 }
 
