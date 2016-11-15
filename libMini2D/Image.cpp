@@ -151,6 +151,7 @@ void Image::toRSX(void * buffer) {
 	_width = img.width;
 	_height = img.height;
 }
+
 //---------------------------------------------------------------------------
 // Draw Functions
 //---------------------------------------------------------------------------
@@ -168,5 +169,5 @@ void Image::Draw(unsigned int rgba) {
 
 	float ax = nx, ay = ny;
 	
-	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, DrawRegion.RectangleAngle, TINY3D_TEX_FORMAT_A8R8G8B8);
+	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, -DrawRegion.RectangleAngle, TINY3D_TEX_FORMAT_A8R8G8B8);
 }

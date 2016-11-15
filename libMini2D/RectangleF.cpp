@@ -63,6 +63,8 @@ void RectangleF::Init(float x, float y, float w, float h) {
 }
 
 void RectangleF::Update() {
+	float c,s,x,y;
+
 	if (_lastX == Location.X && _lastY == Location.Y &&
 		_lastAX == Anchor.X && _lastAY == Anchor.Y &&
 		_lastA == AnchorAngle && _lastUA == UseAnchor)
@@ -77,14 +79,13 @@ void RectangleF::Update() {
 
 	_rCenter->Set(Location.X, Location.Y);
 	if (AnchorAngle && UseAnchor) {
-		float c = cos(DEG2RAD(AnchorAngle));
-		float s = sin(DEG2RAD(AnchorAngle));
+		c = cos(DEG2RAD(-AnchorAngle));
+		s = sin(DEG2RAD(-AnchorAngle));
+		x = _rCenter->X-Anchor.X;
+		y = _rCenter->Y-Anchor.Y;
 
-		_rCenter->X-=Anchor.X;
-		_rCenter->Y-=Anchor.Y;
-
-		_rCenter->X = c*_rCenter->X + s*_rCenter->Y + Anchor.X;
-		_rCenter->Y = c*_rCenter->Y - s*_rCenter->X + Anchor.Y;
+		_rCenter->X = (c*x + s*y) + Anchor.X;
+		_rCenter->Y = (c*y - s*x) + Anchor.Y;
 	}
 }
 
@@ -186,10 +187,10 @@ int RectangleF::CheckCollision(RectangleF * rectangle, Vector2 * slopes[]) {
 	Update();
 	center = rectangle->GetRotatedCenter();
 
-	cA = cos(DEG2RAD(RectangleAngle));
-	sA = sin(DEG2RAD(RectangleAngle));
-	cB = cos(DEG2RAD(rectangle->RectangleAngle));
-	sB = sin(DEG2RAD(rectangle->RectangleAngle));
+	cA = cos(DEG2RAD(-RectangleAngle));
+	sA = sin(DEG2RAD(-RectangleAngle));
+	cB = cos(DEG2RAD(-rectangle->RectangleAngle));
+	sB = sin(DEG2RAD(-rectangle->RectangleAngle));
 
 	rect1 = new Vector2*[4];
 	rect2 = new Vector2*[4];
