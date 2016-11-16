@@ -73,6 +73,7 @@ SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.S)))
 PNGFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.png)))
 JPGFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.jpg)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.bin)))
+TTFFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.ttf)))
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
@@ -86,6 +87,7 @@ endif
 export OFILES	:=	$(addsuffix .o,$(PNGFILES)) \
 					$(addsuffix .o,$(JPGFILES)) \
 					$(addsuffix .o,$(BINFILES)) \
+					$(addsuffix .o,$(TTFFILES)) \
 					$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) \
 					$(sFILES:.s=.o) $(SFILES:.S=.o)
 	
@@ -153,6 +155,11 @@ $(OUTPUT).elf:	$(OFILES)
 	@$(bin2o)
 #---------------------------------------------------------------------------------
 %.png.o	:	%.png
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@$(bin2o)
+#---------------------------------------------------------------------------------
+%.ttf.o	:	%.ttf
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	@$(bin2o)

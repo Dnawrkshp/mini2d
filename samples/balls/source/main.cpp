@@ -8,12 +8,15 @@
 
 #include <Mini2D/Mini2D.hpp>
 #include <Mini2D/Image.hpp>
+#include <Mini2D/Font.hpp>
 
 #include "Ball.hpp"
 
 #include "paper_jpg.h"
 #include "ball_png.h"
 #include "cannon_png.h"
+
+#include "OpenSans_Regular_ttf.h"
 
 int drawUpdate(float deltaTime, unsigned int frame);
 void padUpdate(int changed, int port, padData pData);
@@ -29,37 +32,48 @@ int count = 0;
 Image *paper;
 Image *ball;
 Image *cannon;
+Font *openSansRegular;
 
 // The cannon image isn't rendered upright so we have to offset the analog stick's angle by the cannon's starting angle
 // This is an estimation that looks good enough rendered
 const float CANNON_ANGLE_OFFSET = 35.f;
 float CannonAngle = 0;
 
-const unsigned int BALL_RGBA = 0xFF00FFFF;
+const unsigned int BALL_RGBA = 0xFFFFFFFF;
 const float BALL_MINSPEED = 50;
 
+const float SLIDER_BALLSPEED_MAX = 2000;
+const float SLIDER_BALLSPEED_MIN = 500;
 float BallSpeed = 1000;
+
+Vector2 FONT_MEDIUM(0.04*mini.MAXW,0.04*mini.MAXH);
 
 Vector2 SIZE_CANNON(0.1*mini.MAXW,0.1*mini.MAXW);
 Vector2 SIZE_BALL(0.025*mini.MAXW,0.025*mini.MAXW);
-Vector2 SIZE_FULL(mini.MAXW,mini.MAXH);
+Vector2 SIZE_PAPER(mini.MAXW,mini.MAXH*0.8);
 
 Vector2 CENTER(0.5*mini.MAXW,0.5*mini.MAXH);
 Vector2 BALL_START(CENTER.X+SIZE_CANNON.X/2,CENTER.Y-SIZE_CANNON.Y/2);
 
+Vector2 PRINT_FPS(0.1*mini.MAXW, 0.05*mini.MAXH);
+Vector2 PRINT_COUNT(0.9*mini.MAXW, 0.05*mini.MAXH);
+Vector2 SLIDER_POWER(CENTER.X, 0.95*mini.MAXH);
 
 std::vector<Ball*> balls;
 
 int main(s32 argc, const char* argv[]) {
+	// Load background paper
 	paper = new Image(&mini);
 	paper->Load((void*)paper_jpg, paper_jpg_size, Image::IMAGE_TYPE_JPG);
 	paper->DrawRegion.Location = CENTER;
-	paper->DrawRegion.Dimension = SIZE_FULL;
+	paper->DrawRegion.Dimension = SIZE_PAPER;
 
+	// Load ball
 	ball = new Image(&mini);
 	ball->Load((void*)ball_png, ball_png_size, Image::IMAGE_TYPE_PNG);
 	ball->DrawRegion.Dimension = SIZE_BALL;
 
+	// Load cannon
 	cannon = new Image(&mini);
 	cannon->Load((void*)cannon_png, cannon_png_size, Image::IMAGE_TYPE_PNG);
 	cannon->DrawRegion.Location = CENTER;
@@ -69,8 +83,12 @@ int main(s32 argc, const char* argv[]) {
 	cannon->DrawRegion.Anchor = CENTER + Vector2(-SIZE_CANNON.X/4, SIZE_CANNON.Y/4);
 	cannon->DrawRegion.UseAnchor = 1;
 
+	// Load Open Sans Regular font
+	openSansRegular = new Font(&mini);
+	openSansRegular->Load((void*)OpenSans_Regular_ttf, OpenSans_Regular_ttf_size);
+
 	mini.SetAnalogDeadzone(15);
-	mini.SetClearColor(0x23B2D7FF);
+	mini.SetClearColor(0xFF000000);
 	mini.SetAlphaState(1);
 	mini.BeginDrawLoop();
 
@@ -78,6 +96,8 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
+	char buffer[11];
+
 	paper->Draw(0xFFFFFFFF);
 	cannon->Draw(0xFFFFFFFF);
 
@@ -93,6 +113,22 @@ int drawUpdate(float deltaTime, unsigned int frame) {
 
     	count++;
  	}
+
+ 	// Print FPS
+	sprintf((char*)buffer, "FPS: %.2f", 1/deltaTime);
+	openSansRegular->Print((char*)buffer, PRINT_FPS, FONT_MEDIUM, 0xFFFFFFFF, Font::PRINT_ALIGN_CENTERLEFT);
+
+	// Print number of drawn balls
+	sprintf((char*)buffer, "Balls: %d", count);
+	openSansRegular->Print((char*)buffer, PRINT_COUNT, FONT_MEDIUM, 0xFFFFFFFF, Font::PRINT_ALIGN_CENTERRIGHT);
+
+	// Draw power scale bar
+	float scaleW = BallSpeed/SLIDER_BALLSPEED_MAX;
+	mini.DrawRectangle(SLIDER_POWER.X,SLIDER_POWER.Y,SLIDER_POWER.X,SLIDER_POWER.Y,0,scaleW*mini.MAXW,0.1*mini.MAXH,0xC00000FF,0);
+
+	// Print power %
+	sprintf((char*)buffer, "Power: %.0f%%", scaleW*100);
+	openSansRegular->Print((char*)buffer, SLIDER_POWER, FONT_MEDIUM, 0xFFFFFFFF, Font::PRINT_ALIGN_CENTER);
 
 	return doExit;
 }
@@ -119,6 +155,17 @@ void padUpdate(int changed, int port, padData pData) {
 		cannon->DrawRegion.AnchorAngle = CannonAngle;
 	}
 
+	// Adjust power slider bar
+	x = 0x80 - pData.ANA_R_H;
+	if (x <= dead && x >= -dead)
+		x = 0;
+
+	BallSpeed += x;
+	if (BallSpeed > SLIDER_BALLSPEED_MAX)
+		BallSpeed = SLIDER_BALLSPEED_MAX;
+	else if (BallSpeed < SLIDER_BALLSPEED_MIN)
+		BallSpeed = SLIDER_BALLSPEED_MIN;
+
 	// If CROSS is pressed and we haven't hit the max number of balls
 	if (pData.BTN_CROSS && changed & Mini2D::BTN_CHANGED_CROSS && count < 50) {
 		Ball * newBall = new Ball(&mini, ball, BallCollisionCheck);										// Create new ball
@@ -140,7 +187,6 @@ void exit() {
 bool BallCollisionCheck(Ball * ball, Vector2 * normal) {
 	bool ballCollide = 0;
 	int points = 0;
-	float magnitude;
 
 	// Check if the ball goes out of bounds
 	if (paper->DrawRegion.Intersect(&ball->DrawRegion, normal, &points))
