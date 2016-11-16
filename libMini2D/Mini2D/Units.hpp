@@ -8,6 +8,8 @@
 #ifndef UNITS_HPP_
 #define UNITS_HPP_
 
+#include <stdlib.h>							// NULL
+
 class Vector2 {
 public:
 	// Variables
