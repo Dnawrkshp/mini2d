@@ -28,6 +28,11 @@ const Vector2 PRINT_ITEM1(PRINT_ITEM0.X,  0.50*mini.MAXH);
 const Vector2 PRINT_ITEM2(PRINT_ITEM0.X,  0.55*mini.MAXH);
 const Vector2 PRINT_ITEM3(PRINT_ITEM0.X,  0.60*mini.MAXH);
 
+std::wstring TEXT_MESSAGE = 	L"Press Triangle to open Message Dialog";
+std::wstring TEXT_ERROR =		L"Press Square to open Error Dialog";
+std::wstring TEXT_SINGLE =		L"Press Circle to open Single Progress Dialog";
+std::wstring TEXT_DOUBLE =		L"Press Cross to open Double Progress Dialog";
+
 int main(s32 argc, const char* argv[]) {
 	doProgress[0] = -1.f;
 	doProgress[1] = -1.f;
@@ -46,10 +51,10 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	font1->Print((char*)"Press Triangle to open Message Dialog", PRINT_ITEM0, FONT_MEDIUM);
-	font1->Print((char*)"Press Square to open Error Dialog", PRINT_ITEM1, FONT_MEDIUM);
-	font1->Print((char*)"Press Circle to open Single Progress Dialog", PRINT_ITEM2, FONT_MEDIUM);
-	font1->Print((char*)"Press Cross to open Double Progress Dialog", PRINT_ITEM3, FONT_MEDIUM);
+	font1->PrintLine(&TEXT_MESSAGE, NULL, PRINT_ITEM0, FONT_MEDIUM);
+	font1->PrintLine(&TEXT_ERROR, NULL, PRINT_ITEM1, FONT_MEDIUM);
+	font1->PrintLine(&TEXT_SINGLE, NULL, PRINT_ITEM2, FONT_MEDIUM);
+	font1->PrintLine(&TEXT_DOUBLE, NULL, PRINT_ITEM3, FONT_MEDIUM);
 
 	switch (doDialog) {
 		case 0:

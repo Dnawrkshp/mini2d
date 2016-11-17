@@ -21,6 +21,10 @@ const Vector2 PRINT_TOPLEFT(0,0);
 const Vector2 PRINT_CENTER(0.5*mini.MAXW, 0.5*mini.MAXH);
 const Vector2 PRINT_BOTTOMRIGHT(mini.MAXW, mini.MAXH);
 
+std::wstring TEXT_LEFT = 	L"Left align.";
+std::wstring TEXT_RIGHT = 	L"Right align.";
+std::wstring TEXT_CENTER = 	L"Center.";
+
 int main(s32 argc, const char* argv[]) {
 	font1 = new Font(&mini);
 	if (font1->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size))
@@ -35,9 +39,14 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	font1->Print((char*)"Left align.", PRINT_TOPLEFT, FONT_SMALL);	
-	font1->Print((char*)"Right align.", PRINT_BOTTOMRIGHT, FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_BOTTOMRIGHT);	
-	font1->Print((char*)"Center.", PRINT_CENTER, FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_CENTER);
+	font1->TextAlign = Font::PRINT_ALIGN_TOPLEFT;
+	font1->PrintLine(&TEXT_LEFT, NULL, PRINT_TOPLEFT, FONT_SMALL);
+
+	font1->TextAlign = Font::PRINT_ALIGN_BOTTOMRIGHT;
+	font1->PrintLine(&TEXT_RIGHT, NULL, PRINT_BOTTOMRIGHT, FONT_SMALL);
+
+	font1->TextAlign = Font::PRINT_ALIGN_CENTER;
+	font1->PrintLine(&TEXT_CENTER, NULL, PRINT_CENTER, FONT_SMALL);
 	
 	return doExit;
 }

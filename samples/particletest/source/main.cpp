@@ -28,6 +28,11 @@ const Vector2 FONT_SMALL(0.03*mini.MAXW,0.03*mini.MAXH);
 const Vector2 PRINT_ITEM(CENTER.X,0.07*mini.MAXH);
 Vector2 PRINT_INC(0,0.04*mini.MAXH);
 
+std::wstring TEXT_START = 		L"Press CROSS to start the emission";
+std::wstring TEXT_PAUSERESUME = L"Press TRIANGLE to pause/resume the emission";
+std::wstring TEXT_STOP =		L"Press CIRCLE to stop the emission";
+std::wstring TEXT_DIRECT =		L"Use the analog stick to direct the emission";
+
 int main(s32 argc, const char* argv[]) {
 	emitter1 = new Emitter(&mini, 1000);										// Initialize new emitter with 1000 max particles
 	emitter1->RangeDimensionW = 	Vector2(1,4);								// Range for width (default is 10-50)
@@ -51,6 +56,7 @@ int main(s32 argc, const char* argv[]) {
 
 	comfortaa = new Font(&mini);
 	comfortaa->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size);
+	comfortaa->TextAlign = Font::PRINT_ALIGN_CENTER;
 
 	mini.SetAnalogDeadzone(15);
 	mini.SetClearColor(0xFFFFFFFF);
@@ -61,10 +67,10 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	comfortaa->Print((char*)"Press CROSS to start the emission", PRINT_ITEM, FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_CENTER);
-	comfortaa->Print((char*)"Press TRIANGLE to pause/resume the emission", PRINT_ITEM + PRINT_INC, FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_CENTER);
-	comfortaa->Print((char*)"Press CIRCLE to stop the emission", PRINT_ITEM + (PRINT_INC*2.f), FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_CENTER);
-	comfortaa->Print((char*)"Use the analog stick to direct the emission", PRINT_ITEM + (PRINT_INC * 3.f), FONT_SMALL, 0x000000FF, Font::PRINT_ALIGN_CENTER);
+	comfortaa->PrintLine(&TEXT_START, NULL, PRINT_ITEM, FONT_SMALL);
+	comfortaa->PrintLine(&TEXT_PAUSERESUME, NULL, PRINT_ITEM + PRINT_INC, FONT_SMALL);
+	comfortaa->PrintLine(&TEXT_STOP, NULL, PRINT_ITEM + (PRINT_INC*2.f), FONT_SMALL);
+	comfortaa->PrintLine(&TEXT_DIRECT, NULL, PRINT_ITEM + (PRINT_INC * 3.f), FONT_SMALL);
 
 	emitterBackground->Draw(0xFFFFFFFF);
 	if (emitter1->Status())

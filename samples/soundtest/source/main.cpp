@@ -27,9 +27,14 @@ const Vector2 FONT_MEDIUM(0.04*mini.MAXW, 0.04*mini.MAXH);
 const Vector2 PRINT_ITEM0(0.5*mini.MAXW, 0.5*mini.MAXH);
 const Vector2 PRINT_ITEM1(PRINT_ITEM0.X, 0.55*mini.MAXH);
 
+std::wstring TEXT_PAUSEAUDIO = 			L"Press Triangle to pause audio.";
+std::wstring TEXT_RESUMEAUDIO = 		L"Press Triangle to resume audio.";
+std::wstring TEXT_STARTAUDIO = 			L"Press Triangle to start infinite audio.";
+std::wstring TEXT_SNARE =				L"Press Square for snare.";
 
 int main(s32 argc, const char* argv[]) {
 	font1 = new Font(&mini);
+	font1->TextAlign = Font::PRINT_ALIGN_CENTER;
 	if (font1->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size))
 		printf("error loading font\n");
 
@@ -50,14 +55,21 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	if (infiniteVoice >= 0 && status == Sound::VOICE_RUNNING)
-		font1->Print((char*)"Press Triangle to pause audio.", PRINT_ITEM0, FONT_MEDIUM, 0x800000FF, Font::PRINT_ALIGN_CENTER);
-	else if (infiniteVoice < 0)
-		font1->Print((char*)"Press Triangle to start infinite audio.", PRINT_ITEM0, FONT_MEDIUM, 0x000080FF, Font::PRINT_ALIGN_CENTER);
-	else
-		font1->Print((char*)"Press Triangle to resume audio.", PRINT_ITEM0, FONT_MEDIUM, 0x000080FF, Font::PRINT_ALIGN_CENTER);
+	if (infiniteVoice >= 0 && status == Sound::VOICE_RUNNING) {
+		font1->ForeColor = 0x800000FF;
+		font1->PrintLine(&TEXT_PAUSEAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
+	}
+	else if (infiniteVoice < 0) {
+		font1->ForeColor = 0x000080FF;
+		font1->PrintLine(&TEXT_STARTAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
+	}
+	else {
+		font1->ForeColor = 0x000080FF;
+		font1->PrintLine(&TEXT_RESUMEAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
+	}
 
-	font1->Print((char*)"Press Square for snare.", PRINT_ITEM1, FONT_MEDIUM, 0x000000FF, Font::PRINT_ALIGN_CENTER);	
+	font1->ForeColor = 0x000000FF;
+	font1->PrintLine(&TEXT_SNARE, NULL, PRINT_ITEM1, FONT_MEDIUM);	
 
 	return doExit;
 }

@@ -5,6 +5,8 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <string>
+#include <sstream>
 
 #include <Mini2D/Mini2D.hpp>
 #include <Mini2D/Image.hpp>
@@ -36,28 +38,28 @@ Font *openSansRegular;
 
 // The cannon image isn't rendered upright so we have to offset the analog stick's angle by the cannon's starting angle
 // This is an estimation that looks good enough rendered
-const float CANNON_ANGLE_OFFSET = 35.f;
-float CannonAngle = 0;
+const float CANNON_ANGLE_OFFSET = 	35.f;
+float CannonAngle = 				0;
 
-const unsigned int BALL_RGBA = 0xFFFFFFFF;
-const float BALL_MINSPEED = 50;
+const unsigned int BALL_RGBA = 		0xFFFFFFFF;
+const float BALL_MINSPEED = 		50;
 
-const float SLIDER_BALLSPEED_MAX = 2000;
-const float SLIDER_BALLSPEED_MIN = 500;
-float BallSpeed = 1000;
+const float SLIDER_BALLSPEED_MAX = 	2000;
+const float SLIDER_BALLSPEED_MIN = 	500;
+float BallSpeed = 					1000;
 
-Vector2 FONT_MEDIUM(0.04*mini.MAXW,0.04*mini.MAXH);
+Vector2 FONT_MEDIUM(				0.04*mini.MAXW,					0.04*mini.MAXH);
 
-Vector2 SIZE_CANNON(0.1*mini.MAXW,0.1*mini.MAXW);
-Vector2 SIZE_BALL(0.025*mini.MAXW,0.025*mini.MAXW);
-Vector2 SIZE_PAPER(mini.MAXW,mini.MAXH*0.8);
+Vector2 SIZE_CANNON(				0.1*mini.MAXW,					0.1*mini.MAXW);
+Vector2 SIZE_BALL(					0.025*mini.MAXW,				0.025*mini.MAXW);
+Vector2 SIZE_PAPER(					mini.MAXW,						mini.MAXH*0.8);
 
-Vector2 CENTER(0.5*mini.MAXW,0.5*mini.MAXH);
-Vector2 BALL_START(CENTER.X+SIZE_CANNON.X/2,CENTER.Y-SIZE_CANNON.Y/2);
+Vector2 CENTER(						0.5*mini.MAXW,					0.5*mini.MAXH);
+Vector2 BALL_START(					CENTER.X+SIZE_CANNON.X/2,		CENTER.Y-SIZE_CANNON.Y/2);
 
-Vector2 PRINT_FPS(0.1*mini.MAXW, 0.05*mini.MAXH);
-Vector2 PRINT_COUNT(0.9*mini.MAXW, 0.05*mini.MAXH);
-Vector2 SLIDER_POWER(CENTER.X, 0.95*mini.MAXH);
+Vector2 PRINT_FPS(					0.1*mini.MAXW,					0.05*mini.MAXH);
+Vector2 PRINT_COUNT(				0.9*mini.MAXW,					0.05*mini.MAXH);
+Vector2 SLIDER_POWER(				CENTER.X,						0.95*mini.MAXH);
 
 std::vector<Ball*> balls;
 
@@ -86,6 +88,7 @@ int main(s32 argc, const char* argv[]) {
 	// Load Open Sans Regular font
 	openSansRegular = new Font(&mini);
 	openSansRegular->Load((void*)OpenSans_Regular_ttf, OpenSans_Regular_ttf_size);
+	openSansRegular->ForeColor = 0xFFFFFFFF;
 
 	mini.SetAnalogDeadzone(15);
 	mini.SetClearColor(0xFF000000);
@@ -96,8 +99,6 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	char buffer[11];
-
 	paper->Draw(0xFFFFFFFF);
 	cannon->Draw(0xFFFFFFFF);
 
@@ -115,20 +116,20 @@ int drawUpdate(float deltaTime, unsigned int frame) {
  	}
 
  	// Print FPS
-	sprintf((char*)buffer, "FPS: %.2f", 1/deltaTime);
-	openSansRegular->Print((char*)buffer, PRINT_FPS, FONT_MEDIUM, 0xFFFFFFFF, Font::PRINT_ALIGN_CENTERLEFT);
+ 	openSansRegular->TextAlign = Font::PRINT_ALIGN_CENTERLEFT;
+	openSansRegular->PrintFormat(PRINT_FPS, FONT_MEDIUM, 0, 0, 11, L"FPS: %.2f", 1/deltaTime);
 
 	// Print number of drawn balls
-	sprintf((char*)buffer, "Balls: %d", count);
-	openSansRegular->Print((char*)buffer, PRINT_COUNT, FONT_MEDIUM, 0xFFFFFFFF, Font::PRINT_ALIGN_CENTERRIGHT);
+	openSansRegular->TextAlign = Font::PRINT_ALIGN_CENTERRIGHT;
+	openSansRegular->PrintFormat(PRINT_COUNT, FONT_MEDIUM, 0, 0, 10, L"Balls: %d", count);
 
 	// Draw power scale bar
 	float scaleW = BallSpeed/SLIDER_BALLSPEED_MAX;
 	mini.DrawRectangle(SLIDER_POWER.X,SLIDER_POWER.Y,SLIDER_POWER.X,SLIDER_POWER.Y,0,scaleW*mini.MAXW,0.1*mini.MAXH,0xC00000FF,0);
 
 	// Print power %
-	sprintf((char*)buffer, "Power: %.0f%%", scaleW*100);
-	openSansRegular->Print((char*)buffer, SLIDER_POWER, FONT_MEDIUM, 0xFFFFFFFF, Font::PRINT_ALIGN_CENTER);
+	openSansRegular->TextAlign = Font::PRINT_ALIGN_CENTER;
+	openSansRegular->PrintFormat(SLIDER_POWER, FONT_MEDIUM, 0, 0, 12, L"Power: %.0f%%", scaleW * 100);
 
 	return doExit;
 }
@@ -221,4 +222,3 @@ bool BallCollisionCheck(Ball * ball, Vector2 * normal) {
 
 	return ballCollide;
 }
-

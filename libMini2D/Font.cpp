@@ -24,6 +24,8 @@ Font::Font(Mini2D * mini) :
 	Container.Y(mini->MAXH/2);
 	Container.W(mini->MAXW);
 	Container.H(mini->MAXH);
+
+	ForeColor = 0x000000FF;
 }
 
 Font::~Font() {
@@ -34,16 +36,44 @@ Font::~Font() {
 //---------------------------------------------------------------------------
 // Print Functions
 //---------------------------------------------------------------------------
-void Font::PrintLines(std::wstring * string, int lineStart, Vector2 location, Vector2 size, bool useContainer, bool wordWrap, unsigned int rgba, FontPrintAlign textAlign, float layer) {
+int Font::PrintFormat(Vector2 location, Vector2 size, bool useContainer, bool wordWrap, std::size_t len, const wchar_t * format, ...) {
+	va_list args;
+	std::wstring str;
+	wchar_t * buffer;
+	int result = 0;
+
+	if (!_mini || !format || !ForeColor || !len)
+		return -1;
+
+	// Allocate room
+	buffer = new wchar_t[len+1]();
+
+    va_start(args, format);
+    result = vswprintf(buffer, len, format, args);
+    va_end(args);
+
+    if (result <= 0) {
+    	delete [] buffer;
+    	return result;
+    }
+
+    str.assign(buffer);
+    delete [] buffer;
+
+    PrintLines(&str, 0, location, size, useContainer, wordWrap);
+    return result;
+}
+
+void Font::PrintLines(std::wstring * string, int lineStart, Vector2 location, Vector2 size, bool useContainer, bool wordWrap) {
 	int i,len,line,last=-1;
 	bool draw = lineStart <= 0,wrap=0;
-	if (!_mini || !string || !rgba)
+	if (!_mini || !string || !ForeColor)
 		return;
 
 	len = string->length();
 	line = 0;
 	for (i=0;i<len;) {
-		wrap = printLine(string, &i, location, size, useContainer, rgba, textAlign, layer, draw && (!wrap || wrap==wordWrap)) == 1;
+		wrap = printLine(string, &i, location, size, useContainer, draw && (!wrap || wrap==wordWrap)) == 1;
 
 		if (!wrap || wrap==wordWrap)
 			location.Y += size.Y;
@@ -60,16 +90,16 @@ void Font::PrintLines(std::wstring * string, int lineStart, Vector2 location, Ve
 	}
 }
 
-void Font::PrintLine(std::wstring * string, int * startIndex, Vector2 location, Vector2 size, bool useContainer, unsigned int rgba, FontPrintAlign align, float layer) {
-	printLine(string, startIndex, location, size, useContainer, rgba, align, layer, 1);
+void Font::PrintLine(std::wstring * string, int * startIndex, Vector2 location, Vector2 size, bool useContainer) {
+	printLine(string, startIndex, location, size, useContainer, 1);
 }
 
-int Font::printLine(std::wstring * string, int * startIndex, Vector2 location, Vector2 size, bool useContainer, unsigned int rgba, FontPrintAlign align, float layer, bool draw) {
+int Font::printLine(std::wstring * string, int * startIndex, Vector2 location, Vector2 size, bool useContainer, bool draw) {
 	int j,len;
 	float cRight=0,cLeft=0,cTop=0,cBottom=0,w;
 	wchar_t chr;
 	bool wrap = 0;
-	if (!_mini || !string || !rgba)
+	if (!_mini || !string || !ForeColor)
 		return -1;
 
 	// Calculate left and right bounds
@@ -87,7 +117,7 @@ int Font::printLine(std::wstring * string, int * startIndex, Vector2 location, V
 	// If useContainer: only align if the string width is less than the container width
 	w = GetWidth(string,size.X,j);
 	if (w < (useContainer?Container.Dimension.X:w+1)) {
-		switch (align) {
+		switch (TextAlign) {
 			case PRINT_ALIGN_TOPCENTER:
 			case PRINT_ALIGN_CENTER:
 			case PRINT_ALIGN_BOTTOMCENTER:
@@ -106,7 +136,7 @@ int Font::printLine(std::wstring * string, int * startIndex, Vector2 location, V
 		location.X = cLeft;
 
 	// Align Y
-	switch (align) {
+	switch (TextAlign) {
 		case PRINT_ALIGN_CENTERRIGHT:
 		case PRINT_ALIGN_CENTER:
 		case PRINT_ALIGN_CENTERLEFT:
@@ -141,7 +171,7 @@ int Font::printLine(std::wstring * string, int * startIndex, Vector2 location, V
 				if (!draw || (useContainer && (location.X < cLeft || location.Y+size.Y > cBottom || location.Y < cTop)))
 					location.X += size.X * ((float)it->fw / (float)(it->w+1));
 				else
-					location.X += printChar(&(*it), location.X, location.Y, layer, size.X, size.Y, rgba);
+					location.X += printChar(&(*it), location.X, location.Y, size.X, size.Y);
 			}
 		}
 	}
@@ -152,7 +182,7 @@ int Font::printLine(std::wstring * string, int * startIndex, Vector2 location, V
 	return wrap;
 }
 
-float Font::printChar(FontChar * fontChar, float x, float y, float z, float w, float h, unsigned int rgba) {
+float Font::printChar(FontChar * fontChar, float x, float y, float w, float h) {
 	float dx2 = w * ((float)fontChar->fw / (float)(fontChar->w+1));
 	if (!_mini || !fontChar)
 		return 0;
@@ -164,20 +194,20 @@ float Font::printChar(FontChar * fontChar, float x, float y, float z, float w, f
 
 	// Draw background
 	if (BackColor)
-		_mini->DrawRectangle(x, y, x, y, z, dx2, h, BackColor, 0);
+		_mini->DrawRectangle(x, y, x, y, ZIndex, dx2, h, BackColor, 0);
 
 	y +=  (float)fontChar->fy * (h / (float)(fontChar->h+1));
 
 	_mini->DrawTexture(fontChar->rsx,
 					fontChar->p,
 					fontChar->fw,
-					fontChar->h,
+					fontChar->h+1,
 					x,
 					y,
-					z,
+					ZIndex,
 					dx2,
 					h,
-					rgba,
+					ForeColor,
 					0,
 					TINY3D_TEX_FORMAT_A4R4G4B4);
 
@@ -319,6 +349,7 @@ u8 * Font::addFontFromTTF(FT_Face face, u8 *texture, short w, short h)
 		fontChar.fw = w;
 		fontChar.w = w-1;
 		fontChar.h = h-1;
+		fontChar.p = w*2;
 		fontChar.fy = 0;
 		fontChar.rsx = 0;
 

@@ -37,6 +37,11 @@ public:
 	} FontPrintAlign;
 
 	unsigned int BackColor;					// RGBA background color of text
+	unsigned int ForeColor;					// RGBA text color
+
+	float ZIndex;							// Z coordinate
+
+	FontPrintAlign TextAlign;				// Text alignment
 
 	RectangleF Container;					// Print container. Text only prints in here (default is full screen)
 
@@ -92,16 +97,8 @@ public:
 	 * 		Width and height of each character
 	 * useContainer:
 	 *		Whether or not to use container to clip printed text
-	 * rgba:
-	 * 		RGBA color
-	 * align:
-	 * 		Text alignment
-	 * layer:
-	 *		Z coordinate
 	 */
-	void PrintLine(std::wstring * string, int * startIndex,
-		Vector2 location, Vector2 size,
-		bool useContainer = 0, unsigned int rgba = 0x000000FF, FontPrintAlign align = PRINT_ALIGN_TOPLEFT, float layer = 0);
+	void PrintLine(std::wstring * string, int * startIndex, Vector2 location, Vector2 size, bool useContainer = 0);
 
 	/*
 	 * PrintLines:
@@ -119,16 +116,32 @@ public:
 	 *		Whether or not to use container to clip printed text
 	 * wordWrap:
 	 *		If useContainer is true. Whether or not to wrap characters drawn outside the container to a new line
-	 * rgba:
-	 * 		RGBA color
-	 * align:
-	 * 		Text alignment
-	 * layer:
-	 *		Z coordinate
 	 */
-	void PrintLines(std::wstring * string, int lineStart, Vector2 location, Vector2 size,
-		bool useContainer = 0, bool wordWrap = 0,
-		unsigned int rgba = 0x000000FF, FontPrintAlign textAlign = PRINT_ALIGN_TOPLEFT, float layer = 0);
+	void PrintLines(std::wstring * string, int lineStart, Vector2 location, Vector2 size, bool useContainer = 0, bool wordWrap = 0);
+
+	/*
+	 * PrintFormat:
+	 *		Prints all the lines in string generated from swprintf()
+	 *
+	 * location:
+	 * 		Where to print text
+	 * size:
+	 * 		Width and height of each character
+	 * useContainer:
+	 *		Whether or not to use container to clip printed text
+	 * wordWrap:
+	 *		If useContainer is true. Whether or not to wrap characters drawn outside the container to a new line
+	 * len:
+	 *		Max number of characters written
+	 * format:
+	 *		Pointer to a null-terminated wide string specifying how to interpret the data
+	 * ...:
+	 *		Arguments
+	 *
+	 * Return:
+	 *		Negative value if failed. Otherwise, number of characters written
+	 */
+	int PrintFormat(Vector2 location, Vector2 size, bool useContainer, bool wordWrap, std::size_t len, const wchar_t * format, ...);
 
 	/*
 	 * GetWidth:
@@ -172,11 +185,11 @@ private:
 	// Load font
 	FontLoadStatus loadFont(char * path, void * buffer, int size, short w, short h);
 	// Draw character to frame
-	float printChar(FontChar * fontChar, float x, float y, float z, float w, float h, unsigned int rgba);
+	float printChar(FontChar * fontChar, float x, float y, float w, float h);
 	// Determine if the character denotes a line break
 	bool isNewline(std::wstring * string, int strLen, int * index);
 	// Prints line
-	int printLine(std::wstring * string, int * startIndex, Vector2 location, Vector2 size, bool useContainer, unsigned int rgba, FontPrintAlign align, float layer, bool draw);
+	int printLine(std::wstring * string, int * startIndex, Vector2 location, Vector2 size, bool useContainer, bool draw);
 	// Convert the glyph into a bitmap and load into the RSX
 	bool ttfToBitmap(FT_Face face, unsigned int chr, u8 * bitmap, u8 *w, short *h, u8 *yCorrection);
 	// Load all glyphs into rsx
