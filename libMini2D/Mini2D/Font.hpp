@@ -88,9 +88,9 @@ public:
 	 *		Print the first line in string from the index held in startIndex
 	 * 
 	 * cString:
-	 *		
+	 *		Buffer containing wide char array to print (if printing std::wstring, make NULL)
 	 * string:
-	 *		Buffer containing line to print
+	 *		Buffer containing std::wstring to print (if printing wchar_t*, make NULL)
 	 * startIndex:
 	 *		Pointer to startIndex. When this function closes this value is set to the index of the next line to print
 	 * location:
@@ -107,9 +107,9 @@ public:
 	 *		Prints all the lines in string from the index lineStart onward
 	 * 
 	 * cString:
-	 *		
+	 *		Buffer containing wide char array to print (if printing std::wstring, make NULL)
 	 * string:
-	 *		Buffer containing lines to print
+	 *		Buffer containing std::wstring to print (if printing wchar_t*, make NULL)
 	 * lineStart:
 	 *		Starting line
 	 * location:
@@ -184,7 +184,7 @@ private:
 		short p;								// Pitch of image
 	} FontChar;
 
-	std::vector<FontChar> CharMap;				// List of characters
+	std::vector<FontChar*> CharMap;				// List of characters
 
 	Mini2D * _mini;
 
@@ -200,6 +200,8 @@ private:
 	bool ttfToBitmap(FT_Face face, unsigned int chr, u8 * bitmap, u8 *w, short *h, u8 *yCorrection);
 	// Load all glyphs into rsx
 	u8 * addFontFromTTF(FT_Face face, u8 *texture, short w, short h);
+	// Unload all FontChars
+	void unloadCharMap();
 };
 
 #endif /* FONT_HPP_ */

@@ -29,8 +29,13 @@ Font::Font(Mini2D * mini) :
 }
 
 Font::~Font() {
-	CharMap.clear();
+	unloadCharMap();
 	_mini = NULL;
+}
+
+void Font::unloadCharMap() {
+	for(std::vector<FontChar*>::iterator it = CharMap.begin(); it != CharMap.end(); it++) { if (*it) {delete *it;} }
+	CharMap.clear();
 }
 
 //---------------------------------------------------------------------------
@@ -97,6 +102,8 @@ int Font::printLine(const wchar_t * cString, std::wstring * string, int * startI
 	float cRight=0,cLeft=0,cTop=0,cBottom=0,w;
 	wchar_t chr;
 	bool wrap = 0;
+	FontChar * fc = NULL;
+
 	if (!_mini || (!string && !cString) || !ForeColor)
 		return -1;
 
@@ -163,13 +170,14 @@ int Font::printLine(const wchar_t * cString, std::wstring * string, int * startI
 		}
 
 		chr = string?string->at(j):cString[j];
-		for(std::vector<FontChar>::iterator it = CharMap.begin(); it != CharMap.end(); it++) {
-			if (it->chr == chr) {
+		for(std::vector<FontChar*>::iterator it = CharMap.begin(); it != CharMap.end(); it++) {
+			fc = *it;
+			if (fc->chr == chr) {
 				// If draw is false or we are drawing before the container, skip
 				if (!draw || (useContainer && (location.X < cLeft || location.Y+size.Y > cBottom || location.Y < cTop)))
-					location.X += size.X * ((float)it->fw / (float)(it->w+1));
+					location.X += size.X * ((float)fc->fw / (float)(fc->w+1));
 				else
-					location.X += printChar(&(*it), location.X, location.Y, size.X, size.Y);
+					location.X += printChar(fc, location.X, location.Y, size.X, size.Y);
 			}
 		}
 	}
@@ -233,10 +241,12 @@ float Font::GetWidth(const wchar_t * cString, std::wstring * string, float w, in
 }
 
 float Font::GetWidth(wchar_t chr, float w) {
+	FontChar * fc = NULL;
 
-	for(std::vector<FontChar>::iterator it = CharMap.begin(); it != CharMap.end(); it++) {
-		if (it->chr == chr) {
-			return w * ((float)it->fw / (float)(it->w+1));
+	for(std::vector<FontChar*>::iterator it = CharMap.begin(); it != CharMap.end(); it++) {
+		fc = *it;
+		if (fc->chr == chr) {
+			return w * ((float)fc->fw / (float)(fc->w+1));
 		}
 	}
 
@@ -328,9 +338,8 @@ u8 * Font::addFontFromTTF(FT_Face face, u8 *texture, short w, short h)
 	FT_UInt index = 0;
 	u8 i;
 	u8 *font;
-	u8 bitmap[257 * 256];
-	FontChar fontChar;
-	
+	u8 * bitmap;
+	FontChar * fontChar = NULL;
 	int bpp = 8;
 	
 	if(h < 8) h = 8;
@@ -338,25 +347,27 @@ u8 * Font::addFontFromTTF(FT_Face face, u8 *texture, short w, short h)
 	if(h > 256) h = 256;
 	if(w > 256) w = 256;
 
-	CharMap.clear();   
+	bitmap = new u8[257 * 256]();
+
+	unloadCharMap(); 
 	
 	chr = FT_Get_First_Char(face, &index);
 	while (index > 0) {
-		fontChar = FontChar();
-		fontChar.chr = chr;
-		fontChar.fw = w;
-		fontChar.w = w-1;
-		fontChar.h = h-1;
-		fontChar.p = w*2;
-		fontChar.fy = 0;
-		fontChar.rsx = 0;
+		fontChar = new FontChar();
+		fontChar->chr = chr;
+		fontChar->fw = w;
+		fontChar->w = w-1;
+		fontChar->h = h-1;
+		fontChar->p = w*2;
+		fontChar->fy = 0;
+		fontChar->rsx = 0;
 
 		font = bitmap;
 		
 		// If the bitmap contains opaque pixels then add to rsx
-		if (ttfToBitmap(face, chr, bitmap, &fontChar.fw, &h,  &fontChar.fy)) {
+		if (ttfToBitmap(face, chr, bitmap, &fontChar->fw, &h,  &fontChar->fy)) {
 			texture = (u8 *) ((((long) texture) + 15) & ~15);
-			fontChar.rsx = tiny3d_TextureOffset(texture);
+			fontChar->rsx = tiny3d_TextureOffset(texture);
 
 			// Convert to A4R4G4B4
 			for(a = 0; a < h; a++) {
@@ -385,6 +396,8 @@ u8 * Font::addFontFromTTF(FT_Face face, u8 *texture, short w, short h)
 	}
 
 	texture = (u8 *) ((((long) texture) + 15) & ~15);
+
+	delete [] bitmap;
 
 	return texture;
 }
