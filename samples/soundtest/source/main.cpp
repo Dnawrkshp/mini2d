@@ -57,19 +57,19 @@ int main(s32 argc, const char* argv[]) {
 int drawUpdate(float deltaTime, unsigned int frame) {
 	if (infiniteVoice >= 0 && status == Sound::VOICE_RUNNING) {
 		font1->ForeColor = 0x800000FF;
-		font1->PrintLine(&TEXT_PAUSEAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
+		font1->PrintLine(NULL, &TEXT_PAUSEAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
 	}
 	else if (infiniteVoice < 0) {
 		font1->ForeColor = 0x000080FF;
-		font1->PrintLine(&TEXT_STARTAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
+		font1->PrintLine(NULL, &TEXT_STARTAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
 	}
 	else {
 		font1->ForeColor = 0x000080FF;
-		font1->PrintLine(&TEXT_RESUMEAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
+		font1->PrintLine(NULL, &TEXT_RESUMEAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
 	}
 
 	font1->ForeColor = 0x000000FF;
-	font1->PrintLine(&TEXT_SNARE, NULL, PRINT_ITEM1, FONT_MEDIUM);	
+	font1->PrintLine(NULL, &TEXT_SNARE, NULL, PRINT_ITEM1, FONT_MEDIUM);	
 
 	return doExit;
 }

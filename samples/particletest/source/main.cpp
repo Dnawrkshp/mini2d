@@ -67,10 +67,10 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	comfortaa->PrintLine(&TEXT_START, NULL, PRINT_ITEM, FONT_SMALL);
-	comfortaa->PrintLine(&TEXT_PAUSERESUME, NULL, PRINT_ITEM + PRINT_INC, FONT_SMALL);
-	comfortaa->PrintLine(&TEXT_STOP, NULL, PRINT_ITEM + (PRINT_INC*2.f), FONT_SMALL);
-	comfortaa->PrintLine(&TEXT_DIRECT, NULL, PRINT_ITEM + (PRINT_INC * 3.f), FONT_SMALL);
+	comfortaa->PrintLine(NULL, &TEXT_START, NULL, PRINT_ITEM, FONT_SMALL);
+	comfortaa->PrintLine(NULL, &TEXT_PAUSERESUME, NULL, PRINT_ITEM + PRINT_INC, FONT_SMALL);
+	comfortaa->PrintLine(NULL, &TEXT_STOP, NULL, PRINT_ITEM + (PRINT_INC*2.f), FONT_SMALL);
+	comfortaa->PrintLine(NULL, &TEXT_DIRECT, NULL, PRINT_ITEM + (PRINT_INC * 3.f), FONT_SMALL);
 
 	emitterBackground->Draw(0xFFFFFFFF);
 	if (emitter1->Status())
