@@ -215,14 +215,29 @@ void exit() {
 	balls.clear();
 
 	// Clean up
+	if (paper) {
+		delete paper;
+		paper = NULL;
 	}
 
+	if (ball) {
+		delete ball;
+		ball = NULL;
 	}
 
+	if (cannon) {
+		delete cannon;
+		cannon = NULL;
 	}
 
+	if (openSansRegular) {
+		delete openSansRegular;
+		openSansRegular = NULL;
 	}
 
+	if (mini) {
+		delete mini;
+		mini = NULL;
 	}
 }
 

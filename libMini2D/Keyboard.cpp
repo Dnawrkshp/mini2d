@@ -36,7 +36,6 @@ Keyboard::Keyboard(Mini2D * mini) : _mini(mini) {
 		printf("ERROR sysMemContainerCreate() in Keyboard::Keyboard()\n");
 		return;
 	}
-	printf("%x\n", container);
 
 	SetDefault();
 
