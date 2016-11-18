@@ -13,32 +13,49 @@ int drawUpdate(float deltaTime, unsigned int frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
-Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+Mini2D * mini = NULL;
+
+Font * OpenSans = NULL;
+Keyboard * kb1 = NULL;
 
 int doExit = 0;
 bool kbWait = 0;
 
-Font * OpenSans;
-Keyboard * kb1;
-
-const Vector2 FONT_SMALL(0.03*mini.MAXW, 0.03*mini.MAXH);
-
-const Vector2 LOC_CONTAINER(0.5*mini.MAXW, 0.5*mini.MAXH);
-const Vector2 SIZE_CONTAINER(0.5*mini.MAXW, 0.25*mini.MAXH);
-const Vector2 LOC_TEXT(LOC_CONTAINER.X-SIZE_CONTAINER.X/2 + 2,LOC_CONTAINER.Y-SIZE_CONTAINER.Y/2);
+// Font sizes
+Vector2 FONT_SMALL;
+// Font locations
+Vector2 LOC_TEXT;
+// Font containers
+Vector2 LOC_CONTAINER;
+Vector2 SIZE_CONTAINER;
 
 std::wstring title = L"Enter something please";
 std::wstring start = L"Press TRIANGLE to open Keyboard";
 
 int main(s32 argc, const char* argv[]) {
-	OpenSans = new Font(&mini);
+
+	// Initialize Mini2D
+	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+
+	// Initialize location and size vectors
+	FONT_SMALL = Vector2(0.03*mini->MAXW, 0.03*mini->MAXH);
+
+	LOC_CONTAINER = Vector2(0.5*mini->MAXW, 0.5*mini->MAXH);
+	SIZE_CONTAINER = Vector2(0.5*mini->MAXW, 0.25*mini->MAXH);
+
+	LOC_TEXT = Vector2(LOC_CONTAINER.X-SIZE_CONTAINER.X/2 + 2,LOC_CONTAINER.Y-SIZE_CONTAINER.Y/2);
+
+	// Load Open Sans font
+	OpenSans = new Font(mini);
 	if (OpenSans->Load((void*)OpenSans_Regular_ttf, OpenSans_Regular_ttf_size, 64, 64))
 		printf("error loading font\n");
 
+	// Set container
 	OpenSans->Container.Location.Set(LOC_CONTAINER);
 	OpenSans->Container.Dimension.Set(SIZE_CONTAINER);
 
-	kb1 = new Keyboard(&mini);
+	// Load keyboard
+	kb1 = new Keyboard(mini);
 	kb1->MaxLength = 128;
 	kb1->Languages = 	Keyboard::PANEL_ALPHABET_FULL_WIDTH |
 						Keyboard::PANEL_ALPHABET |
@@ -61,16 +78,16 @@ int main(s32 argc, const char* argv[]) {
 	kb1->InitialPanel = Keyboard::PANEL_ENGLISH;
 	kb1->Prohibit = 0;
 
-	mini.SetAnalogDeadzone(15);
-	mini.SetClearColor(0xFF000000);
-	mini.SetAlphaState(1);
-	mini.BeginDrawLoop();
+	mini->SetAnalogDeadzone(15);
+	mini->SetClearColor(0xFF000000);
+	mini->SetAlphaState(1);
+	mini->BeginDrawLoop();
 
 	return 0;
 }
 
 int drawUpdate(float deltaTime, unsigned int frame) {
-	mini.DrawRectangle(OpenSans->Container.X(), OpenSans->Container.Y(), OpenSans->Container.X(), OpenSans->Container.Y(), 0, OpenSans->Container.W(), OpenSans->Container.H(), 0xC0C0C0FF, 0);
+	mini->DrawRectangle(OpenSans->Container.X(), OpenSans->Container.Y(), OpenSans->Container.X(), OpenSans->Container.Y(), 0, OpenSans->Container.W(), OpenSans->Container.H(), 0xC0C0C0FF, 0);
 	OpenSans->PrintLines(NULL, &start, 0, LOC_TEXT, FONT_SMALL, 1, 1);
 	
 	if (kbWait && !kb1->Alive()) {
@@ -105,4 +122,19 @@ void padUpdate(int changed, int port, padData pData) {
 
 void exit() {
 	printf("exiting\n");
+
+	if (kb1) {
+		delete kb1;
+		kb1 = NULL;
+	}
+
+	if (OpenSans) {
+		delete OpenSans;
+		OpenSans = NULL;
+	}
+
+	if (mini) {
+		delete mini;
+		mini = NULL;
+	}
 }
