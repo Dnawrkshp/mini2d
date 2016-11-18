@@ -13,20 +13,23 @@ int drawUpdate(float deltaTime, unsigned int frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
-Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+Mini2D * mini = NULL;
+
+Emitter * emitter1 = NULL;
+Font * comfortaa = NULL;
+Image * emitterBackground = NULL;
 
 int doExit = 0;
 unsigned int emitterBackgroundPixel = 0xFF000000;
 
-Emitter * emitter1;
-Font * comfortaa;
-Image * emitterBackground;
+// Center location
+Vector2 CENTER;
 
-Vector2 CENTER(mini.MAXW*0.5, mini.MAXH*0.5);
-
-const Vector2 FONT_SMALL(0.03*mini.MAXW,0.03*mini.MAXH);
-const Vector2 PRINT_ITEM(CENTER.X,0.07*mini.MAXH);
-Vector2 PRINT_INC(0,0.04*mini.MAXH);
+// Font sizes
+Vector2 FONT_SMALL;
+// Font locations
+Vector2 PRINT_ITEM;
+Vector2 PRINT_INC;
 
 std::wstring TEXT_START = 		L"Press CROSS to start the emission";
 std::wstring TEXT_PAUSERESUME = L"Press TRIANGLE to pause/resume the emission";
@@ -34,7 +37,19 @@ std::wstring TEXT_STOP =		L"Press CIRCLE to stop the emission";
 std::wstring TEXT_DIRECT =		L"Use the analog stick to direct the emission";
 
 int main(s32 argc, const char* argv[]) {
-	emitter1 = new Emitter(&mini, 1000);										// Initialize new emitter with 1000 max particles
+	// Load Mini2D
+	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+
+	// Initialize location and size vectors
+	CENTER = Vector2(mini->MAXW*0.5, mini->MAXH*0.5);
+
+	FONT_SMALL = Vector2(0.03*mini->MAXW,0.03*mini->MAXH);
+
+	PRINT_ITEM = Vector2(CENTER.X,0.07*mini->MAXH);
+	PRINT_INC = Vector2(0,0.04*mini->MAXH);
+
+	// Load emitter
+	emitter1 = new Emitter(mini, 1000);											// Initialize new emitter with 1000 max particles
 	emitter1->RangeDimensionW = 	Vector2(1,4);								// Range for width (default is 10-50)
 	emitter1->RangeDimensionH = 	Vector2(1,4);								// Range for height (default is 10-50)
 	emitter1->RangeVelocity = 		Vector2(-1,1) * 100;						// Range for X velocity per second (default is 0 to 10)
@@ -50,18 +65,20 @@ int main(s32 argc, const char* argv[]) {
 	emitter1->SkipExplosion =		1;											// Skip sequence from start point to outer reaches (smooths loop)
 	emitter1->Clip =				RectangleF(CENTER, CENTER);					// Particles outside this box will not be drawn. Default is (x:0, y:0, w:MAXW, h:MAXH)
 
-	emitterBackground = new Image(&mini);
+	// Load background image
+	emitterBackground = new Image(mini);
 	emitterBackground->Load((void*)&emitterBackgroundPixel, 1, 1);
 	emitterBackground->DrawRegion = emitter1->Clip;
 
-	comfortaa = new Font(&mini);
+	// Load comfortaa font
+	comfortaa = new Font(mini);
 	comfortaa->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size);
 	comfortaa->TextAlign = Font::PRINT_ALIGN_CENTER;
 
-	mini.SetAnalogDeadzone(15);
-	mini.SetClearColor(0xFFFFFFFF);
-	mini.SetAlphaState(1);
-	mini.BeginDrawLoop();
+	mini->SetAnalogDeadzone(15);
+	mini->SetClearColor(0xFFFFFFFF);
+	mini->SetAlphaState(1);
+	mini->BeginDrawLoop();
 
 	return 0;
 }
@@ -121,6 +138,24 @@ void padUpdate(int changed, int port, padData pData) {
 
 void exit() {
 	printf("exiting\n");
-	delete emitter1;
-	delete emitterBackground;
+	
+	if (emitter1) {
+		delete emitter1;
+		emitter1 = NULL;
+	}
+
+	if (emitterBackground) {
+		delete emitterBackground;
+		emitterBackground = NULL;
+	}
+
+	if (comfortaa) {
+		delete comfortaa;
+		comfortaa = NULL;
+	}
+
+	if (mini) {
+		delete mini;
+		mini = NULL;
+	}
 }
