@@ -10,30 +10,44 @@ int drawUpdate(float deltaTime, unsigned int frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
-Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+Mini2D * mini = NULL;
+
+Font * font1 = NULL;
 
 int doExit = 0;
-Font *font1;
 
-const Vector2 FONT_SMALL(0.03*mini.MAXW, 0.03*mini.MAXH);
-
-const Vector2 PRINT_TOPLEFT(0,0);
-const Vector2 PRINT_CENTER(0.5*mini.MAXW, 0.5*mini.MAXH);
-const Vector2 PRINT_BOTTOMRIGHT(mini.MAXW, mini.MAXH);
+// Font sizes
+Vector2 FONT_SMALL;
+// Font locations
+Vector2 PRINT_TOPLEFT;
+Vector2 PRINT_CENTER;
+Vector2 PRINT_BOTTOMRIGHT;
 
 std::wstring TEXT_LEFT = 	L"Left align.";
 std::wstring TEXT_RIGHT = 	L"Right align.";
 std::wstring TEXT_CENTER = 	L"Center.";
 
 int main(s32 argc, const char* argv[]) {
-	font1 = new Font(&mini);
+
+	// Load Mini2D
+	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+
+	// Initialize location and size vectors
+	FONT_SMALL = Vector2(0.03*mini->MAXW, 0.03*mini->MAXH);
+
+	PRINT_TOPLEFT = Vector2(0,0);
+	PRINT_CENTER = Vector2(0.5*mini->MAXW, 0.5*mini->MAXH);
+	PRINT_BOTTOMRIGHT = Vector2(mini->MAXW, mini->MAXH);
+
+	// Load comfortaa font
+	font1 = new Font(mini);
 	if (font1->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size))
 		printf("error loading font\n");
 
-	mini.SetAnalogDeadzone(15);
-	mini.SetClearColor(0xFFFFFFFF);
-	mini.SetAlphaState(1);
-	mini.BeginDrawLoop();
+	mini->SetAnalogDeadzone(15);
+	mini->SetClearColor(0xFFFFFFFF);
+	mini->SetAlphaState(1);
+	mini->BeginDrawLoop();
 
 	return 0;
 }
@@ -58,4 +72,14 @@ void padUpdate(int changed, int port, padData pData) {
 
 void exit() {
 	printf("exiting\n");
+
+	if (font1) {
+		delete font1;
+		font1 = NULL;
+	}
+
+	if (mini) {
+		delete mini;
+		mini = NULL;
+	}
 }
