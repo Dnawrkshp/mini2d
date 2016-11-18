@@ -14,19 +14,20 @@ void exit();
 void ProgressSingle(float deltaTime);
 void ProgressDouble(float deltaTime);
 
-Mini2D mini((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+Mini2D * mini = NULL;
+
+Dialog * dialog1 = NULL;
+Font * font1 = NULL;
 
 int doExit = 0, doDialog = 0;
 float doProgress[2];
-Dialog *dialog1;
-Font *font1;
 
-const Vector2 FONT_MEDIUM(0.04*mini.MAXW, 0.04*mini.MAXH);
+Vector2 FONT_MEDIUM;
 
-const Vector2 PRINT_ITEM0(0.15*mini.MAXW, 0.45*mini.MAXH);
-const Vector2 PRINT_ITEM1(PRINT_ITEM0.X,  0.50*mini.MAXH);
-const Vector2 PRINT_ITEM2(PRINT_ITEM0.X,  0.55*mini.MAXH);
-const Vector2 PRINT_ITEM3(PRINT_ITEM0.X,  0.60*mini.MAXH);
+Vector2 PRINT_ITEM0;
+Vector2 PRINT_ITEM1;
+Vector2 PRINT_ITEM2;
+Vector2 PRINT_ITEM3;
 
 std::wstring TEXT_MESSAGE = 	L"Press Triangle to open Message Dialog";
 std::wstring TEXT_ERROR =		L"Press Square to open Error Dialog";
@@ -34,18 +35,33 @@ std::wstring TEXT_SINGLE =		L"Press Circle to open Single Progress Dialog";
 std::wstring TEXT_DOUBLE =		L"Press Cross to open Double Progress Dialog";
 
 int main(s32 argc, const char* argv[]) {
-	doProgress[0] = -1.f;
-	doProgress[1] = -1.f;
 
-	dialog1 = new Dialog(&mini);
-	font1 = new Font(&mini);
+	// Initialize Mini2D
+	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+
+	// Initialize location and size vectors
+	FONT_MEDIUM = Vector2(0.04*mini->MAXW, 0.04*mini->MAXH);
+
+	PRINT_ITEM0 = Vector2(0.15*mini->MAXW, 0.45*mini->MAXH);
+	PRINT_ITEM1 = Vector2(PRINT_ITEM0.X,  0.50*mini->MAXH);
+	PRINT_ITEM2 = Vector2(PRINT_ITEM0.X,  0.55*mini->MAXH);
+	PRINT_ITEM3 = Vector2(PRINT_ITEM0.X,  0.60*mini->MAXH);
+
+	// Load dialog
+	dialog1 = new Dialog(mini);
+
+	// Load comfortaa font
+	font1 = new Font(mini);
 	if (font1->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size))
 		printf("error loading font\n");
 
-	mini.SetAnalogDeadzone(15);
-	mini.SetClearColor(0xFFFFFFFF);
-	mini.SetAlphaState(1);
-	mini.BeginDrawLoop();
+	doProgress[0] = -1.f;
+	doProgress[1] = -1.f;
+
+	mini->SetAnalogDeadzone(15);
+	mini->SetClearColor(0xFFFFFFFF);
+	mini->SetAlphaState(1);
+	mini->BeginDrawLoop();
 
 	return 0;
 }
@@ -108,6 +124,21 @@ void padUpdate(int changed, int port, padData pData) {
 
 void exit() {
 	printf("exiting\n");
+
+	if (dialog1) {
+		delete dialog1;
+		dialog1 = NULL;
+	}
+
+	if (font1) {
+		delete font1;
+		font1 = NULL;
+	}
+
+	if (mini) {
+		delete mini;
+		mini = NULL;
+	}
 }
 
 void ProgressSingle(float deltaTime) {
