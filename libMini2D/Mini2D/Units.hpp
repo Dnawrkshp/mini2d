@@ -83,6 +83,140 @@ public:
 	static void Reflect(Vector2 * out, Vector2 * direction, Vector2 * normal);
 };
 
+class CircleF {
+public:
+
+	Vector2 Location;						// Center of circle
+	Vector2 Anchor;							// Point to rotate around
+
+	float Radius;							// Radius of circle
+	float AnchorAngle;						// Angle of rotation around anchor point (degrees)
+	float CircleAngle;						// Angle of rotation around circle center (degrees)
+
+	bool UseAnchor;							// Whether or not to use anchor point in rotation calculation
+
+	CircleF();
+	CircleF(Vector2 center, float radius);
+	CircleF(Vector2 center);
+	CircleF(float radius);
+	virtual ~CircleF();
+
+	// Get X,Y,R
+	float X();
+	float Y();
+	float R();
+
+	// Set X,Y,R
+	void X(float x);
+	void Y(float y);
+	void R(float r);
+
+	/*
+	 * GetRotatedCenter:
+	 *		Returns a pointer to the position of the circle after rotation has been calculated.
+	 *		If UseAnchor is false, this will be the same value as Location.
+	 */
+	Vector2 *GetRotatedCenter();
+
+	/*
+	 * Intersect:
+	 *		Determines if the passed polygon intersects with this circle.
+	 * 
+	 * polygon:
+	 *		Array of points
+	 * polyCount:
+	 *		Number of points in polygon
+	 * normal [OUT]:
+	 *		The resulting normal of the intersected segment (can be null)
+	 * points [OUT]:
+	 *		The number of points of polygon contained within this circle (can be null)
+	 * 
+	 * Return:
+	 *		1 if they intersect. 0 if not.
+	 */
+	bool Intersect(Vector2 * polygon[], int polyCount, Vector2 * normal, int * points);
+
+	/*
+	 * Intersect:
+	 *		Determines if the passed circle intersects with this circle.
+	 * 
+	 * circle:
+	 *		CircleF to compare with
+	 * normal [OUT]:
+	 *		The resulting normal of the intersected segment (can be null)
+	 * 
+	 * Return:
+	 *		1 if they intersect. 0 if not.
+	 */
+	bool Intersect(CircleF * circle, Vector2 * normal);
+
+private:
+	Vector2 _cCenter;						// Center of rotated circle
+
+	float _lastX;							// X value from last Update()
+	float _lastY;							// Y value from last Update()
+	float _lastR;							// Radius value from last Update()
+	float _lastUA;							// UseAnchor value from last Update()
+	float _lastAX;							// Anchor X value from last Update()
+	float _lastAY;							// Anchor Y value from last Update()
+	float _lastA;							// AnchorAngle from last Update()
+	float _lastCA;							// CircleAngle from last Update()
+
+	// Load
+	void Init(float x, float y, float r);
+
+	// Calculate center
+	void Update();
+
+};
+
+class PolygonF {
+public:
+
+	/*
+	 * IntersectConvex:
+	 *		Determines if the passed convex polygons intersect.
+	 *		If polyMoving is contained within polyStatic, this returns 0
+	 * 
+	 * polyStatic:
+	 *		Array of points that generate the polygon used to check polyMoving is colliding
+	 * polyStaticCount:
+	 *		Number of points in polyStatic array
+	 * polyMoving:
+	 *		Array of points that generate the polygon that is potentially colliding into polyStatic
+	 * polyMovingCount:
+	 *		Number of points in polyMoving array
+	 * normal [OUT]:
+	 *		The resulting normal of the intersected segment (can be null)
+	 * points [OUT]:
+	 *		The number of points of polyMoving contained within polyStatic (can be null)
+	 * 
+	 * Return:
+	 *		1 if they intersect. 0 if not.
+	 */
+	static bool IntersectConvex(Vector2 * polyStatic[], int polyStaticCount, Vector2 * polyMoving[], int polyMovingCount, Vector2 * normal = NULL, int * points = NULL);
+
+	/*
+	 * IntersectCircle:
+	 *		Determines if the given circle intersects with the given polygon.
+	 *		If polyMoving is contained within polyStatic, this returns 0
+	 * 
+	 * polyStatic:
+	 *		Array of points that generate the polygon used to check polyMoving is colliding
+	 * polyStaticCount:
+	 *		Number of points in polyStatic array
+	 * circleMoving:
+	 *		The circle that is potentially colliding into polyStatic
+	 * normal:
+	 *		The resulting normal of the intersected segment (can be null)
+	 * 
+	 * Return:
+	 *		1 if they intersect. 0 if not.
+	 */
+	static bool IntersectCircle(Vector2 * polyStatic[], int polyStaticCount, CircleF * circleMoving, Vector2 * normal = NULL);
+
+};
+
 class RectangleF {
 public:
 	// Variables
@@ -146,27 +280,30 @@ public:
 	 * 
 	 * rectangle:
 	 *		Rectangle to compare with
-	 * normal:
+	 * normal [OUT]:
 	 *		The resulting normal of the intersected segment (can be null)
-	 * points:
-	 *		The number of points contained within this rectangle
+	 * points [OUT]:
+	 *		The number of points contained within this rectangle (can be null)
 	 * 
 	 * Return:
-	 *		1 if they intersect. 0 if not.
+	 *		1 if they intersect. 0 if not. -1 if not contained.
 	 */
-	bool Intersect(RectangleF * rectangle, Vector2 * normal = NULL, int * points = NULL);
+	int Intersect(RectangleF * rectangle, Vector2 * normal = NULL, int * points = NULL);
 
 	/*
-	 * IntersectFast:
-	 *		Determines if the passed rectangle intersects with this rectangle.
+	 * Intersect:
+	 *		Determines if the passed circle intersects with this rectangle.
+	 *		If one is contained within the other, this returns 0
 	 * 
-	 * rectangle:
-	 *		Rectangle to compare with
+	 * circle:
+	 *		Circle to compare with
+	 * normal [OUT]:
+	 *		The resulting normal of the intersected segment (can be null)
 	 * 
 	 * Return:
-	 *		1 if they intersect. 0 if not.
+	 *		1 if they intersect. 0 if not. -1 if not contained.
 	 */
-	bool IntersectFast(RectangleF * rectangle);
+	int Intersect(CircleF * circle, Vector2 * normal = NULL);
 	
 	/*
 	 * Contain:
@@ -192,17 +329,19 @@ private:
 	float _lastX;							// X value from last Update()
 	float _lastY;							// Y value from last Update()
 	float _lastA;							// AnchorAngle from last Update()
+	float _lastRA;							// RectangleAngle from last Update()
 	float _lastAX;							// Anchor X value from last Update()
 	float _lastAY;							// Anchor Y value from last Update()
 	float _lastUA;							// UseAnchor value from last Update()
 
 	// Load
-	void Init(float x, float y, float w, float h, bool init = 1);
+	void init(float x, float y, float w, float h, bool init = 1);
 
 	// Calculate Center
-	void Update();
-	// Determine how many points from rectangle are within this rectangle
-	int CheckCollision(RectangleF * rectangle, Vector2 * slopes[]);
+	void update();
+	// Do a quick and rough intersection check (to speedup collision testing)
+	bool intersectFast(RectangleF * rectangle);
+	bool intersectFast(CircleF * circle);
 };
 
 #endif /* UNITS_HPP_ */

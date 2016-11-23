@@ -27,6 +27,7 @@ Image::Image(Mini2D * mini) :
 	loadModules();
 
 	TexturePointer = 0;
+	ZIndex = 0;
 }
 
 Image::~Image() {

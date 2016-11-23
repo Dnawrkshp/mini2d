@@ -7,8 +7,7 @@ Ball::Ball(Mini2D * mini, Image * image, Ball::BallCollision_f ballCollision) : 
 	if (!mini || !image || !ballCollision)
 		return;
 
-	DrawRegion.W(image->DrawRegion.W());
-	DrawRegion.H(image->DrawRegion.H());
+	DrawRegion.R(image->DrawRegion.W()/2);
 	Friction = 0.9f;
 }
 
@@ -30,11 +29,11 @@ bool Ball::Draw(float deltaTime) {
 	DrawRegion.Location += Velocity * deltaTime;
 
 	// Rotate
-	DrawRegion.RectangleAngle += Velocity.Magnitude() * deltaTime;
-	while (DrawRegion.RectangleAngle > 180)
-		DrawRegion.RectangleAngle -= 360;
-	while (DrawRegion.RectangleAngle < -180)
-		DrawRegion.RectangleAngle += 360;
+	DrawRegion.CircleAngle += (Velocity.X<0?-1:1) * Velocity.Magnitude() * deltaTime;
+	while (DrawRegion.CircleAngle > 180)
+		DrawRegion.CircleAngle -= 360;
+	while (DrawRegion.CircleAngle < -180)
+		DrawRegion.CircleAngle += 360;
 
 	// If there was a collision then we must go back to before the collision
 	// Then we must calculate the new velocity using the normal
@@ -62,10 +61,10 @@ bool Ball::Draw(float deltaTime) {
 
 	_image->DrawRegion.X(DrawRegion.X());
 	_image->DrawRegion.Y(DrawRegion.Y());
-	_image->DrawRegion.W(DrawRegion.W());
-	_image->DrawRegion.H(DrawRegion.H());
+	_image->DrawRegion.W(DrawRegion.R()*2);
+	_image->DrawRegion.H(DrawRegion.R()*2);
 	_image->DrawRegion.UseAnchor = 0;
-	_image->DrawRegion.RectangleAngle = DrawRegion.RectangleAngle;
+	_image->DrawRegion.RectangleAngle = DrawRegion.CircleAngle;
 	_image->Draw(RGBA);
 
 	return 1;

@@ -7,45 +7,38 @@
 
 #include <stdlib.h>							// abs()
 #include <math.h>							// Trig functions
-#include <stdio.h>
+#include <stdio.h>							// printf()
 
-#include <Mini2D/Units.hpp>
-
-#define PI 3.14159265
-#define DEG2RAD(x) ((x*PI)/180.0)
-#define RAD2DEG(x) ((x*180.0)/PI)
-
-// Determine if point exists within polygon
-bool polyContainPoint(Vector2 * p, Vector2 * poly[], int polyCount, Vector2 * slope);
+#include <Mini2D/Units.hpp>					// Class definition
 
 //---------------------------------------------------------------------------
 // Init Functions
 //---------------------------------------------------------------------------
 RectangleF::RectangleF() {
-	Init(0,0,0,0);
+	init(0,0,0,0);
 }
 
 RectangleF::RectangleF(float x, float y, float w, float h) {
-	Init(x,y,w,h);
+	init(x,y,w,h);
 }
 
 RectangleF::RectangleF(Vector2 point, Vector2 dimension) {
-	Init(point.X, point.Y, dimension.X, dimension.Y);
+	init(point.X, point.Y, dimension.X, dimension.Y);
 }
 
 RectangleF::RectangleF(Vector2 point, float w, float h) {
-	Init(point.X, point.Y, w, h);
+	init(point.X, point.Y, w, h);
 }
 
 RectangleF::RectangleF(RectangleF * rectangle) {
-	Init(rectangle->X(), rectangle->Y(), rectangle->W(), rectangle->H());
+	init(rectangle->X(), rectangle->Y(), rectangle->W(), rectangle->H());
 }
 
 RectangleF::~RectangleF() {
 
 }
 
-void RectangleF::Init(float x, float y, float w, float h, bool init) {
+void RectangleF::init(float x, float y, float w, float h, bool init) {
 	Location.X = x;
 	Location.Y = y;
 	Dimension.X = w;
@@ -58,19 +51,21 @@ void RectangleF::Init(float x, float y, float w, float h, bool init) {
 		_lastUA = 1;
 	}
 
-	Update();
+	update();
 }
 
-void RectangleF::Update() {
+void RectangleF::update() {
 	float w2, h2;
 	if (_lastX == Location.X && _lastY == Location.Y &&
 		_lastAX == Anchor.X && _lastAY == Anchor.Y &&
-		_lastA == AnchorAngle && _lastUA == UseAnchor)
+		_lastA == AnchorAngle && _lastUA == UseAnchor && 
+		_lastRA == RectangleAngle)
 		return;
 
 	_lastX = Location.X;
 	_lastY = Location.Y;
 	_lastA = AnchorAngle;
+	_lastRA = RectangleAngle;
 	_lastAX = Anchor.X;
 	_lastAY = Anchor.Y;
 	_lastUA = UseAnchor;
@@ -106,7 +101,7 @@ float RectangleF::X() {
 
 void RectangleF::X(float x) {
 	Location.X = x;
-	Update();
+	update();
 }
 
 float RectangleF::Y() {
@@ -115,7 +110,7 @@ float RectangleF::Y() {
 
 void RectangleF::Y(float y) {
 	Location.Y = y;
-	Update();
+	update();
 }
 
 float RectangleF::W() {
@@ -124,7 +119,7 @@ float RectangleF::W() {
 
 void RectangleF::W(float w) {
 	Dimension.X = w;
-	Update();
+	update();
 }
 
 float RectangleF::H() {
@@ -133,11 +128,11 @@ float RectangleF::H() {
 
 void RectangleF::H(float h) {
 	Dimension.Y = h;
-	Update();
+	update();
 }
 
 void RectangleF::FromCorners(Vector2 point1, Vector2 point2) {
-	Init((point1.X+point2.X)/2,
+	init((point1.X+point2.X)/2,
 		(point1.Y+point2.Y)/2,
 		point1.X<point2.X?point2.X-point1.X:point2.X-point1.X,
 		point1.Y<point2.Y?point2.Y-point1.Y:point2.Y-point1.Y,
@@ -145,7 +140,7 @@ void RectangleF::FromCorners(Vector2 point1, Vector2 point2) {
 }
 
 Vector2 * RectangleF::GetRotatedCenter() {
-	Update();
+	update();
 
 	return &_rCenter;
 }
@@ -153,135 +148,71 @@ Vector2 * RectangleF::GetRotatedCenter() {
 //---------------------------------------------------------------------------
 // Misc Functions
 //---------------------------------------------------------------------------
-bool RectangleF::IntersectFast(RectangleF * rectangle) {
-
-	if ((Location.X-Dimension.X/2) < (rectangle->X()+rectangle->W()/2) &&
-		(Location.X+Dimension.X/2) > (rectangle->X()-rectangle->W()/2) &&
-		(Location.Y-Dimension.Y/2) < (rectangle->Y()+rectangle->H()/2) &&
-		(Location.Y+Dimension.Y/2) > (rectangle->Y()-rectangle->H()/2))
+bool RectangleF::intersectFast(RectangleF * rectangle) {
+	update();
+	Vector2 * center = rectangle->GetRotatedCenter();
+	if ((_rCenter.X-Dimension.X/2) < (center->X+rectangle->W()/2) &&
+		(_rCenter.X+Dimension.X/2) > (center->X-rectangle->W()/2) &&
+		(_rCenter.Y-Dimension.Y/2) < (center->Y+rectangle->H()/2) &&
+		(_rCenter.Y+Dimension.Y/2) > (center->Y-rectangle->H()/2))
 		return 1;
 	return 0;
 }
 
-bool RectangleF::Intersect(RectangleF * rectangle, Vector2 * normal, int * points) {
-	int contains;
-	Vector2 * slopes[4];
+bool RectangleF::intersectFast(CircleF * circle) {
+	update();
+	Vector2 * center = circle->GetRotatedCenter();
+	if ((_rCenter.X-Dimension.X/2) < (center->X+circle->R()) &&
+		(_rCenter.X+Dimension.X/2) > (center->X-circle->R()) &&
+		(_rCenter.Y-Dimension.Y/2) < (center->Y+circle->R()) &&
+		(_rCenter.Y+Dimension.Y/2) > (center->Y-circle->R()))
+		return 1;
+	return 0;
+}
+
+int RectangleF::Intersect(RectangleF * rectangle, Vector2 * normal, int * points) {
+	Vector2 * rect[4];
+	Vector2 * rcmp[4];
 
 	// Check if they intersect quickly
 	// If they do, find the normal
-	if (!IntersectFast(rectangle))
-		return 0;
+	if (!intersectFast(rectangle))
+		return -1;
 
-	if (normal) {
-		slopes[0] = new Vector2();
-		slopes[1] = new Vector2();
-		slopes[2] = new Vector2();
-		slopes[3] = new Vector2();
+	rect[0] = &BottomRight;
+	rect[1] = &BottomLeft;
+	rect[2] = &TopLeft;
+	rect[3] = &TopRight;
 
-		contains = CheckCollision(rectangle, slopes);
+	rcmp[0] = &rectangle->BottomRight;
+	rcmp[1] = &rectangle->BottomLeft;
+	rcmp[2] = &rectangle->TopLeft;
+	rcmp[3] = &rectangle->TopRight;
 
-		// Convert slope to normal (make perpendicular)
-		if (contains > 0 && contains < 4)
-		{
-			for (int x = 0; x < 4; x++) {
-				normal->X -= slopes[x]->Y;
-				normal->Y += slopes[x]->X;
-				delete slopes[x];
-			}
-			// If normal is invalid, return 0
-			if (normal->Magnitude() == 0)
-				return 0;
-			normal->Normalize();
-		}
-	}
-	else
-		contains = CheckCollision(rectangle, NULL);
+	return PolygonF::IntersectConvex(rect, 4, rcmp, 4, normal, points);
+}
 
-	if (points)
-		*points = contains;
-	return contains > 0 && contains < 4;
+int RectangleF::Intersect(CircleF * circle, Vector2 * normal) {
+	Vector2 * rect[4];
+
+	// Check if they intersect quickly
+	// If they do, find the normal
+	if (!intersectFast(circle))
+		return -1;
+
+	rect[0] = &BottomRight;
+	rect[1] = &BottomLeft;
+	rect[2] = &TopLeft;
+	rect[3] = &TopRight;
+
+	return PolygonF::IntersectCircle(rect, 4, circle, normal);
 }
 
 bool RectangleF::Contain(RectangleF * rectangle) {
-	return CheckCollision(rectangle, NULL) == 4;
-}
-
-int RectangleF::CheckCollision(RectangleF * rectangle, Vector2 * slopes[]) {
-	int x,c=0;
-	Vector2 *center;
-	Vector2 * rect1[4], * rect2[4];
-
-	Update();
-	center = rectangle->GetRotatedCenter();
-
-	rect1[0] = &BottomRight;
-	rect1[1] = &BottomLeft;
-	rect1[2] = &TopLeft;
-	rect1[3] = &TopRight;
-
-	rect2[0] = &rectangle->BottomRight;
-	rect2[1] = &rectangle->BottomLeft;
-	rect2[2] = &rectangle->TopLeft;
-	rect2[3] = &rectangle->TopRight;
-
-	for (x=0;x<4;x++) {
-		if (polyContainPoint(rect2[x], rect1, 4, (slopes==NULL?NULL:slopes[x])))
-			c++;
-	}
-
-	return c;	
-}
-
-/*
- * From: http://blog.theliuy.com/determine-if-two-rotated-rectangles-overlap-each-other/
- */
-int orientation(Vector2 *p, Vector2 *q, Vector2 *r)
-{
-    int val = Vector2::CrossProduct(p,q,r);
-	if (0 == val)
-		return 0;
-	return val > 0 ? 1: 2;
-}
-
-bool polyContainPoint(Vector2 * p, Vector2 *poly[], int polyCount, Vector2 * slope) {
-	int x,o;
-	float distances[4], distance;
-	Vector2 * temp;
-	if (polyCount < 2)
-		return 0;
-
-    // orientation
-	o = orientation(poly[0], poly[1], p);
-
-	if (o == 0)
+	int points = 0;
+	if (Intersect(rectangle, NULL, &points) && points == 4)
 		return 1;
-
-    for (x=1;x<polyCount;x++) {
-    	if (o != orientation(poly[x], poly[((x==polyCount-1)?0:x+1)], p)) {
-    		return 0;
-    	}
-    	else if (slope) {
-    		temp = poly[((x==polyCount-1)?0:x+1)];
-    		distances[x] = abs(Vector2::CrossProduct(poly[x],temp,p))/Vector2::DistanceFrom(temp,poly[x]);
-    	}
-    }
-    
-    if (slope) {
-    	distances[0] = abs(Vector2::CrossProduct(poly[0],poly[1],p))/Vector2::DistanceFrom(poly[1],poly[0]);
-	    distance = distances[0];
-	    o = 0;
-
-	    for (x=1;x<4;x++) {
-	    	if (distances[x]<distance) {
-	    		distance = distances[x];
-	    		o = x;
-	    	}
-	    }
-
-	    slope->Set(*poly[((o==polyCount-1)?0:o+1)]-*poly[o]);
-	}
-
-    return 1;
+	return 0;
 }
 
 //---------------------------------------------------------------------------

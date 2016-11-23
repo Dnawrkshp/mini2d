@@ -25,7 +25,7 @@ public:
 	typedef bool (*BallCollision_f) (Ball *, Vector2 *);
 
 	Vector2 Velocity;						// Current velocity
-	RectangleF DrawRegion;					// Current location
+	CircleF DrawRegion;						// Current location
 	float MinSpeed;							// Minimum speed before ball is considered dead
 	float Friction;							// Multiplies with velocity after every collision
 	unsigned int RGBA;						// Color of ball

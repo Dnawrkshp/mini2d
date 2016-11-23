@@ -243,14 +243,14 @@ void exit() {
 
 bool BallCollisionCheck(Ball * ball, Vector2 * normal) {
 	bool ballCollide = 0;
-	int points = 0;
 
 	// Check if the ball goes out of bounds
-	if (paper->DrawRegion.Intersect(&ball->DrawRegion, normal, &points))
+	int boundsCheck = paper->DrawRegion.Intersect(&ball->DrawRegion, normal);
+	if (boundsCheck)
 		return 1;
 	
 	// If the ball is fully out of bounds (velocity must be too high)
-	if (points == 0) {
+	if (boundsCheck == -1) {
 		normal->Set(0,0);
 		return 1;
 	}
@@ -275,7 +275,6 @@ bool BallCollisionCheck(Ball * ball, Vector2 * normal) {
     		ball->Velocity += n * (dA - dB);
     	}
  	}
-
 
 	return ballCollide;
 }
