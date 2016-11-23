@@ -3,20 +3,27 @@
 #---------------------------------------------------------------------------------
 .SUFFIXES:
 #---------------------------------------------------------------------------------
-all:
-	@$(MAKE) -C alphatest --no-print-directory
-	@$(MAKE) -C printtest --no-print-directory
-	@$(MAKE) -C dialogtest --no-print-directory
-	@$(MAKE) -C soundtest --no-print-directory
-	@$(MAKE) -C particletest --no-print-directory
-	@$(MAKE) -C balls --no-print-directory
-	@$(MAKE) -C keyboardtest --no-print-directory
 
-clean:
-	@$(MAKE) -C alphatest clean --no-print-directory
-	@$(MAKE) -C printtest clean --no-print-directory
-	@$(MAKE) -C dialogtest clean --no-print-directory
-	@$(MAKE) -C soundtest clean --no-print-directory
-	@$(MAKE) -C particletest clean --no-print-directory
-	@$(MAKE) -C balls clean --no-print-directory
-	@$(MAKE) -C keyboardtest clean --no-print-directory
+
+SUBDIRS 		:=		$(wildcard */.)
+SUBDIRSCLEAN 	:=		$(SUBDIRS:%=clean-%)
+
+#---------------------------------------------------------------------------------
+all:	$(SUBDIRS)
+
+#---------------------------------------------------------------------------------
+clean:	$(SUBDIRSCLEAN)
+
+#---------------------------------------------------------------------------------
+$(SUBDIRS):
+	@echo "[ALL]    $(dir $@)"
+	@$(MAKE) --no-print-directory -C $@
+
+#---------------------------------------------------------------------------------
+$(SUBDIRSCLEAN):
+	@echo "[CLEAN]  $(dir $(@:clean-%=%))"
+	@$(MAKE) --no-print-directory -C $(@:clean-%=%) clean
+
+#---------------------------------------------------------------------------------
+.PHONY: all $(SUBDIRS)
+.PHONY: $(SUBDIRSCLEAN)
