@@ -26,7 +26,15 @@ bool Ball::Draw(float deltaTime) {
 	x = DrawRegion.X();
 	y = DrawRegion.Y();
 
+	// Move
 	DrawRegion.Location += Velocity * deltaTime;
+
+	// Rotate
+	DrawRegion.RectangleAngle += Velocity.Magnitude() * deltaTime;
+	while (DrawRegion.RectangleAngle > 180)
+		DrawRegion.RectangleAngle -= 360;
+	while (DrawRegion.RectangleAngle < -180)
+		DrawRegion.RectangleAngle += 360;
 
 	// If there was a collision then we must go back to before the collision
 	// Then we must calculate the new velocity using the normal

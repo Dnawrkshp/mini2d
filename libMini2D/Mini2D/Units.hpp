@@ -90,6 +90,12 @@ public:
 	Vector2 Dimension;						// Size of rectangle
 	Vector2 Anchor;							// Point to rotate around
 
+	// Points
+	Vector2 TopLeft;						// Top Left corner of rectangle (for reading)
+	Vector2 TopRight;						// Top Right corner of rectangle (for reading)
+	Vector2 BottomLeft;						// Bottom Left corner of rectangle (for reading)
+	Vector2 BottomRight;					// Bottom Right corner of rectangle (for reading)
+
 	float AnchorAngle;						// Angle of rotation around anchor point (degrees)
 	float RectangleAngle;					// Angle of rotation around rectangle center (degrees)
 
@@ -181,7 +187,7 @@ public:
 	bool operator==(const RectangleF& r) const;
 	bool operator!=(const RectangleF& r) const;
 private:
-	Vector2 * _rCenter;						// Center of rotated rectangle
+	Vector2 _rCenter;						// Center of rotated rectangle
 
 	float _lastX;							// X value from last Update()
 	float _lastY;							// Y value from last Update()
@@ -191,7 +197,7 @@ private:
 	float _lastUA;							// UseAnchor value from last Update()
 
 	// Load
-	void Init(float x, float y, float w, float h);
+	void Init(float x, float y, float w, float h, bool init = 1);
 
 	// Calculate Center
 	void Update();

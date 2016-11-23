@@ -22,47 +22,47 @@ bool polyContainPoint(Vector2 * p, Vector2 * poly[], int polyCount, Vector2 * sl
 // Init Functions
 //---------------------------------------------------------------------------
 RectangleF::RectangleF() {
-	_rCenter = new Vector2(0,0);
 	Init(0,0,0,0);
 }
 
 RectangleF::RectangleF(float x, float y, float w, float h) {
-	_rCenter = new Vector2(0,0);
 	Init(x,y,w,h);
 }
 
 RectangleF::RectangleF(Vector2 point, Vector2 dimension) {
-	_rCenter = new Vector2(0,0);
 	Init(point.X, point.Y, dimension.X, dimension.Y);
 }
 
 RectangleF::RectangleF(Vector2 point, float w, float h) {
-	_rCenter = new Vector2(0,0);
 	Init(point.X, point.Y, w, h);
 }
 
 RectangleF::RectangleF(RectangleF * rectangle) {
-	_rCenter = new Vector2(0,0);
 	Init(rectangle->X(), rectangle->Y(), rectangle->W(), rectangle->H());
 }
 
 RectangleF::~RectangleF() {
-	if (_rCenter)
-		delete _rCenter;
 
-	_rCenter = 0;
 }
 
-void RectangleF::Init(float x, float y, float w, float h) {
+void RectangleF::Init(float x, float y, float w, float h, bool init) {
 	Location.X = x;
 	Location.Y = y;
 	Dimension.X = w;
 	Dimension.Y = h;
 
+	if (init) {
+		AnchorAngle = 0;
+		RectangleAngle = 0;
+		UseAnchor = 0;
+		_lastUA = 1;
+	}
+
 	Update();
 }
 
 void RectangleF::Update() {
+	float w2, h2;
 	if (_lastX == Location.X && _lastY == Location.Y &&
 		_lastAX == Anchor.X && _lastAY == Anchor.Y &&
 		_lastA == AnchorAngle && _lastUA == UseAnchor)
@@ -75,9 +75,25 @@ void RectangleF::Update() {
 	_lastAY = Anchor.Y;
 	_lastUA = UseAnchor;
 
-	_rCenter->Set(Location.X, Location.Y);
+	_rCenter.Set(Location.X, Location.Y);
+
 	if (AnchorAngle && UseAnchor) {
-		_rCenter->RotateAroundPoint(&Anchor, AnchorAngle);
+		_rCenter.RotateAroundPoint(&Anchor, AnchorAngle);
+	}
+
+	w2 = Dimension.X/2;
+	h2 = Dimension.Y/2;
+
+	TopLeft.Set(_rCenter.X-w2, _rCenter.Y-h2);
+	TopRight.Set(_rCenter.X+w2, _rCenter.Y-h2);
+	BottomLeft.Set(_rCenter.X-w2, _rCenter.Y+h2);
+	BottomRight.Set(_rCenter.X+w2, _rCenter.Y+h2);
+
+	if (RectangleAngle) {
+		TopLeft.RotateAroundPoint(&_rCenter, RectangleAngle);
+		TopRight.RotateAroundPoint(&_rCenter, RectangleAngle);
+		BottomLeft.RotateAroundPoint(&_rCenter, RectangleAngle);
+		BottomRight.RotateAroundPoint(&_rCenter, RectangleAngle);
 	}
 }
 
@@ -124,13 +140,14 @@ void RectangleF::FromCorners(Vector2 point1, Vector2 point2) {
 	Init((point1.X+point2.X)/2,
 		(point1.Y+point2.Y)/2,
 		point1.X<point2.X?point2.X-point1.X:point2.X-point1.X,
-		point1.Y<point2.Y?point2.Y-point1.Y:point2.Y-point1.Y);
+		point1.Y<point2.Y?point2.Y-point1.Y:point2.Y-point1.Y,
+		0);
 }
 
 Vector2 * RectangleF::GetRotatedCenter() {
 	Update();
 
-	return _rCenter;
+	return &_rCenter;
 }
 
 //---------------------------------------------------------------------------
@@ -191,42 +208,26 @@ bool RectangleF::Contain(RectangleF * rectangle) {
 
 int RectangleF::CheckCollision(RectangleF * rectangle, Vector2 * slopes[]) {
 	int x,c=0;
-	float cA,sA,cB,sB;
 	Vector2 *center;
-	Vector2 ** rect1, ** rect2;
+	Vector2 * rect1[4], * rect2[4];
 
 	Update();
 	center = rectangle->GetRotatedCenter();
 
-	cA = cos(DEG2RAD(-RectangleAngle));
-	sA = sin(DEG2RAD(-RectangleAngle));
-	cB = cos(DEG2RAD(-rectangle->RectangleAngle));
-	sB = sin(DEG2RAD(-rectangle->RectangleAngle));
+	rect1[0] = &BottomRight;
+	rect1[1] = &BottomLeft;
+	rect1[2] = &TopLeft;
+	rect1[3] = &TopRight;
 
-	rect1 = new Vector2*[4];
-	rect2 = new Vector2*[4];
-
-	rect1[0] = new Vector2(cA*Dimension.X* 0.5 + sA*Dimension.Y* 0.5 + _rCenter->X, cA*Dimension.Y* 0.5 + sA*Dimension.X* 0.5 + _rCenter->Y);
-	rect1[1] = new Vector2(cA*Dimension.X*-0.5 + sA*Dimension.Y* 0.5 + _rCenter->X, cA*Dimension.Y* 0.5 + sA*Dimension.X*-0.5 + _rCenter->Y);
-	rect1[2] = new Vector2(cA*Dimension.X*-0.5 + sA*Dimension.Y*-0.5 + _rCenter->X, cA*Dimension.Y*-0.5 + sA*Dimension.X*-0.5 + _rCenter->Y);
-	rect1[3] = new Vector2(cA*Dimension.X* 0.5 + sA*Dimension.Y*-0.5 + _rCenter->X, cA*Dimension.Y*-0.5 + sA*Dimension.X* 0.5 + _rCenter->Y);
-
-	rect2[0] = new Vector2(cB*rectangle->W()* 0.5 + sB*rectangle->H()* 0.5 + center->X, cB*rectangle->H()* 0.5 + sB*rectangle->W()* 0.5 + center->Y);
-	rect2[1] = new Vector2(cB*rectangle->W()*-0.5 + sB*rectangle->H()* 0.5 + center->X, cB*rectangle->H()* 0.5 + sB*rectangle->W()*-0.5 + center->Y);
-	rect2[2] = new Vector2(cB*rectangle->W()*-0.5 + sB*rectangle->H()*-0.5 + center->X, cB*rectangle->H()*-0.5 + sB*rectangle->W()*-0.5 + center->Y);
-	rect2[3] = new Vector2(cB*rectangle->W()* 0.5 + sB*rectangle->H()*-0.5 + center->X, cB*rectangle->H()*-0.5 + sB*rectangle->W()* 0.5 + center->Y);
+	rect2[0] = &rectangle->BottomRight;
+	rect2[1] = &rectangle->BottomLeft;
+	rect2[2] = &rectangle->TopLeft;
+	rect2[3] = &rectangle->TopRight;
 
 	for (x=0;x<4;x++) {
 		if (polyContainPoint(rect2[x], rect1, 4, (slopes==NULL?NULL:slopes[x])))
 			c++;
 	}
-
-	for (x=0;x<4;x++) {
-		delete rect1[x];
-		delete rect2[x];
-	}
-	delete[] rect1;
-	delete[] rect2;
 
 	return c;	
 }
