@@ -172,3 +172,14 @@ void Image::Draw(unsigned int rgba) {
 	
 	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, -DrawRegion.RectangleAngle, TINY3D_TEX_FORMAT_A8R8G8B8);
 }
+
+//---------------------------------------------------------------------------
+// Get Functions
+//---------------------------------------------------------------------------
+int Image::GetWidth() {
+	return _width;
+}
+
+int Image::GetHeight() {
+	return _height;
+}

@@ -87,6 +87,18 @@ public:
 	 */
 	void Draw(unsigned int rgba = 0xFFFFFFFF);
 
+	/*
+	 * GetWidth:
+	 *		Returns the width of the image
+	 */
+	int GetWidth();
+
+	/*
+	 * GetHeight:
+	 *		Returns the height of the image
+	 */
+	int GetHeight();
+
 private:
 	Mini2D * _mini;
 
