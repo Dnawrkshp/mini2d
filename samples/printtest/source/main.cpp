@@ -6,7 +6,7 @@
 
 #include "comfortaa_regular_ttf.h"
 
-int drawUpdate(float deltaTime, unsigned int frame);
+int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
@@ -52,7 +52,7 @@ int main(s32 argc, const char* argv[]) {
 	return 0;
 }
 
-int drawUpdate(float deltaTime, unsigned int frame) {
+int drawUpdate(float deltaTime, unsigned long frame) {
 	font1->TextAlign = Font::PRINT_ALIGN_TOPLEFT;
 	font1->PrintLine(NULL, &TEXT_LEFT, NULL, PRINT_TOPLEFT, FONT_SMALL);
 

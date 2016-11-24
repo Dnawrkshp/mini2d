@@ -6,7 +6,7 @@
 
 #include "alphatest_png.h"
 
-int drawUpdate(float deltaTime, unsigned int frame);
+int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
@@ -42,7 +42,7 @@ int main(s32 argc, const char* argv[]) {
 	return 0;
 }
 
-int drawUpdate(float deltaTime, unsigned int frame) {
+int drawUpdate(float deltaTime, unsigned long frame) {
 	img1->Draw(doSaturate ? 0xFFFFFFFF : 0xFFFFFFC0);
 	return doExit;
 }

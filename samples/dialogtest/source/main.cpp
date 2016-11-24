@@ -7,7 +7,7 @@
 
 #include "comfortaa_regular_ttf.h"
 
-int drawUpdate(float deltaTime, unsigned int frame);
+int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
@@ -66,7 +66,7 @@ int main(s32 argc, const char* argv[]) {
 	return 0;
 }
 
-int drawUpdate(float deltaTime, unsigned int frame) {
+int drawUpdate(float deltaTime, unsigned long frame) {
 	font1->PrintLine(NULL, &TEXT_MESSAGE, NULL, PRINT_ITEM0, FONT_MEDIUM);
 	font1->PrintLine(NULL, &TEXT_ERROR, NULL, PRINT_ITEM1, FONT_MEDIUM);
 	font1->PrintLine(NULL, &TEXT_SINGLE, NULL, PRINT_ITEM2, FONT_MEDIUM);

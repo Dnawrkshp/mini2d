@@ -10,7 +10,7 @@
 #include "sbfsc_adhdj_mp3.h"
 #include "snare_ogg.h"
 
-int drawUpdate(float deltaTime, unsigned int frame);
+int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
@@ -69,7 +69,7 @@ int main(s32 argc, const char* argv[]) {
 	return 0;
 }
 
-int drawUpdate(float deltaTime, unsigned int frame) {
+int drawUpdate(float deltaTime, unsigned long frame) {
 	if (infiniteVoice >= 0 && status == Sound::VOICE_RUNNING) {
 		font1->ForeColor = 0x800000FF;
 		font1->PrintLine(NULL, &TEXT_PAUSEAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);

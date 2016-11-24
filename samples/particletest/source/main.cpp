@@ -9,7 +9,7 @@
 
 #include "comfortaa_regular_ttf.h"
 
-int drawUpdate(float deltaTime, unsigned int frame);
+int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
@@ -83,7 +83,7 @@ int main(s32 argc, const char* argv[]) {
 	return 0;
 }
 
-int drawUpdate(float deltaTime, unsigned int frame) {
+int drawUpdate(float deltaTime, unsigned long frame) {
 	comfortaa->PrintLine(NULL, &TEXT_START, NULL, PRINT_ITEM, FONT_SMALL);
 	comfortaa->PrintLine(NULL, &TEXT_PAUSERESUME, NULL, PRINT_ITEM + PRINT_INC, FONT_SMALL);
 	comfortaa->PrintLine(NULL, &TEXT_STOP, NULL, PRINT_ITEM + (PRINT_INC*2.f), FONT_SMALL);

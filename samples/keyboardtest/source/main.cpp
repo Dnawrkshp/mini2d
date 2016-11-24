@@ -9,7 +9,7 @@
 
 #include "OpenSans_Regular_ttf.h"
 
-int drawUpdate(float deltaTime, unsigned int frame);
+int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
@@ -86,7 +86,7 @@ int main(s32 argc, const char* argv[]) {
 	return 0;
 }
 
-int drawUpdate(float deltaTime, unsigned int frame) {
+int drawUpdate(float deltaTime, unsigned long frame) {
 	mini->DrawRectangle(OpenSans->Container.X(), OpenSans->Container.Y(), OpenSans->Container.X(), OpenSans->Container.Y(), 0, OpenSans->Container.W(), OpenSans->Container.H(), 0xC0C0C0FF, 0);
 	OpenSans->PrintLines(NULL, &start, 0, LOC_TEXT, FONT_SMALL, 1, 1);
 	

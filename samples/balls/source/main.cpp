@@ -21,7 +21,7 @@
 #include "OpenSans_Regular_ttf.h"
 
 
-int drawUpdate(float deltaTime, unsigned int frame);
+int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
@@ -122,7 +122,7 @@ int main(s32 argc, const char* argv[]) {
 	return 0;
 }
 
-int drawUpdate(float deltaTime, unsigned int frame) {
+int drawUpdate(float deltaTime, unsigned long frame) {
 	paper->Draw(0xFFFFFFFF);
 	cannon->Draw(0xFFFFFFFF);
 
