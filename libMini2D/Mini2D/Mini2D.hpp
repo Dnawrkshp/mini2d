@@ -73,13 +73,13 @@ public:
 	 * 
 	 * float:
 	 * 		Delta time. Amount of time passed since last frame
-	 * unsigned int:
+	 * unsigned long:
 	 * 		Frame.
 	 * 
 	 * Return:
 	 * 		If return is less than 0 the draw loop stops
 	 */
-	typedef int (*DrawCallback_f) (float, unsigned int);
+	typedef int (*DrawCallback_f) (float, unsigned long);
 
 	/*
 	 * ExitCallback_f:
@@ -241,8 +241,8 @@ private:
 	float _maxH;							// MAXH refers to
 	float _minH;							// MINH refers to
 
-	unsigned int _maxFrameCount;			// Max value of _frameCount before reset. Value is divisible by 10
-	unsigned int _frameCount;				// Number of frames drawn, resets on _maxFrameCount
+	unsigned long _maxFrameCount;			// Max value of _frameCount before reset. Value is divisible by 10
+	unsigned long _frameCount;				// Number of frames drawn, resets on _maxFrameCount
 	struct timeval _start;					// Start of draw
 	struct timeval _end;						// End of draw
 	float _deltaTime;						// Time between start and end of draw

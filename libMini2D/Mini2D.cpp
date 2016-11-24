@@ -75,7 +75,7 @@ Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f
 	sysUtilRegisterCallback(SYSUTIL_EVENT_SLOT0, sys_callback, this);
 
 	// Private variables
-	_maxFrameCount = 0xFFFFFFFA;
+	_maxFrameCount = 0xFFFFFFFFFFFFFFFA;
 	_clearColor = 0xFF000000;
 	_alphaEnabled = 0;
 	_analogDeadzone = 0;
