@@ -1,5 +1,5 @@
 # Mini 2D
-A 2D graphics library for the PS3 that runs on top of [Tiny3D](https://github.com/wargio/tiny3d).
+A 2D graphics library for the PS3 that runs on top of [Tiny3D](https://github.com/Estwald/PSDK3v2/tree/master/libraries-src/Tiny3D).
 
 # Status
 - [x] Draw Image (PNG/JPG)

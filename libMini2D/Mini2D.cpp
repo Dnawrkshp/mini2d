@@ -144,6 +144,7 @@ static void sys_callback(uint64_t status, uint64_t param, void* userdata) {
 	printf("sys_callback: %ld, %ld\n", status, param);
 	switch (status) {
 		case SYSUTIL_EXIT_GAME: //0x0101
+			tiny3d_Exit();
 			unload();
 				
 			if (_exitCallback != NULL)
@@ -221,6 +222,8 @@ void Mini2D::BeginDrawLoop() {
 
 		Flip();
 	}
+
+	tiny3d_Exit();
 }
 
 void Mini2D::Flip() {
