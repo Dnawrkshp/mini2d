@@ -26,6 +26,9 @@ Font::Font(Mini2D * mini) :
 	Container.H(mini->MAXH);
 
 	ForeColor = 0x000000FF;
+	BackColor = 0x00000000;
+	ZIndex = 0;
+	TextAlign = PRINT_ALIGN_TOPLEFT;
 }
 
 Font::~Font() {

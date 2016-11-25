@@ -81,6 +81,7 @@ public:
 	static float DistanceFrom(Vector2 * a, Vector2 * b);
 	static float Magnitude(Vector2 * a);
 	static void Reflect(Vector2 * out, Vector2 * direction, Vector2 * normal);
+	static float ToAngle(Vector2 * in);
 };
 
 class CircleF {

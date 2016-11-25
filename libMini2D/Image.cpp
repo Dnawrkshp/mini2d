@@ -28,6 +28,13 @@ Image::Image(Mini2D * mini) :
 
 	TexturePointer = 0;
 	ZIndex = 0;
+
+	_width = 0;
+	_height = 0;
+	_pitch = 0;
+	_sWidth = 0;
+	_sHeight = 0;
+	_textureOff = 0;
 }
 
 Image::~Image() {

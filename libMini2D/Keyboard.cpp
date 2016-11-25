@@ -37,6 +37,10 @@ Keyboard::Keyboard(Mini2D * mini) : _mini(mini) {
 		return;
 	}
 
+	MaxLength = 0;
+	_newMessage = 0;
+	_newStart = 0;
+
 	SetDefault();
 
 	result.str = NULL;

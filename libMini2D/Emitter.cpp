@@ -23,6 +23,16 @@ float randomRange(float min, float max);
 Emitter::Emitter(Mini2D * mini, unsigned int maxParticles) : _mini(mini) {
 	_maxP = maxParticles;
 
+	// Set defaults
+	ZIndex = 0;
+	MinParticles = maxParticles;
+	Revive = 0;
+	SkipExplosion = 0;
+	_loop = 0;
+	_pause = 0;
+	_timeLeft = 0;
+	_activeP = 0;
+
 	// Full range dispersion
 	RangeVelocityTheta.Set(0,360);
 
@@ -48,16 +58,19 @@ Emitter::Emitter(Mini2D * mini, unsigned int maxParticles) : _mini(mini) {
 
 	ParticleImage = NULL;
 
-	_particles = new EmitterParticle[maxParticles];
+	//_particles = new EmitterParticle[maxParticles]();
+	if (maxParticles)
+		_particles.reserve(maxParticles);
 }
 Emitter::~Emitter() {
 	_timeLeft = 0;
 	_activeP = 0;
 	ParticleImage = NULL;
 
-	if (_particles)
-		delete[] _particles;
-	_particles = NULL;
+	_particles.clear();
+	//if (_particles)
+	//	delete[] _particles;
+	//_particles = NULL;
 }
 
 //---------------------------------------------------------------------------
@@ -86,20 +99,24 @@ bool Emitter::Start(Vector2 location, float timeToLive) {
 		_timeLeft = RangeTTL.Y;
 	}
 
+	_particles.clear();
 	srand(time(NULL));
 	for (i = 0; i < _activeP; i++) {
-		createParticle(location, i);
+		createParticle(location);
+		std::vector<EmitterParticle>::iterator particle = _particles.end()-1;
 
 		// Here we process the next loop of it's life in order to skip the initial explosion
 		if (SkipExplosion) {
 			for (float t=0; t <= RangeTTL.Y*2; t+=dt) {
-				if (_particles[i].TTL > 0) {
-					_particles[i].rect.Location += (_particles[i].velocity * dt);
-					_particles[i].rect.RectangleAngle += _particles[i].angleVelocity * dt;
-					_particles[i].TTL-=dt;
+				if (particle->TTL > 0) {
+					particle->rect.Location += (_particles[i].velocity * dt);
+					particle->rect.RectangleAngle += _particles[i].angleVelocity * dt;
+					particle->TTL-=dt;
 				}
 				else {
-					createParticle(location, i);
+					_particles.erase(particle);
+					createParticle(location);
+					particle = _particles.end()-1;
 				}
 			}
 		}
@@ -109,7 +126,7 @@ bool Emitter::Start(Vector2 location, float timeToLive) {
 }
 
 void Emitter::Draw(float deltaTime) {
-	int i,alive;
+	int alive;
 
 	// If we're using an image, save all the data values we are about to change
 	float z=0,ix=0,iy=0,iw=0,ih=0,ua=0,ra=0;
@@ -124,41 +141,46 @@ void Emitter::Draw(float deltaTime) {
 	}
 
 	alive = 0;
-	for (i=0;i<_activeP;i++) {
-		if (_particles[i].TTL > 0 && _particles[i].spawn) {
+	for (std::vector<EmitterParticle>::iterator it = _particles.begin(); it != _particles.end(); it++) {
+		if (it->TTL > 0) {
 			if (!_pause) {
-				_particles[i].rect.Location += (_particles[i].velocity * deltaTime);
-				_particles[i].rect.RectangleAngle += _particles[i].angleVelocity * deltaTime;
-				_particles[i].TTL -= deltaTime;
+				it->rect.Location += it->velocity * deltaTime;
+				it->rect.RectangleAngle += it->angleVelocity * deltaTime;
+				it->TTL -= deltaTime;
 			}
 
-			if (Clip.Contain(&_particles[i].rect)) {
+			if (Clip.Contain(&it->rect)) {
 				if (ParticleImage) {
 					ParticleImage->ZIndex = ZIndex;
-					ParticleImage->DrawRegion.X(_particles[i].rect.X());
-					ParticleImage->DrawRegion.Y(_particles[i].rect.Y());
-					ParticleImage->DrawRegion.W(_particles[i].rect.W());
-					ParticleImage->DrawRegion.H(_particles[i].rect.H());
-					ParticleImage->DrawRegion.RectangleAngle = _particles[i].rect.RectangleAngle;
+					ParticleImage->DrawRegion.X(it->rect.X());
+					ParticleImage->DrawRegion.Y(it->rect.Y());
+					ParticleImage->DrawRegion.W(it->rect.W());
+					ParticleImage->DrawRegion.H(it->rect.H());
+					ParticleImage->DrawRegion.RectangleAngle = it->rect.RectangleAngle;
 					ParticleImage->DrawRegion.UseAnchor = 0;
-					ParticleImage->Draw(_particles[i].RGBA);
+					ParticleImage->Draw(it->RGBA);
 				}
 				else {
-					_mini->DrawRectangle(_particles[i].rect.X(), _particles[i].rect.Y(),
-										_particles[i].rect.X(), _particles[i].rect.Y(), ZIndex,
-										_particles[i].rect.W(), _particles[i].rect.H(),
-										_particles[i].RGBA, _particles[i].rect.RectangleAngle);
+					_mini->DrawRectangle(it->rect.X(), it->rect.Y(),
+										it->rect.X(), it->rect.Y(), ZIndex,
+										it->rect.W(), it->rect.H(),
+										it->RGBA, it->rect.RectangleAngle);
+
 				}
+			}
+			else {
+				//printf("r(%.2f,%.2f,%.2f,%.2f) 0x%08x\n", it->rect.X(), it->rect.Y(), it->rect.W(), it->rect.H(), it->RGBA);
 			}
 
 			alive++;
 		}
-		else if (Revive && _particles[i].spawn && _timeLeft > 0) {
-			createParticle(_startLocation, i);
+		else if (Revive && _timeLeft > 0) {
+			it = _particles.erase(it);
+			it--;
+			createParticle(_startLocation);
 			alive++;
 		}
 	}
-
 
 	if (!_pause && !_loop)
 		_timeLeft -= deltaTime;
@@ -178,26 +200,28 @@ void Emitter::Draw(float deltaTime) {
 	}
 }
 
-void Emitter::createParticle(Vector2 location, int i) {
+void Emitter::createParticle(Vector2 location) {
 	char r,g,b,a;
 	float c,s,x,y,t;
 
+	EmitterParticle particle = EmitterParticle();
+
 	// Knows to draw and to revive when dead
-	_particles[i].spawn = 1;
+	particle.spawn = 1;
 
 	// Generate random attributes
-	_particles[i].TTL = randomRange(RangeTTL.X, RangeTTL.Y);
+	particle.TTL = randomRange(RangeTTL.X, RangeTTL.Y);
 
 	r = (char)randomRange(RangeColorRed.X,RangeColorRed.Y); if (r<0) {r=0;} else if (r>255) {r=255;}
 	g = (char)randomRange(RangeColorGreen.X,RangeColorGreen.Y); if (g<0) {g=0;} else if (g>255) {g=255;}
 	b = (char)randomRange(RangeColorBlue.X,RangeColorBlue.Y); if (b<0) {b=0;} else if (b>255) {b=255;}
 	a = (char)randomRange(RangeColorAlpha.X,RangeColorAlpha.Y); if (a<0) {a=0;} else if (a>255) {a=255;}
-	_particles[i].RGBA = (r<<24) | (g<<16) | (b<<8) | a;
+	particle.RGBA = (r<<24) | (g<<16) | (b<<8) | a;
 
-	_particles[i].rect.X(randomRange(RangeStartX.X, RangeStartX.Y) + location.X);
-	_particles[i].rect.Y(randomRange(RangeStartY.X, RangeStartX.Y) + location.Y);
-	_particles[i].rect.W(randomRange(RangeDimensionW.X, RangeDimensionW.Y));
-	_particles[i].rect.H(randomRange(RangeDimensionH.X, RangeDimensionH.Y));
+	particle.rect.X(randomRange(RangeStartX.X, RangeStartX.Y) + location.X);
+	particle.rect.Y(randomRange(RangeStartY.X, RangeStartX.Y) + location.Y);
+	particle.rect.W(randomRange(RangeDimensionW.X, RangeDimensionW.Y));
+	particle.rect.H(randomRange(RangeDimensionH.X, RangeDimensionH.Y));
 
 
 	t = DEG2RAD(randomRange(RangeVelocityTheta.X, RangeVelocityTheta.Y));
@@ -207,9 +231,11 @@ void Emitter::createParticle(Vector2 location, int i) {
 	y = -x;
 
 
-	_particles[i].velocity.Set(c*x, s*x);
+	particle.velocity.Set(c*x, s*x);
 
-	_particles[i].angleVelocity = randomRange(RangeRotation.X, RangeRotation.Y);
+	particle.angleVelocity = randomRange(RangeRotation.X, RangeRotation.Y);
+
+	_particles.push_back(particle);
 }
 
 //---------------------------------------------------------------------------
@@ -234,17 +260,12 @@ void Emitter::Resume() {
 }
 
 void Emitter::Stop() {
-	int i;
-
 	_timeLeft = 0;
 	if (_activeP <= 0)
 		return;
 
 	// clean up
-	for (i=0;i<_maxP;i++) {
-		_particles[i].TTL = 0;
-		_particles[i].spawn = 0;
-	}
+	_particles.clear();
 	_activeP = 0;
 }
 

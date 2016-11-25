@@ -8,6 +8,8 @@
 #ifndef EMITTER_HPP_
 #define EMITTER_HPP_
 
+#include <vector>							// std::vector<>
+
 #include <Mini2D/Mini2D.hpp>				// Mini2D class
 #include <Mini2D/Image.hpp>					// Image class
 #include <Mini2D/Units.hpp>					// RectangleF, Vector2
@@ -116,10 +118,11 @@ private:
 
 	Vector2 _startLocation;					// Start location for the given emission session
 
-	EmitterParticle * _particles;			// Array of particles
+	//EmitterParticle * _particles;			// Array of particles
+	std::vector<EmitterParticle> _particles;
 
 	// Create particle
-	void createParticle(Vector2 location, int i);
+	void createParticle(Vector2 location);
 };
 
 #endif /* EMITTER_HPP_ */

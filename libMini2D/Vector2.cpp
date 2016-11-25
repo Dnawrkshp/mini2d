@@ -136,3 +136,7 @@ void Vector2::Reflect(Vector2 * out, Vector2 * direction, Vector2 * normal) {
 	n.Normalize();
 	out->Set(*direction - (n * 2.0f * DotProduct(direction,&n)));
 }
+
+float Vector2::ToAngle(Vector2 * in) {
+	return -RAD2DEG(atan2(in->Y,in->X));
+}

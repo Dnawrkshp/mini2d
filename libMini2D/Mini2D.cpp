@@ -76,12 +76,16 @@ Mini2D::Mini2D(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f
 
 	// Private variables
 	_maxFrameCount = 0xFFFFFFFFFFFFFFFA;
+	_frameCount = 0;
 	_clearColor = 0xFF000000;
 	_alphaEnabled = 0;
 	_analogDeadzone = 0;
 
-	memset(&_padData[0], 0, sizeof(padData));
-	memset(&_padData[1], 0, sizeof(padData));
+	XMB = 0;
+
+	// Clear padData buffers
+	for (int x = 0; x < MAX_PORT_NUM; x++)
+		memset(&_padData[x], 0, sizeof(padData));
 
 	_exitCallback = eCallback;
 }

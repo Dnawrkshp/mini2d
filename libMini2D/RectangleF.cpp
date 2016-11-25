@@ -150,23 +150,27 @@ Vector2 * RectangleF::GetRotatedCenter() {
 //---------------------------------------------------------------------------
 bool RectangleF::intersectFast(RectangleF * rectangle) {
 	update();
-	Vector2 * center = rectangle->GetRotatedCenter();
-	if ((_rCenter.X-Dimension.X/2) < (center->X+rectangle->W()/2) &&
-		(_rCenter.X+Dimension.X/2) > (center->X-rectangle->W()/2) &&
-		(_rCenter.Y-Dimension.Y/2) < (center->Y+rectangle->H()/2) &&
-		(_rCenter.Y+Dimension.Y/2) > (center->Y-rectangle->H()/2))
+	rectangle->GetRotatedCenter();
+
+	if (TopLeft.X <= rectangle->TopRight.X &&
+		TopRight.X >= rectangle->TopLeft.X &&
+		TopLeft.Y <= rectangle->BottomLeft.Y &&
+		BottomLeft.Y >= rectangle->TopLeft.Y)
 		return 1;
+
 	return 0;
 }
 
 bool RectangleF::intersectFast(CircleF * circle) {
 	update();
 	Vector2 * center = circle->GetRotatedCenter();
-	if ((_rCenter.X-Dimension.X/2) < (center->X+circle->R()) &&
-		(_rCenter.X+Dimension.X/2) > (center->X-circle->R()) &&
-		(_rCenter.Y-Dimension.Y/2) < (center->Y+circle->R()) &&
-		(_rCenter.Y+Dimension.Y/2) > (center->Y-circle->R()))
+	
+	if (TopLeft.X <= (center->X+circle->R()) &&
+		TopRight.X >= (center->X-circle->R()) &&
+		TopLeft.Y <= (center->Y+circle->R()) &&
+		BottomLeft.Y >= (center->Y-circle->R()))
 		return 1;
+
 	return 0;
 }
 
@@ -209,9 +213,15 @@ int RectangleF::Intersect(CircleF * circle, Vector2 * normal) {
 }
 
 bool RectangleF::Contain(RectangleF * rectangle) {
-	int points = 0;
-	if (Intersect(rectangle, NULL, &points) && points == 4)
+	update();
+	rectangle->GetRotatedCenter();
+	
+	if (TopLeft.X <= rectangle->TopLeft.X &&
+		BottomRight.X >= rectangle->BottomRight.X &&
+		TopLeft.Y <= rectangle->TopLeft.Y &&
+		BottomRight.Y >= rectangle->BottomRight.Y)
 		return 1;
+
 	return 0;
 }
 
