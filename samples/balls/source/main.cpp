@@ -245,7 +245,7 @@ bool BallCollisionCheck(Ball * ball, Vector2 * normal) {
 	bool ballCollide = 0;
 
 	// Check if the ball goes out of bounds
-	int boundsCheck = paper->DrawRegion.Intersect(&ball->DrawRegion, normal);
+	int boundsCheck = ball->Intersect(&paper->DrawRegion, normal);
 	if (boundsCheck)
 		return 1;
 	
@@ -257,7 +257,7 @@ bool BallCollisionCheck(Ball * ball, Vector2 * normal) {
 
 	// Check if the ball collides with another ball
 	for(std::vector<Ball*>::iterator it = balls.begin(); it != balls.end(); it++) {
-    	if ((*it) != ball && (*it)->DrawRegion.Intersect(&ball->DrawRegion, normal)) {
+		if ((*it) != ball && (*it)->Intersect(&ball->DrawRegion, normal)) {
     		ballCollide = 1;
 
     		// Here we can affect the velocity of the other ball

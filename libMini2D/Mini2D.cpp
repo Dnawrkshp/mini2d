@@ -148,7 +148,7 @@ static void sys_callback(uint64_t status, uint64_t param, void* userdata) {
 	printf("sys_callback: %ld, %ld\n", status, param);
 	switch (status) {
 		case SYSUTIL_EXIT_GAME: //0x0101
-			tiny3d_Exit();
+			// tiny3d_Exit();
 			unload();
 				
 			if (_exitCallback != NULL)
@@ -227,7 +227,7 @@ void Mini2D::BeginDrawLoop() {
 		Flip();
 	}
 
-	tiny3d_Exit();
+	// tiny3d_Exit();
 }
 
 void Mini2D::Flip() {
@@ -307,14 +307,18 @@ unsigned int Mini2D::AddTexture(void * pixelData, int pitch, int height) {
 	return textureOff;
 }
 
-void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat) {
+void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgbaTL, unsigned int rgbaTR, unsigned int rgbaBR, unsigned int rgbaBL, float angle, unsigned int colorFormat) {
 	tiny3d_SetTextureWrap(0, textureOff, width, height, pitch,  
 		(text_format)colorFormat, TEXTWRAP_CLAMP, TEXTWRAP_CLAMP, TEXTURE_LINEAR);
-	drawSpriteRot(xAnchor, yAnchor, x, y, z, w, h, rgba, angle);
+	drawSpriteRot(xAnchor, yAnchor, x, y, z, w, h, rgbaTL, rgbaTR, rgbaBR, rgbaBL, angle);
+}
+
+void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat) {
+	DrawTexture(textureOff, pitch, width, height, xAnchor, yAnchor, x, y, z, w, h, rgba, rgba, rgba, rgba, angle, colorFormat);
 }
 
 void Mini2D::DrawTexture(u32 textureOff, int pitch, int width, int height, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat) {
-	DrawTexture(textureOff, pitch, width, height, x+(w/2), y+(h/2), x, y, z, w, h, rgba, angle, colorFormat);
+	DrawTexture(textureOff, pitch, width, height, x, y, x, y, z, w, h, rgba, angle, colorFormat);
 }
 
 void Mini2D::DrawRectangle(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, unsigned int rgba, float angle) {
@@ -347,7 +351,7 @@ void Mini2D::DrawRectangle(float xAnchor, float yAnchor, float x, float y, float
 	tiny3d_End();
 }
 
-void Mini2D::drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, u32 rgba, float angle) {
+void Mini2D::drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, u32 rgba0, u32 rgba1, u32 rgba2, u32 rgba3, float angle) {
 	MATRIX matrix;
 	dx/=2;
 	dy/=2;
@@ -367,16 +371,19 @@ void Mini2D::drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float
 	tiny3d_SetPolygon(TINY3D_QUADS);
 
 	tiny3d_VertexPos(x-dx, y-dy, layer);
-	tiny3d_VertexColor(rgba);
+	tiny3d_VertexColor(rgba0);
 	tiny3d_VertexTexture(0.0f, 0.0f);
 
 	tiny3d_VertexPos(x+dx, y-dy, layer);
+	tiny3d_VertexColor(rgba1);
 	tiny3d_VertexTexture(0.99f, 0.0f);
 
 	tiny3d_VertexPos(x+dx, y+dy, layer);
+	tiny3d_VertexColor(rgba2);
 	tiny3d_VertexTexture(0.99f, 0.99f);
 
 	tiny3d_VertexPos(x-dx, y+dy, layer);
+	tiny3d_VertexColor(rgba3);
 	tiny3d_VertexTexture(0.0f, 0.99f);
 
 	tiny3d_End();

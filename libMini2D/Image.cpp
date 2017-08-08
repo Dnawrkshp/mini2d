@@ -163,7 +163,7 @@ void Image::toRSX(void * buffer) {
 //---------------------------------------------------------------------------
 // Draw Functions
 //---------------------------------------------------------------------------
-void Image::Draw(unsigned int rgba) {
+void Image::Draw(unsigned int rgbaTL, unsigned int rgbaTR, unsigned int rgbaBR, unsigned int rgbaBL) {
 	if (_mini == NULL || !_textureOff)
 		return;
 
@@ -177,7 +177,11 @@ void Image::Draw(unsigned int rgba) {
 
 	float ax = nx, ay = ny;
 	
-	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgba, -DrawRegion.RectangleAngle, TINY3D_TEX_FORMAT_A8R8G8B8);
+	_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgbaTL, rgbaTR, rgbaBR, rgbaBL, -DrawRegion.RectangleAngle, TINY3D_TEX_FORMAT_A8R8G8B8);
+}
+
+void Image::Draw(unsigned int rgba) {
+	Draw(rgba, rgba, rgba, rgba);
 }
 
 //---------------------------------------------------------------------------

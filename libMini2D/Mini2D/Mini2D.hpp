@@ -200,6 +200,7 @@ public:
 	 * colorFormat:
 	 *		Tiny3D pixel format
 	 */
+	void DrawTexture(u32 textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgbaTL, unsigned int rgbaTR, unsigned int rgbaBR, unsigned int rgbaBL, float angle, unsigned int colorFormat);
 	void DrawTexture(unsigned int textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat);
 	void DrawTexture(unsigned int textureOff, int pitch, int width, int height, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat);
 	
@@ -257,7 +258,7 @@ private:
 	sysSpuImage _spuImage;					// Image holding sound module
 
 	// Draw texture with rotation
-	void drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, u32 rgba, float angle);
+	void drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, u32 rgba0, u32 rgba1, u32 rgba2, u32 rgba3, float angle);
 	
 	// Initialize SPU and sound modules
 	void initSPU();

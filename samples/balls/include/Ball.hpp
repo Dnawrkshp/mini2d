@@ -36,6 +36,52 @@ public:
 	// Returns 0 if the ball is dead
 	bool Draw(float deltaTime);
 
+	/*
+	 * Intersect:
+	 *		Determines if the passed circle intersects with this ball.
+	 * 
+	 * circle:
+	 *		CircleF to compare with
+	 * normal [OUT]:
+	 *		The resulting normal of the intersected segment (can be null)
+	 * 
+	 * Return:
+	 *		1 if they intersect. 0 if not.
+	 */
+	bool Intersect(CircleF * circle, Vector2 * normal);
+
+	/*
+	 * Intersect:
+	 *		Determines if the passed rectangle intersects with this ball.
+	 * 
+	 * rectangle:
+	 *		RectangleF to compare with
+	 * normal [OUT]:
+	 *		The resulting normal of the intersected segment (can be null)
+	 * 
+	 * Return:
+	 *		1 if they intersect. 0 if not.
+	 */
+	int Intersect(RectangleF * rectangle, Vector2 * normal);
+
+	/*
+	 * Intersect:
+	 *		Determines if the passed polygon intersects with this ball.
+	 * 
+	 * polygon:
+	 *		Array of points
+	 * polyCount:
+	 *		Number of points in polygon
+	 * normal [OUT]:
+	 *		The resulting normal of the intersected segment (can be null)
+	 * points [OUT]:
+	 *		The number of points of polygon contained within this circle (can be null)
+	 * 
+	 * Return:
+	 *		1 if they intersect. 0 if not.
+	 */
+	bool Intersect(Vector2 * polygon[], int polyCount, Vector2 * normal, int * points);
+
 private:
 	Mini2D * _mini;
 	Image * _image;
@@ -43,6 +89,9 @@ private:
 	float _lastMove;
 
 	BallCollision_f _ballCollision;
+
+	// Checks if ball or rectangle is contained within each other
+	bool contains(RectangleF * rectangle);
 };
 
 #endif /* BALL_HPP_ */

@@ -119,38 +119,6 @@ public:
 	 */
 	Vector2 *GetRotatedCenter();
 
-	/*
-	 * Intersect:
-	 *		Determines if the passed polygon intersects with this circle.
-	 * 
-	 * polygon:
-	 *		Array of points
-	 * polyCount:
-	 *		Number of points in polygon
-	 * normal [OUT]:
-	 *		The resulting normal of the intersected segment (can be null)
-	 * points [OUT]:
-	 *		The number of points of polygon contained within this circle (can be null)
-	 * 
-	 * Return:
-	 *		1 if they intersect. 0 if not.
-	 */
-	bool Intersect(Vector2 * polygon[], int polyCount, Vector2 * normal, int * points);
-
-	/*
-	 * Intersect:
-	 *		Determines if the passed circle intersects with this circle.
-	 * 
-	 * circle:
-	 *		CircleF to compare with
-	 * normal [OUT]:
-	 *		The resulting normal of the intersected segment (can be null)
-	 * 
-	 * Return:
-	 *		1 if they intersect. 0 if not.
-	 */
-	bool Intersect(CircleF * circle, Vector2 * normal);
-
 private:
 	Vector2 _cCenter;						// Center of rotated circle
 
@@ -168,53 +136,6 @@ private:
 
 	// Calculate center
 	void Update();
-
-};
-
-class PolygonF {
-public:
-
-	/*
-	 * IntersectConvex:
-	 *		Determines if the passed convex polygons intersect.
-	 *		If polyMoving is contained within polyStatic, this returns 0
-	 * 
-	 * polyStatic:
-	 *		Array of points that generate the polygon used to check polyMoving is colliding
-	 * polyStaticCount:
-	 *		Number of points in polyStatic array
-	 * polyMoving:
-	 *		Array of points that generate the polygon that is potentially colliding into polyStatic
-	 * polyMovingCount:
-	 *		Number of points in polyMoving array
-	 * normal [OUT]:
-	 *		The resulting normal of the intersected segment (can be null)
-	 * points [OUT]:
-	 *		The number of points of polyMoving contained within polyStatic (can be null)
-	 * 
-	 * Return:
-	 *		1 if they intersect. 0 if not.
-	 */
-	static bool IntersectConvex(Vector2 * polyStatic[], int polyStaticCount, Vector2 * polyMoving[], int polyMovingCount, Vector2 * normal = NULL, int * points = NULL);
-
-	/*
-	 * IntersectCircle:
-	 *		Determines if the given circle intersects with the given polygon.
-	 *		If polyMoving is contained within polyStatic, this returns 0
-	 * 
-	 * polyStatic:
-	 *		Array of points that generate the polygon used to check polyMoving is colliding
-	 * polyStaticCount:
-	 *		Number of points in polyStatic array
-	 * circleMoving:
-	 *		The circle that is potentially colliding into polyStatic
-	 * normal:
-	 *		The resulting normal of the intersected segment (can be null)
-	 * 
-	 * Return:
-	 *		1 if they intersect. 0 if not.
-	 */
-	static bool IntersectCircle(Vector2 * polyStatic[], int polyStaticCount, CircleF * circleMoving, Vector2 * normal = NULL);
 
 };
 
@@ -273,38 +194,6 @@ public:
 	 *		Second corner
 	 */
 	void FromCorners(Vector2 point1, Vector2 point2);
-
-	/*
-	 * Intersect:
-	 *		Determines if the passed rectangle intersects with this rectangle.
-	 *		If one is contained within the other, this returns 0
-	 * 
-	 * rectangle:
-	 *		Rectangle to compare with
-	 * normal [OUT]:
-	 *		The resulting normal of the intersected segment (can be null)
-	 * points [OUT]:
-	 *		The number of points contained within this rectangle (can be null)
-	 * 
-	 * Return:
-	 *		1 if they intersect. 0 if not. -1 if not contained.
-	 */
-	int Intersect(RectangleF * rectangle, Vector2 * normal = NULL, int * points = NULL);
-
-	/*
-	 * Intersect:
-	 *		Determines if the passed circle intersects with this rectangle.
-	 *		If one is contained within the other, this returns 0
-	 * 
-	 * circle:
-	 *		Circle to compare with
-	 * normal [OUT]:
-	 *		The resulting normal of the intersected segment (can be null)
-	 * 
-	 * Return:
-	 *		1 if they intersect. 0 if not. -1 if not contained.
-	 */
-	int Intersect(CircleF * circle, Vector2 * normal = NULL);
 	
 	/*
 	 * Contain:
@@ -340,9 +229,6 @@ private:
 
 	// Calculate Center
 	void update();
-	// Do a quick and rough intersection check (to speedup collision testing)
-	bool intersectFast(RectangleF * rectangle);
-	bool intersectFast(CircleF * circle);
 };
 
 #endif /* UNITS_HPP_ */

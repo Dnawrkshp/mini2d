@@ -86,6 +86,7 @@ public:
 	 *		Color
 	 */
 	void Draw(unsigned int rgba = 0xFFFFFFFF);
+	void Draw(unsigned int rgbaTL, unsigned int rgbaTR, unsigned int rgbaBR, unsigned int rgbaBL);
 
 	/*
 	 * GetWidth:

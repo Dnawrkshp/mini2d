@@ -29,8 +29,8 @@ DATA		:=	data
 INCLUDES	:=	include
 PKGFILES 	:= $(CURDIR)/pkgdata
 
-TITLE		:=	Mini2D printtest
-APPID		:=	M2DPRINTT
+TITLE		:=	Mini2D dialogtest
+APPID		:=	M2DDIALOG
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 #---------------------------------------------------------------------------------
