@@ -28,6 +28,7 @@ Font::Font(Mini2D * mini) :
 	ForeColor = 0x000000FF;
 	BackColor = 0x00000000;
 	ZIndex = 0;
+	SpacingOffset = 0;
 	TextAlign = PRINT_ALIGN_TOPLEFT;
 }
 
@@ -220,7 +221,7 @@ float Font::printChar(FontChar * fontChar, float x, float y, float w, float h) {
 					0,
 					fontChar->format);
 
-	return dx2;
+	return dx2 + SpacingOffset;
 }
 
 float Font::GetWidth(const wchar_t * cString, std::wstring * string, float w, int offset) {
@@ -249,7 +250,7 @@ float Font::GetWidth(wchar_t chr, float w) {
 	for(std::vector<FontChar*>::iterator it = CharMap.begin(); it != CharMap.end(); it++) {
 		fc = *it;
 		if (fc->chr == chr) {
-			return w * ((float)fc->fw / (float)(fc->w+1));
+			return (w * ((float)fc->fw / (float)(fc->w+1))) + SpacingOffset;
 		}
 	}
 

@@ -41,6 +41,7 @@ public:
 	unsigned int ForeColor;					// RGBA text color
 
 	float ZIndex;							// Z coordinate
+	float SpacingOffset;					// Offset added to draw location after each character
 
 	FontPrintAlign TextAlign;				// Text alignment
 
