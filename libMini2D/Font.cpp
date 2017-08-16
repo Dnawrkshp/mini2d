@@ -218,7 +218,7 @@ float Font::printChar(FontChar * fontChar, float x, float y, float w, float h) {
 					h,
 					ForeColor,
 					0,
-					TINY3D_TEX_FORMAT_A4R4G4B4);
+					fontChar->format);
 
 	return dx2;
 }
@@ -256,6 +256,7 @@ float Font::GetWidth(wchar_t chr, float w) {
 	return 0;
 }
 
+
 bool Font::isNewline(const wchar_t * cString, std::wstring * string, int strLen, int * index) {
 	wchar_t chr = string?string->at(*index):cString[*index];
 	if (chr == 0x000D && (*index) < (strLen-1) && (string?string->at((*index)+1):cString[(*index)+1]) == 0x000A)
@@ -270,6 +271,39 @@ bool Font::isNewline(const wchar_t * cString, std::wstring * string, int strLen,
 		return 1;
 	}
 	return 0;
+}
+
+//---------------------------------------------------------------------------
+// Load TTF Functions
+//---------------------------------------------------------------------------
+bool Font::AddChar(wchar_t chr, Image * image, int yCorrection) {
+	FontChar * fontChar = NULL;
+
+	if (!image || !chr)
+		return false;
+
+	fontChar = new FontChar();
+	fontChar->chr = chr;
+	fontChar->fw = image->GetWidth();
+	fontChar->w = fontChar->fw-1;
+	fontChar->h = image->GetHeight()-1;
+	fontChar->p = image->GetPitch();
+	fontChar->fy = yCorrection;
+	fontChar->rsx = tiny3d_TextureOffset(image->TexturePointer);
+	fontChar->format = TINY3D_TEX_FORMAT_A8R8G8B8;
+
+	// If this wchar is already mapped let's remove it
+	for(std::vector<FontChar*>::iterator it = CharMap.begin(); it != CharMap.end(); it++) {
+		if ((*it)->chr == chr) {
+			delete *it;
+			CharMap.erase(it);
+			break;
+		}
+	}
+
+	CharMap.push_back(fontChar);
+
+	return true;
 }
 
 //---------------------------------------------------------------------------
@@ -364,6 +398,7 @@ u8 * Font::addFontFromTTF(FT_Face face, u8 *texture, short w, short h)
 		fontChar->p = w*2;
 		fontChar->fy = 0;
 		fontChar->rsx = 0;
+		fontChar->format = TINY3D_TEX_FORMAT_A4R4G4B4;
 
 		font = bitmap;
 		

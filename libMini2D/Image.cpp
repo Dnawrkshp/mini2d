@@ -194,3 +194,7 @@ int Image::GetWidth() {
 int Image::GetHeight() {
 	return _height;
 }
+
+int Image::GetPitch() {
+	return _pitch;
+}

@@ -12,6 +12,7 @@
 #include <string>							// std::wstring
 
 #include <Mini2D/Mini2D.hpp>				// Class definition
+#include <Mini2D/Image.hpp>					// Image class
 #include <Mini2D/Units.hpp>					// Vector2
 
 class Font {
@@ -148,6 +149,22 @@ public:
 	int PrintFormat(Vector2 location, Vector2 size, bool useContainer, bool wordWrap, std::size_t len, const wchar_t * format, ...);
 
 	/*
+	 * AddChar:
+	 *		Defines the given wchar_t as the given image within this font
+	 *
+	 * chr:
+	 *		Wide character to associate this image with
+	 * image:
+	 *		Image to draw
+	 * yCorrection:
+	 *		Y offset from top
+	 * 
+	 * Return:
+	 *		True if successful. False if unsuccessful.
+	 */
+	bool AddChar(wchar_t chr, Image * image, int yCorrection = 0);
+
+	/*
 	 * GetWidth:
 	 *		Returns the width of the current line in string or cString
 	 *
@@ -177,6 +194,7 @@ private:
 	typedef struct _fontChar_t {
 		wchar_t chr;							// Character code
 		u32 rsx;								// Offset in RSX
+		u32 format;								// Color format of image
 		u8 fw;									// Width of char
 		u8 fy;									// Y correction
 		u8 w;									// Width of image

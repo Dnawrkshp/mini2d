@@ -100,6 +100,12 @@ public:
 	 */
 	int GetHeight();
 
+	/*
+	 * GetPitch:
+	 *		Returns the pitch of the image
+	 */
+	int GetPitch();
+
 private:
 	Mini2D * _mini;
 
