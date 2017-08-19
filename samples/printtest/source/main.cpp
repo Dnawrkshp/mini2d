@@ -55,13 +55,13 @@ int main(s32 argc, const char* argv[]) {
 
 int drawUpdate(float deltaTime, unsigned long frame) {
 	font1->TextAlign = Font::PRINT_ALIGN_TOPLEFT;
-	font1->PrintLine(NULL, &TEXT_LEFT, NULL, PRINT_TOPLEFT, FONT_LARGE);
+	font1->PrintLine(TEXT_LEFT, NULL, PRINT_TOPLEFT, FONT_LARGE);
 
 	font1->TextAlign = Font::PRINT_ALIGN_BOTTOMRIGHT;
-	font1->PrintLine(NULL, &TEXT_RIGHT, NULL, PRINT_BOTTOMRIGHT, FONT_LARGE);
+	font1->PrintLine(TEXT_RIGHT, NULL, PRINT_BOTTOMRIGHT, FONT_LARGE);
 
 	font1->TextAlign = Font::PRINT_ALIGN_CENTER;
-	font1->PrintLine(NULL, &TEXT_CENTER, NULL, PRINT_CENTER, FONT_LARGE);
+	font1->PrintLine(TEXT_CENTER, NULL, PRINT_CENTER, FONT_LARGE);
 	
 	return doExit;
 }

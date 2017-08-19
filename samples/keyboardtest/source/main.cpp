@@ -88,7 +88,7 @@ int main(s32 argc, const char* argv[]) {
 
 int drawUpdate(float deltaTime, unsigned long frame) {
 	mini->DrawRectangle(OpenSans->Container.X(), OpenSans->Container.Y(), OpenSans->Container.X(), OpenSans->Container.Y(), 0, OpenSans->Container.W(), OpenSans->Container.H(), 0xC0C0C0FF, 0);
-	OpenSans->PrintLines(NULL, &start, 0, LOC_TEXT, FONT_LARGE, 1, 1);
+	OpenSans->PrintLines(start, 0, LOC_TEXT, FONT_LARGE, 1, 1);
 	
 	if (kbWait && !kb1->Alive()) {
 		// If user submitted the text

@@ -67,10 +67,10 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned long frame) {
-	font1->PrintLine(NULL, &TEXT_MESSAGE, NULL, PRINT_ITEM0, FONT_LARGE);
-	font1->PrintLine(NULL, &TEXT_ERROR, NULL, PRINT_ITEM1, FONT_LARGE);
-	font1->PrintLine(NULL, &TEXT_SINGLE, NULL, PRINT_ITEM2, FONT_LARGE);
-	font1->PrintLine(NULL, &TEXT_DOUBLE, NULL, PRINT_ITEM3, FONT_LARGE);
+	font1->PrintLine(TEXT_MESSAGE, NULL, PRINT_ITEM0, FONT_LARGE);
+	font1->PrintLine(TEXT_ERROR, NULL, PRINT_ITEM1, FONT_LARGE);
+	font1->PrintLine(TEXT_SINGLE, NULL, PRINT_ITEM2, FONT_LARGE);
+	font1->PrintLine(TEXT_DOUBLE, NULL, PRINT_ITEM3, FONT_LARGE);
 
 	switch (doDialog) {
 		case 0:

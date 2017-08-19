@@ -85,10 +85,8 @@ public:
 	 * PrintLine:
 	 *		Print the first line in string from the index held in startIndex
 	 * 
-	 * cString:
-	 *		Buffer containing wide char array to print (if printing std::wstring, make NULL)
 	 * string:
-	 *		Buffer containing std::wstring to print (if printing wchar_t*, make NULL)
+	 *		Buffer containing std::wstring to print
 	 * startIndex:
 	 *		Pointer to startIndex. When this function closes this value is set to the index of the next line to print
 	 * location:
@@ -98,16 +96,14 @@ public:
 	 * useContainer:
 	 *		Whether or not to use container to clip printed text
 	 */
-	void PrintLine(const wchar_t * cString, const std::wstring * string, int * startIndex, const Vector2& location, float size, bool useContainer = 0);
+	void PrintLine(const std::wstring& string, int * startIndex, const Vector2& location, float size, bool useContainer = 0);
 
 	/*
 	 * PrintLines:
 	 *		Prints all the lines in string from the index lineStart onward
 	 * 
-	 * cString:
-	 *		Buffer containing wide char array to print (if printing std::wstring, make NULL)
 	 * string:
-	 *		Buffer containing std::wstring to print (if printing wchar_t*, make NULL)
+	 *		Buffer containing std::wstring to print
 	 * lineStart:
 	 *		Starting line
 	 * location:
@@ -119,7 +115,7 @@ public:
 	 * wordWrap:
 	 *		If useContainer is true. Whether or not to wrap characters drawn outside the container to a new line
 	 */
-	void PrintLines(const wchar_t * cString, const std::wstring * string, int lineStart, const Vector2& location, float size, bool useContainer = 0, bool wordWrap = 0);
+	void PrintLines(const std::wstring& string, int lineStart, const Vector2& location, float size, bool useContainer = 0, bool wordWrap = 0);
 
 	/*
 	 * PrintFormat:
@@ -163,18 +159,16 @@ public:
 
 	/*
 	 * GetWidth:
-	 *		Returns the width of the current line in string or cString
+	 *		Returns the width of the current line in string
 	 *
-	 * cString:
-	 *		wide char array (If calculating width of std::wstring, make NULL)
 	 * string:
-	 *		wide string (If calculating width of wchar_t*, make NULL)
+	 *		wide string
 	 * size:
 	 *		Pixel size per character
 	 * offset:
 	 *		Offset in string to start calculating width from
 	 */
-	float GetWidth(const wchar_t * cString, const std::wstring * string, float size, int offset = 0);
+	float GetWidth(const std::wstring& string, float size, int offset = 0);
 	
 	/*
 	 * GetWidth:
@@ -213,9 +207,9 @@ private:
 	// Draw character to frame
 	float printChar(FontChar * fontChar, float x, float y, float size);
 	// Determine if the character denotes a line break
-	bool isNewline(const wchar_t * cString, const std::wstring * string, int strLen, int * index);
+	bool isNewline(const std::wstring& string, int strLen, int * index);
 	// Prints line
-	int printLine(const wchar_t * cString, const std::wstring * string, int * startIndex, const Vector2& location, float size, bool useContainer, bool draw);
+	int printLine(const std::wstring& string, int * startIndex, const Vector2& location, float size, bool useContainer, bool draw);
 	// Convert the glyph into a bitmap and load into the RSX
 	bool ttfToBitmap(FT_Face face, u32 chr, u8 ** bitmap, u16 * w, u16 * h, u16 * fw, u16 * yCorrection);
 	// Load all glyphs into rsx

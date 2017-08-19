@@ -48,6 +48,7 @@ void Font::unloadCharMap() {
 int Font::PrintFormat(const Vector2& location, float size, bool useContainer, bool wordWrap, std::size_t len, const wchar_t * format, ...) {
 	va_list args;
 	wchar_t * buffer;
+	std::wstring string;
 	int result = 0;
 
 	if (!_mini || !format || !ForeColor || !len)
@@ -65,23 +66,26 @@ int Font::PrintFormat(const Vector2& location, float size, bool useContainer, bo
     	return result;
     }
 
-
-    PrintLines((const wchar_t*)buffer, NULL, 0, location, size, useContainer, wordWrap);
+    string = buffer;
     delete [] buffer;
+
+    PrintLines(string, 0, location, size, useContainer, wordWrap);
+
+    
     return result;
 }
 
-void Font::PrintLines(const wchar_t * cString, const std::wstring * string, int lineStart, const Vector2& location, float size, bool useContainer, bool wordWrap) {
+void Font::PrintLines(const std::wstring& string, int lineStart, const Vector2& location, float size, bool useContainer, bool wordWrap) {
 	int i,len,line,last=-1;
 	bool draw = lineStart <= 0,wrap=0;
 	Vector2 loc = location;
-	if (!_mini || (!string && !cString) || !ForeColor)
+	if (!_mini || string.empty() || !ForeColor)
 		return;
 
-	len = string?string->length():wcslen(cString);
+	len = string.length();
 	line = 0;
 	for (i=0;i<len;) {
-		wrap = printLine(cString, string, &i, loc, size, useContainer, draw && (!wrap || wrap==wordWrap)) == 1;
+		wrap = printLine(string, &i, loc, size, useContainer, draw && (!wrap || wrap==wordWrap)) == 1;
 
 		if (!wrap || wrap==wordWrap)
 			loc.Y += size;
@@ -91,18 +95,18 @@ void Font::PrintLines(const wchar_t * cString, const std::wstring * string, int 
 			draw = 1;
 
 		if (last == i) {
-			wprintf(L"Endless loop detected in Font::PrintLines():\n\tstring: %ls\n\tindex %d\n\tDrawing past container width perhaps?\n", string?string->c_str():cString, i);
+			wprintf(L"Endless loop detected in Font::PrintLines():\n\tstring: %ls\n\tindex %d\n\tDrawing past container width perhaps?\n", string.c_str(), i);
 			return;
 		}
 		last = i;
 	}
 }
 
-void Font::PrintLine(const wchar_t * cString, const std::wstring * string, int * startIndex, const Vector2& location, float size, bool useContainer) {
-	printLine(cString, string, startIndex, location, size, useContainer, 1);
+void Font::PrintLine(const std::wstring& string, int * startIndex, const Vector2& location, float size, bool useContainer) {
+	printLine(string, startIndex, location, size, useContainer, 1);
 }
 
-int Font::printLine(const wchar_t * cString, const std::wstring * string, int * startIndex, const Vector2& location, float size, bool useContainer, bool draw) {
+int Font::printLine(const std::wstring& string, int * startIndex, const Vector2& location, float size, bool useContainer, bool draw) {
 	int j,len;
 	float cRight=0,cLeft=0,cTop=0,cBottom=0,w;
 	float cw = 0, ch = 0;
@@ -110,7 +114,7 @@ int Font::printLine(const wchar_t * cString, const std::wstring * string, int * 
 	FontChar * fc = NULL;
 	Vector2 loc = location;
 
-	if (!_mini || (!string && !cString) || !ForeColor)
+	if (!_mini || string.empty() || !ForeColor)
 		return -1;
 
 	// Calculate left and right bounds
@@ -126,7 +130,7 @@ int Font::printLine(const wchar_t * cString, const std::wstring * string, int * 
 
 	// Align X
 	// If useContainer: only align if the string width is less than the container width
-	w = GetWidth(cString,string,size,j);
+	w = GetWidth(string,size,j);
 	if (w < (useContainer?Container.Dimension.X:w+1)) {
 		switch (TextAlign) {
 			case PRINT_ALIGN_TOPCENTER:
@@ -162,14 +166,14 @@ int Font::printLine(const wchar_t * cString, const std::wstring * string, int * 
 			break;
 	}
 
-	len = string?string->length():wcslen(cString);
+	len = string.length();
 	for (; j < len; j++) {
-		if (isNewline(cString, string, len, &j)) {
+		if (isNewline(string, len, &j)) {
 			j++;
 			break;
 		}
 
-		fc = getFontChar(string?string->at(j):cString[j]);
+		fc = getFontChar(string.at(j));
 		if (fc) {
 			cw = getDimension(fc->w, fc->fr, size);
 			ch = getDimension(fc->h, fc->fr, size);
@@ -232,21 +236,21 @@ float Font::printChar(FontChar * fontChar, float x, float y, float size) {
 	return dx2 + SpacingOffset;
 }
 
-float Font::GetWidth(const wchar_t * cString, const std::wstring * string, float size, int offset) {
+float Font::GetWidth(const std::wstring& string, float size, int offset) {
 	int i,l;
 	float width = 0.f;
 
-	if (!string && !cString)
+	if (string.empty())
 		return 0.f;
 
 	if (offset < 0)
 		offset = 0;
 
-	l = string?string->length():wcslen(cString);
+	l = string.length();
 	for (i=offset;i<l;i++) {
-		if (isNewline(cString, string, l, &i))
+		if (isNewline(string, l, &i))
 			break;
-		width += GetWidth(string?string->at(i):cString[i], size);
+		width += GetWidth(string.at(i), size);
 	}
 
 	return width;
@@ -265,9 +269,9 @@ float Font::getDimension(float d, float r, float s) {
 }
 
 
-bool Font::isNewline(const wchar_t * cString, const std::wstring * string, int strLen, int * index) {
-	wchar_t chr = string?string->at(*index):cString[*index];
-	if (chr == 0x000D && (*index) < (strLen-1) && (string?string->at((*index)+1):cString[(*index)+1]) == 0x000A)
+bool Font::isNewline(const std::wstring& string, int strLen, int * index) {
+	wchar_t chr = string.at(*index);
+	if (chr == 0x000D && (*index) < (strLen-1) && string.at((*index)+1) == 0x000A)
 	{
 		(*index) ++;
 		return 1;
