@@ -20,7 +20,11 @@
 
 #include "OpenSans_Regular_ttf.h"
 
+// 
+using namespace Mini2D;
 
+
+// 
 int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
@@ -28,7 +32,7 @@ void exit();
 // Called by Ball on Draw()
 bool BallCollisionCheck(Ball * ball, Vector2 * normal);
 
-Mini2D * mini = NULL;
+Mini * mini = NULL;
 
 Image *paper = NULL;
 Image *ball = NULL;
@@ -70,8 +74,8 @@ std::vector<Ball*> balls;
 
 int main(s32 argc, const char* argv[]) {
 
-	// Load Mini2D
-	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+	// Load Mini
+	mini = new Mini((Mini::PadCallback_f)&padUpdate, (Mini::DrawCallback_f)&drawUpdate, (Mini::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
 	SIZE_CANNON = Vector2(					0.1*mini->MAXW,					0.1*mini->MAXW);
@@ -162,7 +166,7 @@ void padUpdate(int changed, int port, padData pData) {
 	short x,y,dead=10;
 	float theta;
 
-	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
+	if (pData.BTN_START && changed & Mini::BTN_CHANGED_START)
 		doExit = -1;
 
 	// Direct cannon
@@ -192,7 +196,7 @@ void padUpdate(int changed, int port, padData pData) {
 		BallSpeed = SLIDER_BALLSPEED_MIN;
 
 	// If CROSS is pressed and we haven't hit the max number of balls
-	if (pData.BTN_CROSS && changed & Mini2D::BTN_CHANGED_CROSS && count < 50) {
+	if (pData.BTN_CROSS && changed & Mini::BTN_CHANGED_CROSS && count < 50) {
 		Ball * newBall = new Ball(mini, ball, BallCollisionCheck);										// Create new ball
 		newBall->MinSpeed = BALL_MINSPEED;																// Set minimum speed
 		newBall->DrawRegion.Location.Set(BALL_START);													// Set location to start location

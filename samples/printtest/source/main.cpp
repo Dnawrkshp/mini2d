@@ -6,11 +6,15 @@
 
 #include "comfortaa_regular_ttf.h"
 
+// 
+using namespace Mini2D;
+
+// callbacks
 int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
-Mini2D * mini = NULL;
+Mini * mini = NULL;
 
 Font * font1 = NULL;
 
@@ -29,8 +33,8 @@ std::wstring TEXT_CENTER = 	L"Center.";
 
 int main(s32 argc, const char* argv[]) {
 
-	// Load Mini2D
-	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+	// Load Mini
+	mini = new Mini((Mini::PadCallback_f)&padUpdate, (Mini::DrawCallback_f)&drawUpdate, (Mini::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
 	FONT_LARGE = 0.02*mini->MAXW;
@@ -67,7 +71,7 @@ int drawUpdate(float deltaTime, unsigned long frame) {
 }
 
 void padUpdate(int changed, int port, padData pData) {
-	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
+	if (pData.BTN_START && changed & Mini::BTN_CHANGED_START)
 		doExit = -1;
 }
 

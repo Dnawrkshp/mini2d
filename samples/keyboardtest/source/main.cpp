@@ -9,11 +9,15 @@
 
 #include "OpenSans_Regular_ttf.h"
 
+// 
+using namespace Mini2D;
+
+// callbacks
 int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
-Mini2D * mini = NULL;
+Mini * mini = NULL;
 
 Font * OpenSans = NULL;
 Keyboard * kb1 = NULL;
@@ -34,8 +38,8 @@ std::wstring start = L"Press TRIANGLE to open Keyboard";
 
 int main(s32 argc, const char* argv[]) {
 
-	// Initialize Mini2D
-	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+	// Initialize Mini
+	mini = new Mini((Mini::PadCallback_f)&padUpdate, (Mini::DrawCallback_f)&drawUpdate, (Mini::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
 	FONT_LARGE = 0.02*mini->MAXW;
@@ -111,10 +115,10 @@ int drawUpdate(float deltaTime, unsigned long frame) {
 }
 
 void padUpdate(int changed, int port, padData pData) {
-	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
+	if (pData.BTN_START && changed & Mini::BTN_CHANGED_START)
 		doExit = -1;
 
-	if (pData.BTN_TRIANGLE && changed & Mini2D::BTN_CHANGED_TRIANGLE) {
+	if (pData.BTN_TRIANGLE && changed & Mini::BTN_CHANGED_TRIANGLE) {
 		kb1->Display(&title, &start);
 		kbWait = 1;
 	}

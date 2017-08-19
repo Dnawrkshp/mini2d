@@ -9,11 +9,15 @@
 
 #include "comfortaa_regular_ttf.h"
 
+// 
+using namespace Mini2D;
+
+// callbacks
 int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
-Mini2D * mini = NULL;
+Mini * mini = NULL;
 
 Emitter * emitter1 = NULL;
 Font * comfortaa = NULL;
@@ -37,8 +41,9 @@ std::wstring TEXT_STOP =		L"Press CIRCLE to stop the emission";
 std::wstring TEXT_DIRECT =		L"Use the analog stick to direct the emission";
 
 int main(s32 argc, const char* argv[]) {
-	// Load Mini2D
-	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+	
+	// Load Mini
+	mini = new Mini((Mini::PadCallback_f)&padUpdate, (Mini::DrawCallback_f)&drawUpdate, (Mini::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
 	CENTER = Vector2(mini->MAXW*0.5, mini->MAXH*0.5);
@@ -100,16 +105,16 @@ void padUpdate(int changed, int port, padData pData) {
 	short x,y,dead=15;
 	float theta, d=5;
 
-	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
+	if (pData.BTN_START && changed & Mini::BTN_CHANGED_START)
 		doExit = -1;
 
-	if (pData.BTN_CROSS && changed & Mini2D::BTN_CHANGED_CROSS) {
+	if (pData.BTN_CROSS && changed & Mini::BTN_CHANGED_CROSS) {
 		emitter1->Start(CENTER, -1);
 	}
-	if (pData.BTN_CIRCLE && changed & Mini2D::BTN_CHANGED_CIRCLE) {
+	if (pData.BTN_CIRCLE && changed & Mini::BTN_CHANGED_CIRCLE) {
 		emitter1->Stop();
 	}
-	if (pData.BTN_TRIANGLE && changed & Mini2D::BTN_CHANGED_TRIANGLE) {
+	if (pData.BTN_TRIANGLE && changed & Mini::BTN_CHANGED_TRIANGLE) {
 		if (emitter1->Status() == Emitter::EMITTER_PAUSED)
 			emitter1->Resume();
 		else

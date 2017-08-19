@@ -6,11 +6,15 @@
 
 #include "alphatest_png.h"
 
+// 
+using namespace Mini2D;
+
+// callbacks
 int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
 
-Mini2D * mini = NULL;
+Mini * mini = NULL;
 Image * img1 = NULL;
 
 int doExit = 0;
@@ -21,8 +25,8 @@ Vector2 ALPHATEST_SIZE;
 
 int main(s32 argc, const char* argv[]) {
 
-	// Initialize Mini2D
-	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+	// Initialize Mini
+	mini = new Mini((Mini::PadCallback_f)&padUpdate, (Mini::DrawCallback_f)&drawUpdate, (Mini::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
 	ALPHATEST_LOC = Vector2(0.5*mini->MAXW,0.5*mini->MAXH);
@@ -48,12 +52,12 @@ int drawUpdate(float deltaTime, unsigned long frame) {
 }
 
 void padUpdate(int changed, int port, padData pData) {
-	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
+	if (pData.BTN_START && changed & Mini::BTN_CHANGED_START)
 		doExit = -1;
 
-	if (pData.BTN_LEFT && changed & Mini2D::BTN_CHANGED_LEFT)
+	if (pData.BTN_LEFT && changed & Mini::BTN_CHANGED_LEFT)
 		doSaturate = !doSaturate;
-	if (pData.BTN_RIGHT && changed & Mini2D::BTN_CHANGED_RIGHT)
+	if (pData.BTN_RIGHT && changed & Mini::BTN_CHANGED_RIGHT)
 		doSaturate = !doSaturate;
 }
 

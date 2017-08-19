@@ -12,135 +12,139 @@
 
 #include <Mini2D/Mini2D.hpp>				// Class definition
 
-class Dialog {
-public:
-	msgButton DialogResponse;				// Response from msgDialogCallback (0 if no response)
+namespace Mini2D {
 
-	// Constructors
-	Dialog(Mini2D * mini);
-	virtual ~Dialog();
+	class Dialog {
+	public:
+		msgButton DialogResponse;				// Response from msgDialogCallback (0 if no response)
 
-	/*
-	 * Pop:
-	 * 		Displays a message dialog
-	 * 
-	 * type:
-	 * 		Message dialog type to pass to msgDialogOpen2
-	 * message:
-	 * 		Message text
-	 * wait:
-	 * 		Whether or not to wait for the dialog to close before returning
-	 * ms:
-	 * 		Time (in milliseconds) to wait before automatically closing the dialog
-	 * 
-	 * Return:
-	 * 		The response from the message dialog if wait is true. 0 otherwise
-	 */
-	msgButton Pop(msgType type, const char * message, bool wait, unsigned int ms);
-	msgButton Pop(msgType type, const char * message, bool wait);
+		// Constructors
+		Dialog(Mini * mini);
+		virtual ~Dialog();
 
-	/*
-	 * PopError:
-	 * 		Displays an error dialog
-	 * 
-	 * errorCode:
-	 * 		Error code to display
-	 * wait:
-	 * 		Whether or not to wait for the dialog to close before returning
-	 * ms:
-	 * 		Time (in milliseconds) to wait before automatically closing the dialog
-	 * 
-	 * Return:
-	 * 		The response from the message dialog if wait is true. 0 otherwise
-	 */
-	msgButton PopError(unsigned int errorCode, bool wait, unsigned int ms);
-	msgButton PopError(unsigned int errorCode, bool wait);
+		/*
+		 * Pop:
+		 * 		Displays a message dialog
+		 * 
+		 * type:
+		 * 		Message dialog type to pass to msgDialogOpen2
+		 * message:
+		 * 		Message text
+		 * wait:
+		 * 		Whether or not to wait for the dialog to close before returning
+		 * ms:
+		 * 		Time (in milliseconds) to wait before automatically closing the dialog
+		 * 
+		 * Return:
+		 * 		The response from the message dialog if wait is true. 0 otherwise
+		 */
+		msgButton Pop(msgType type, const char * message, bool wait, unsigned int ms);
+		msgButton Pop(msgType type, const char * message, bool wait);
 
-	/*
-	 * PopSingleProgressBar:
-	 * 		Displays a single progress bar dialog
-	 * 
-	 * dialogMessage:
-	 * 		Main dialog messaage
-	 * progressMessage:
-	 * 		Message to display next to the progress bar
-	 * msAfterComplete: (optional)
-	 * 		Time (in milliseconds) to wait before automatically closing the dialog AFTER the progress bar reaches 100%
-	 */
-	void PopSingleProgressBar(const char * dialogMessage, const char * progressMessage, unsigned int msAfterComplete = 0);
+		/*
+		 * PopError:
+		 * 		Displays an error dialog
+		 * 
+		 * errorCode:
+		 * 		Error code to display
+		 * wait:
+		 * 		Whether or not to wait for the dialog to close before returning
+		 * ms:
+		 * 		Time (in milliseconds) to wait before automatically closing the dialog
+		 * 
+		 * Return:
+		 * 		The response from the message dialog if wait is true. 0 otherwise
+		 */
+		msgButton PopError(unsigned int errorCode, bool wait, unsigned int ms);
+		msgButton PopError(unsigned int errorCode, bool wait);
 
-	/*
-	 * PopDoubleProgressBar:
-	 * 		Displays a single progress bar dialog
-	 * 
-	 * dialogMessage:
-	 * 		Main dialog messaage
-	 * progressMessage1:
-	 * 		Message to display next to the first progress bar
-	 * progressMessage2:
-	 * 		Message to display next to the second progress bar
-	 * msAfterComplete: (optional)
-	 * 		Time (in milliseconds) to wait before automatically closing the dialog AFTER the progress bar reaches 100%
-	 */
-	void PopDoubleProgressBar(const char * dialogMessage, const char * progressMessage1, const char * progressMessage2, unsigned int msAfterComplete = 0);
+		/*
+		 * PopSingleProgressBar:
+		 * 		Displays a single progress bar dialog
+		 * 
+		 * dialogMessage:
+		 * 		Main dialog messaage
+		 * progressMessage:
+		 * 		Message to display next to the progress bar
+		 * msAfterComplete: (optional)
+		 * 		Time (in milliseconds) to wait before automatically closing the dialog AFTER the progress bar reaches 100%
+		 */
+		void PopSingleProgressBar(const char * dialogMessage, const char * progressMessage, unsigned int msAfterComplete = 0);
 
-	/*
-	 * ProgressBarIncrease:
-	 * 		Increases the progress bar percent
-	 * 
-	 * index:
-	 * 		Increase the first or second progress bar
-	 * percent:
-	 * 		Percent to increase by
-	 */
-	void ProgressBarIncrease(bool index, unsigned int percent);
+		/*
+		 * PopDoubleProgressBar:
+		 * 		Displays a single progress bar dialog
+		 * 
+		 * dialogMessage:
+		 * 		Main dialog messaage
+		 * progressMessage1:
+		 * 		Message to display next to the first progress bar
+		 * progressMessage2:
+		 * 		Message to display next to the second progress bar
+		 * msAfterComplete: (optional)
+		 * 		Time (in milliseconds) to wait before automatically closing the dialog AFTER the progress bar reaches 100%
+		 */
+		void PopDoubleProgressBar(const char * dialogMessage, const char * progressMessage1, const char * progressMessage2, unsigned int msAfterComplete = 0);
 
-	/*
-	 * ProgressBarSet:
-	 * 		Set the progress bar percent
-	 * 
-	 * index:
-	 * 		Set the first or second progress bar
-	 * percent:
-	 * 		Percent to set to
-	 */
-	void ProgressBarSet(bool index, unsigned int percent);
+		/*
+		 * ProgressBarIncrease:
+		 * 		Increases the progress bar percent
+		 * 
+		 * index:
+		 * 		Increase the first or second progress bar
+		 * percent:
+		 * 		Percent to increase by
+		 */
+		void ProgressBarIncrease(bool index, unsigned int percent);
 
-	/*
-	 * ProgressBarSetMessage:
-	 * 		Set the progress bar message
-	 * 
-	 * index:
-	 * 		Set the first or second progress bar message
-	 * progressMessage:
-	 * 		Message
-	 */
-	void ProgressBarSetMessage(bool index, const char * progressMessage);
+		/*
+		 * ProgressBarSet:
+		 * 		Set the progress bar percent
+		 * 
+		 * index:
+		 * 		Set the first or second progress bar
+		 * percent:
+		 * 		Percent to set to
+		 */
+		void ProgressBarSet(bool index, unsigned int percent);
 
-	/*
-	 * ProgressBarReset:
-	 * 		Reset the progress bar percent to 0%
-	 * 
-	 * index:
-	 * 		Reset the first or second progress bar
-	 */
-	void ProgressBarReset(bool index);
+		/*
+		 * ProgressBarSetMessage:
+		 * 		Set the progress bar message
+		 * 
+		 * index:
+		 * 		Set the first or second progress bar message
+		 * progressMessage:
+		 * 		Message
+		 */
+		void ProgressBarSetMessage(bool index, const char * progressMessage);
 
-	/*
-	 * ProgressBarClose:
-	 * 		Close the dialog
-	 */
-	void ProgressBarClose();
+		/*
+		 * ProgressBarReset:
+		 * 		Reset the progress bar percent to 0%
+		 * 
+		 * index:
+		 * 		Reset the first or second progress bar
+		 */
+		void ProgressBarReset(bool index);
 
-private:
-	Mini2D * _mini;
+		/*
+		 * ProgressBarClose:
+		 * 		Close the dialog
+		 */
+		void ProgressBarClose();
 
-	unsigned int _msAfterComplete;			// Time (in milliseconds) to wait before automatically closing the dialog AFTER the progress bar reaches 100%
+	private:
+		Mini * _mini;
 
-	unsigned int _progressBarPercent[2];	// Current percent of progress bars
+		unsigned int _msAfterComplete;			// Time (in milliseconds) to wait before automatically closing the dialog AFTER the progress bar reaches 100%
 
-	// Check sysutil callback and flip frame
-	void Flip(bool flip = 0);
-};
+		unsigned int _progressBarPercent[2];	// Current percent of progress bars
+
+		// Check sysutil callback and flip frame
+		void Flip(bool flip = 0);
+	};
+
+}
 
 #endif /* DIALOG_HPP_ */

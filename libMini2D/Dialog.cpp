@@ -11,135 +11,139 @@
 #include <tiny3d.h>
 #include <Mini2D/Dialog.hpp>					// Class definition
 
-static void msgDialogHandler(msgButton button, void *usrdata);
+namespace Mini2D {
 
-//---------------------------------------------------------------------------
-// Init Functions
-//---------------------------------------------------------------------------
-Dialog::Dialog(Mini2D * mini) : _mini(mini) {
-	DialogResponse = MSG_DIALOG_BTN_INVALID;
-}
+	static void msgDialogHandler(msgButton button, void *usrdata);
 
-Dialog::~Dialog() {
-
-}
-
-//---------------------------------------------------------------------------
-// Pop Functions
-//---------------------------------------------------------------------------
-msgButton Dialog::Pop(msgType type, const char * message, bool wait) {
-	msgDialogOpen2(type, message, msgDialogHandler, this, NULL);
-	DialogResponse = MSG_DIALOG_BTN_INVALID;
-	while(DialogResponse == MSG_DIALOG_BTN_INVALID && wait){
-		Flip(1);
+	//---------------------------------------------------------------------------
+	// Init Functions
+	//---------------------------------------------------------------------------
+	Dialog::Dialog(Mini * mini) : _mini(mini) {
+		DialogResponse = MSG_DIALOG_BTN_INVALID;
 	}
 
-	return DialogResponse;
-}
+	Dialog::~Dialog() {
 
-msgButton Dialog::Pop(msgType type, const char * message, bool wait, unsigned int ms) {
-	msgDialogOpen2(type, message, msgDialogHandler, this, NULL);
-	msgDialogClose(ms);
-	DialogResponse = MSG_DIALOG_BTN_INVALID;
-	while(DialogResponse == MSG_DIALOG_BTN_INVALID && wait){
-		Flip(1);
 	}
 
-	return DialogResponse;
-}
+	//---------------------------------------------------------------------------
+	// Pop Functions
+	//---------------------------------------------------------------------------
+	msgButton Dialog::Pop(msgType type, const char * message, bool wait) {
+		msgDialogOpen2(type, message, msgDialogHandler, this, NULL);
+		DialogResponse = MSG_DIALOG_BTN_INVALID;
+		while(DialogResponse == MSG_DIALOG_BTN_INVALID && wait){
+			Flip(1);
+		}
 
-msgButton Dialog::PopError(unsigned int errorCode, bool wait) {
-	msgDialogOpenErrorCode(errorCode,msgDialogHandler, this, NULL);
-	DialogResponse = MSG_DIALOG_BTN_INVALID;
-	while(DialogResponse == MSG_DIALOG_BTN_INVALID && wait){
-		Flip(1);
+		return DialogResponse;
 	}
 
-	return DialogResponse;
-}
+	msgButton Dialog::Pop(msgType type, const char * message, bool wait, unsigned int ms) {
+		msgDialogOpen2(type, message, msgDialogHandler, this, NULL);
+		msgDialogClose(ms);
+		DialogResponse = MSG_DIALOG_BTN_INVALID;
+		while(DialogResponse == MSG_DIALOG_BTN_INVALID && wait){
+			Flip(1);
+		}
 
-msgButton Dialog::PopError(unsigned int errorCode, bool wait, unsigned int ms) {
-	msgDialogOpenErrorCode(errorCode,msgDialogHandler, this, NULL);
-	msgDialogClose(ms);
-	DialogResponse = MSG_DIALOG_BTN_INVALID;
-	while(DialogResponse == MSG_DIALOG_BTN_INVALID && wait){
-		Flip(1);
+		return DialogResponse;
 	}
 
-	return DialogResponse;
-}
+	msgButton Dialog::PopError(unsigned int errorCode, bool wait) {
+		msgDialogOpenErrorCode(errorCode,msgDialogHandler, this, NULL);
+		DialogResponse = MSG_DIALOG_BTN_INVALID;
+		while(DialogResponse == MSG_DIALOG_BTN_INVALID && wait){
+			Flip(1);
+		}
 
-void Dialog::PopSingleProgressBar(const char * dialogMessage, const char * progressMessage, unsigned int msAfterComplete) {
-	_msAfterComplete = msAfterComplete;
+		return DialogResponse;
+	}
 
-	msgDialogOpen2((msgType)(MSG_DIALOG_SINGLE_PROGRESSBAR | MSG_DIALOG_DISABLE_CANCEL_ON), dialogMessage, msgDialogHandler, this, NULL);
-	msgDialogProgressBarSetMsg(MSG_PROGRESSBAR_INDEX0, progressMessage);
-	msgDialogProgressBarReset(MSG_PROGRESSBAR_INDEX0);
-	msgDialogProgressBarInc(MSG_PROGRESSBAR_INDEX0, 0);
-	Flip();
-}
+	msgButton Dialog::PopError(unsigned int errorCode, bool wait, unsigned int ms) {
+		msgDialogOpenErrorCode(errorCode,msgDialogHandler, this, NULL);
+		msgDialogClose(ms);
+		DialogResponse = MSG_DIALOG_BTN_INVALID;
+		while(DialogResponse == MSG_DIALOG_BTN_INVALID && wait){
+			Flip(1);
+		}
 
-void Dialog::PopDoubleProgressBar(const char * dialogMessage, const char * progressMessage1, const char * progressMessage2, unsigned int msAfterComplete) {
-	_msAfterComplete = msAfterComplete;
+		return DialogResponse;
+	}
 
-	msgDialogOpen2((msgType)(MSG_DIALOG_DOUBLE_PROGRESSBAR | MSG_DIALOG_DISABLE_CANCEL_ON), dialogMessage, msgDialogHandler, this, NULL);
-	msgDialogProgressBarSetMsg(MSG_PROGRESSBAR_INDEX0, progressMessage1);
-	msgDialogProgressBarSetMsg(MSG_PROGRESSBAR_INDEX1, progressMessage2);
-	msgDialogProgressBarReset(MSG_PROGRESSBAR_INDEX0);
-	msgDialogProgressBarReset(MSG_PROGRESSBAR_INDEX1);
-	msgDialogProgressBarInc(MSG_PROGRESSBAR_INDEX0, 0);
-	msgDialogProgressBarInc(MSG_PROGRESSBAR_INDEX1, 0);
-	Flip();
-}
+	void Dialog::PopSingleProgressBar(const char * dialogMessage, const char * progressMessage, unsigned int msAfterComplete) {
+		_msAfterComplete = msAfterComplete;
 
-//---------------------------------------------------------------------------
-// Progress Bar Post-Pop Functions
-//---------------------------------------------------------------------------
-void Dialog::ProgressBarIncrease(bool index, unsigned int percent) {
-	_progressBarPercent[index] += percent;
+		msgDialogOpen2((msgType)(MSG_DIALOG_SINGLE_PROGRESSBAR | MSG_DIALOG_DISABLE_CANCEL_ON), dialogMessage, msgDialogHandler, this, NULL);
+		msgDialogProgressBarSetMsg(MSG_PROGRESSBAR_INDEX0, progressMessage);
+		msgDialogProgressBarReset(MSG_PROGRESSBAR_INDEX0);
+		msgDialogProgressBarInc(MSG_PROGRESSBAR_INDEX0, 0);
+		Flip();
+	}
 
-	msgDialogProgressBarInc(index ? MSG_PROGRESSBAR_INDEX1 : MSG_PROGRESSBAR_INDEX0, percent);
-	Flip();
+	void Dialog::PopDoubleProgressBar(const char * dialogMessage, const char * progressMessage1, const char * progressMessage2, unsigned int msAfterComplete) {
+		_msAfterComplete = msAfterComplete;
 
-	if (!index && _progressBarPercent[index?1:0] >= 100 && _msAfterComplete)
-		msgDialogClose(_msAfterComplete);
-}
+		msgDialogOpen2((msgType)(MSG_DIALOG_DOUBLE_PROGRESSBAR | MSG_DIALOG_DISABLE_CANCEL_ON), dialogMessage, msgDialogHandler, this, NULL);
+		msgDialogProgressBarSetMsg(MSG_PROGRESSBAR_INDEX0, progressMessage1);
+		msgDialogProgressBarSetMsg(MSG_PROGRESSBAR_INDEX1, progressMessage2);
+		msgDialogProgressBarReset(MSG_PROGRESSBAR_INDEX0);
+		msgDialogProgressBarReset(MSG_PROGRESSBAR_INDEX1);
+		msgDialogProgressBarInc(MSG_PROGRESSBAR_INDEX0, 0);
+		msgDialogProgressBarInc(MSG_PROGRESSBAR_INDEX1, 0);
+		Flip();
+	}
 
-void Dialog::ProgressBarSet(bool index, unsigned int percent) {
-	ProgressBarIncrease(index, percent - _progressBarPercent[index]);
-}
+	//---------------------------------------------------------------------------
+	// Progress Bar Post-Pop Functions
+	//---------------------------------------------------------------------------
+	void Dialog::ProgressBarIncrease(bool index, unsigned int percent) {
+		_progressBarPercent[index] += percent;
 
-void Dialog::ProgressBarSetMessage(bool index, const char * progressMessage) {
-	msgDialogProgressBarSetMsg(index ? MSG_PROGRESSBAR_INDEX1 : MSG_PROGRESSBAR_INDEX0, progressMessage);
-	Flip();
-}
+		msgDialogProgressBarInc(index ? MSG_PROGRESSBAR_INDEX1 : MSG_PROGRESSBAR_INDEX0, percent);
+		Flip();
 
-void Dialog::ProgressBarReset(bool index) {
-	_progressBarPercent[index] = 0;
-	msgDialogProgressBarReset(index ? MSG_PROGRESSBAR_INDEX1 : MSG_PROGRESSBAR_INDEX0);
-	Flip();
-}
+		if (!index && _progressBarPercent[index?1:0] >= 100 && _msAfterComplete)
+			msgDialogClose(_msAfterComplete);
+	}
 
-void Dialog::ProgressBarClose() {
-	msgDialogAbort();
-}
+	void Dialog::ProgressBarSet(bool index, unsigned int percent) {
+		ProgressBarIncrease(index, percent - _progressBarPercent[index]);
+	}
 
+	void Dialog::ProgressBarSetMessage(bool index, const char * progressMessage) {
+		msgDialogProgressBarSetMsg(index ? MSG_PROGRESSBAR_INDEX1 : MSG_PROGRESSBAR_INDEX0, progressMessage);
+		Flip();
+	}
 
-//---------------------------------------------------------------------------
-// Private Functions
-//---------------------------------------------------------------------------
-void Dialog::Flip(bool flip) {
-	sysUtilCheckCallback();
-	if (flip)
-		_mini->Flip();
-}
+	void Dialog::ProgressBarReset(bool index) {
+		_progressBarPercent[index] = 0;
+		msgDialogProgressBarReset(index ? MSG_PROGRESSBAR_INDEX1 : MSG_PROGRESSBAR_INDEX0);
+		Flip();
+	}
 
-static void msgDialogHandler(msgButton button, void *usrdata) {
-	if (!usrdata)
-		return;
-
-	Dialog * dlg = (Dialog *)usrdata;
-	dlg->DialogResponse = button;
-	if (button)
+	void Dialog::ProgressBarClose() {
 		msgDialogAbort();
+	}
+
+
+	//---------------------------------------------------------------------------
+	// Private Functions
+	//---------------------------------------------------------------------------
+	void Dialog::Flip(bool flip) {
+		sysUtilCheckCallback();
+		if (flip)
+			_mini->Flip();
+	}
+
+	static void msgDialogHandler(msgButton button, void *usrdata) {
+		if (!usrdata)
+			return;
+
+		Dialog * dlg = (Dialog *)usrdata;
+		dlg->DialogResponse = button;
+		if (button)
+			msgDialogAbort();
+	}
+
 }

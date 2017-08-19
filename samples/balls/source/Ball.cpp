@@ -3,7 +3,9 @@
 
 #include "Ball.hpp"
 
-Ball::Ball(Mini2D * mini, Image * image, Ball::BallCollision_f ballCollision) : _mini(mini), _image(image), _ballCollision(ballCollision) {
+using namespace Mini2D;
+
+Ball::Ball(Mini * mini, Image * image, Ball::BallCollision_f ballCollision) : _mini(mini), _image(image), _ballCollision(ballCollision) {
 	if (!mini || !image || !ballCollision)
 		return;
 
@@ -70,7 +72,7 @@ bool Ball::Draw(float deltaTime) {
 	return 1;
 }
 
-bool Ball::Intersect(CircleF * circle, Vector2 * normal) {
+bool Ball::Intersect(Mini2D::CircleF * circle, Mini2D::Vector2 * normal) {
 	Vector2 * c0 = DrawRegion.GetRotatedCenter();
 	Vector2 * c1 = circle->GetRotatedCenter();
 	float maxDistance = DrawRegion.Radius + circle->Radius;

@@ -7,6 +7,10 @@
 
 #include "comfortaa_regular_ttf.h"
 
+// 
+using namespace Mini2D;
+
+// callbacks
 int drawUpdate(float deltaTime, unsigned long frame);
 void padUpdate(int changed, int port, padData pData);
 void exit();
@@ -14,7 +18,7 @@ void exit();
 void ProgressSingle(float deltaTime);
 void ProgressDouble(float deltaTime);
 
-Mini2D * mini = NULL;
+Mini * mini = NULL;
 
 Dialog * dialog1 = NULL;
 Font * font1 = NULL;
@@ -36,8 +40,8 @@ std::wstring TEXT_DOUBLE =		L"Press Cross to open Double Progress Dialog";
 
 int main(s32 argc, const char* argv[]) {
 
-	// Initialize Mini2D
-	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
+	// Initialize Mini
+	mini = new Mini((Mini::PadCallback_f)&padUpdate, (Mini::DrawCallback_f)&drawUpdate, (Mini::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
 	FONT_LARGE = 0.02*mini->MAXW;
@@ -109,16 +113,16 @@ int drawUpdate(float deltaTime, unsigned long frame) {
 }
 
 void padUpdate(int changed, int port, padData pData) {
-	if (pData.BTN_START && changed & Mini2D::BTN_CHANGED_START)
+	if (pData.BTN_START && changed & Mini::BTN_CHANGED_START)
 		doExit = -1;
 
-	if (pData.BTN_TRIANGLE && changed & Mini2D::BTN_CHANGED_TRIANGLE)
+	if (pData.BTN_TRIANGLE && changed & Mini::BTN_CHANGED_TRIANGLE)
 		doDialog = 1;
-	if (pData.BTN_SQUARE && changed & Mini2D::BTN_CHANGED_SQUARE)
+	if (pData.BTN_SQUARE && changed & Mini::BTN_CHANGED_SQUARE)
 		doDialog = 2;
-	if (pData.BTN_CIRCLE && changed & Mini2D::BTN_CHANGED_CIRCLE)
+	if (pData.BTN_CIRCLE && changed & Mini::BTN_CHANGED_CIRCLE)
 		doDialog = 3;
-	if (pData.BTN_CROSS && changed & Mini2D::BTN_CHANGED_CROSS)
+	if (pData.BTN_CROSS && changed & Mini::BTN_CHANGED_CROSS)
 		doDialog = 4;
 }
 
