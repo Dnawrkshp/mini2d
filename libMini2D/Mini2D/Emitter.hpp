@@ -5,8 +5,8 @@
  *  Author: Daniel Gerendasy
  */
 
-#ifndef EMITTER_HPP_
-#define EMITTER_HPP_
+#ifndef MINI2D_EMITTER_HPP_
+#define MINI2D_EMITTER_HPP_
 
 #include <vector>                                // std::vector<>
 
@@ -128,4 +128,4 @@ namespace Mini2D {
 
 }
 
-#endif /* EMITTER_HPP_ */
+#endif /* MINI2D_EMITTER_HPP_ */

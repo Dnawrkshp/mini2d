@@ -5,8 +5,8 @@
  * Author: Daniel Gerendasy
  */
 
-#ifndef KEYBOARD_HPP_
-#define KEYBOARD_HPP_
+#ifndef MINI2D_KEYBOARD_HPP_
+#define MINI2D_KEYBOARD_HPP_
 
 #include <string>                                // wstring
 
@@ -202,4 +202,4 @@ namespace Mini2D {
 
 }
 
-#endif /* KEYBOARD_HPP_ */
+#endif /* MINI2D_KEYBOARD_HPP_ */

@@ -5,8 +5,8 @@
  *  Author: Daniel Gerendasy
  */
 
-#ifndef IMAGE_HPP_
-#define IMAGE_HPP_
+#ifndef MINI2D_IMAGE_HPP_
+#define MINI2D_IMAGE_HPP_
 
 #include <pngdec/pngdec.h>                       // PNG load functions
 #include <jpgdec/jpgdec.h>                       // JPG load functions
@@ -123,4 +123,4 @@ namespace Mini2D {
 
 }
 
-#endif /* IMAGE_HPP_ */
+#endif /* MINI2D_IMAGE_HPP_ */

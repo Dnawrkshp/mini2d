@@ -5,8 +5,8 @@
  *  Author: Daniel Gerendasy
  */
 
-#ifndef SOUND_HPP_
-#define SOUND_HPP_
+#ifndef MINI2D_SOUND_HPP_
+#define MINI2D_SOUND_HPP_
 
 #include <Mini2D/Mini.hpp>                       // Class definition
 
@@ -153,4 +153,4 @@ namespace Mini2D {
 
 }
 
-#endif /* SOUND_HPP_ */
+#endif /* MINI2D_SOUND_HPP_ */

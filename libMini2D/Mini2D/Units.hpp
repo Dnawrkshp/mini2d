@@ -5,8 +5,8 @@
  *  Author: Daniel Gerendasy
  */
 
-#ifndef UNITS_HPP_
-#define UNITS_HPP_
+#ifndef MINI2D_UNITS_HPP_
+#define MINI2D_UNITS_HPP_
 
 #include <stdlib.h>                              // NULL
 
@@ -235,4 +235,4 @@ namespace Mini2D {
 
 }
 
-#endif /* UNITS_HPP_ */
+#endif /* MINI2D_UNITS_HPP_ */

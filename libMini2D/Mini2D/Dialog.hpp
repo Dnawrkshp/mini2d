@@ -5,8 +5,8 @@
  *  Author: Daniel Gerendasy
  */
 
-#ifndef DIALOG_HPP_
-#define DIALOG_HPP_
+#ifndef MINI2D_DIALOG_HPP_
+#define MINI2D_DIALOG_HPP_
 
 #include <sysutil/msg.h>                         // Message dialog functions/enums
 
@@ -147,4 +147,4 @@ namespace Mini2D {
 
 }
 
-#endif /* DIALOG_HPP_ */
+#endif /* MINI2D_DIALOG_HPP_ */
