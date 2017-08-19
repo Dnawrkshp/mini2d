@@ -10,7 +10,7 @@
 
 #include <sysutil/msg.h>					// Message dialog functions/enums
 
-#include <Mini2D/Mini2D.hpp>				// Class definition
+#include <Mini2D/Mini.hpp>					// Class definition
 
 namespace Mini2D {
 

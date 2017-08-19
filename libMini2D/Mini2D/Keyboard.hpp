@@ -10,7 +10,7 @@
 
 #include <string>							// wstring
 
-#include <Mini2D/Mini2D.hpp>				// Mini2D definition
+#include <Mini2D/Mini.hpp>					// Mini definition
 #include <Mini2D/Units.hpp>					// Vector2
 
 namespace Mini2D {

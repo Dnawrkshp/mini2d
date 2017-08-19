@@ -8,7 +8,7 @@
 #ifndef SOUND_HPP_
 #define SOUND_HPP_
 
-#include <Mini2D/Mini2D.hpp>				// Class definition
+#include <Mini2D/Mini.hpp>					// Class definition
 
 namespace Mini2D {
 

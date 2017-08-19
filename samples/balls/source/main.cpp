@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 
-#include <Mini2D/Mini2D.hpp>
+#include <Mini2D/Mini.hpp>
 #include <Mini2D/Image.hpp>
 #include <Mini2D/Font.hpp>
 

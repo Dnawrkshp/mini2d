@@ -19,7 +19,7 @@
 #include "spu_soundmodule_bin.h"			// Sound module from PSL1GHT
 
 #include <tiny3d.h>							// Tiny3D functions
-#include <Mini2D/Mini2D.hpp>				// Class definition
+#include <Mini2D/Mini.hpp>					// Class definition
 
 
 #define ANA_DIF_SHIFT(a,b,d,r) ((a==b) ? 0 : ((a<b) ? ((b-a)>=d ? r : 0) : (((a-b)>=d ? r : 0))))

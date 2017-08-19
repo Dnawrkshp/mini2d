@@ -8,11 +8,11 @@
 #ifndef EMITTER_HPP_
 #define EMITTER_HPP_
 
-#include <vector>							// std::vector<>
+#include <vector>                           // std::vector<>
 
-#include <Mini2D/Mini2D.hpp>				// Mini2D class
-#include <Mini2D/Image.hpp>					// Image class
-#include <Mini2D/Units.hpp>					// RectangleF, Vector2
+#include <Mini2D/Mini.hpp>                  // Mini class
+#include <Mini2D/Image.hpp>                 // Image class
+#include <Mini2D/Units.hpp>                 // RectangleF, Vector2
 
 namespace Mini2D {
 
@@ -25,26 +25,26 @@ namespace Mini2D {
 			EMITTER_PAUSED
 		} EmitterStatus;
 
-		Vector2 RangeVelocityTheta;				// Minimum and maximum angle of velocity
-		Vector2 RangeVelocity;					// Minimum and maximum speed
-		Vector2 RangeStartX;					// Minimum and maximum X offset from emission location (locX + (X*randomNumber))
-		Vector2 RangeStartY;					// Minimum and maximum Y offset from emission location (locY + (Y*randomNumber))
-		Vector2 RangeDimensionW;				// Minimum and maximum Width
-		Vector2 RangeDimensionH;				// Minimum and maximum Height
-		Vector2 RangeTTL;						// Minimum and maximum lifetime of particles
-		Vector2 RangeRotation;					// Minimum and maximum rotation (degrees)
-		Vector2 RangeColorRed;					// Minimum and maximum red
+		Vector2 RangeVelocityTheta;               // Minimum and maximum angle of velocity
+		Vector2 RangeVelocity;                    // Minimum and maximum speed
+		Vector2 RangeStartX;                      // Minimum and maximum X offset from emission location (locX + (X*randomNumber))
+		Vector2 RangeStartY;                      // Minimum and maximum Y offset from emission location (locY + (Y*randomNumber))
+		Vector2 RangeDimensionW;                  // Minimum and maximum Width
+		Vector2 RangeDimensionH;                  // Minimum and maximum Height
+		Vector2 RangeTTL;                         // Minimum and maximum lifetime of particles
+		Vector2 RangeRotation;                    // Minimum and maximum rotation (degrees)
+		Vector2 RangeColorRed;				// Minimum and maximum red
 		Vector2 RangeColorGreen;				// Minimum and maximum green
-		Vector2 RangeColorBlue;					// Minimum and maximum blue
+		Vector2 RangeColorBlue;				// Minimum and maximum blue
 		Vector2 RangeColorAlpha;				// Minimum and maximum alpha
-		RectangleF Clip;						// Particle draw region. Any particles outside this box will not be drawn
+		RectangleF Clip;					// Particle draw region. Any particles outside this box will not be drawn
 
-		float ZIndex;							// Z coordinate
+		float ZIndex;						// Z coordinate
 		unsigned int MinParticles;				// Minimum number of particles
-		bool Revive;							// If particle dies before timeToLive hits 0, restart particle
-		bool SkipExplosion;						// Skip initial explosion of particles (pair with revive)
+		bool Revive;						// If particle dies before timeToLive hits 0, restart particle
+		bool SkipExplosion;					// Skip initial explosion of particles (pair with revive)
 
-		Image * ParticleImage;					// Optional image to draw particles with. Otherwise RGBA will be used
+		Image * ParticleImage;				// Optional image to draw particles with. Otherwise RGBA will be used
 
 
 		// Constructors

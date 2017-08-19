@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <io/pad.h>
 
-#include <Mini2D/Mini2D.hpp>
+#include <Mini2D/Mini.hpp>
 #include <Mini2D/Font.hpp>
 
 #include "comfortaa_regular_ttf.h"

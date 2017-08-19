@@ -3,7 +3,7 @@
 #ifndef BALL_HPP_
 #define BALL_HPP_
 
-#include <Mini2D/Mini2D.hpp>				// Mini2D class
+#include <Mini2D/Mini.hpp>					// Mini class
 #include <Mini2D/Image.hpp>					// Image class
 #include <Mini2D/Units.hpp>					// RectangleF, Vector2
 

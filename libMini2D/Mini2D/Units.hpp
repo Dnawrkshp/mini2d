@@ -55,7 +55,7 @@ namespace Mini2D {
 		// Comparison Operators
 		bool operator==(const Vector2& s) const;
 		bool operator!=(const Vector2& s) const;
-		
+
 		// Compound Operators
 		Vector2& operator+=(const Vector2& s);
 		Vector2& operator-=(const Vector2& s);
@@ -189,21 +189,21 @@ namespace Mini2D {
 		/*
 		 * FromCorners:
 		 *		Set the X, Y, Width, and Height of the rectangle from 2 corners
-		 * 
+		 *
 		 * point1:
 		 *		First corner
 		 * point2:
 		 *		Second corner
 		 */
 		void FromCorners(Vector2 point1, Vector2 point2);
-		
+
 		/*
 		 * Contain:
 		 *		Determines if the passed rectangle is contained within this rectangle
-		 * 
+		 *
 		 * rectangle:
 		 *		Rectangle to compare with
-		 * 
+		 *
 		 * Return:
 		 *		1 if rectangle is within container. 0 if not.
 		 */

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string>
 
-#include <Mini2D/Mini2D.hpp>
+#include <Mini2D/Mini.hpp>
 #include <Mini2D/Font.hpp>
 #include <Mini2D/Keyboard.hpp>
 

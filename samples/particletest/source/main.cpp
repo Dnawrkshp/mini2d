@@ -2,7 +2,7 @@
 #include <io/pad.h>
 #include <math.h>
 
-#include <Mini2D/Mini2D.hpp>
+#include <Mini2D/Mini.hpp>
 #include <Mini2D/Image.hpp>
 #include <Mini2D/Font.hpp>
 #include <Mini2D/Emitter.hpp>
@@ -41,7 +41,7 @@ std::wstring TEXT_STOP =		L"Press CIRCLE to stop the emission";
 std::wstring TEXT_DIRECT =		L"Use the analog stick to direct the emission";
 
 int main(s32 argc, const char* argv[]) {
-	
+
 	// Load Mini
 	mini = new Mini((Mini::PadCallback_f)&padUpdate, (Mini::DrawCallback_f)&drawUpdate, (Mini::ExitCallback_f)&exit);
 

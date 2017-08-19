@@ -11,9 +11,9 @@
 #include <vector>							// std::vector<>
 #include <string>							// std::wstring
 
-#include <Mini2D/Mini2D.hpp>				// Class definition
+#include <Mini2D/Mini.hpp>						// Class definition
 #include <Mini2D/Image.hpp>					// Image class
-#include <Mini2D/Units.hpp>					// Vector2
+#include <Mini2D/Units.hpp>						// Vector2
 
 namespace Mini2D {
 
@@ -56,12 +56,12 @@ namespace Mini2D {
 		/*
 		 * Load:
 		 *		Load TTF font
-		 * 
+		 *
 		 * filepath:
 		 *		Path to TTF
 		 * r:
 		 *		Pixel resolution of character loaded into RSX
-		 * 
+		 *
 		 * Return:
 		 * 		Result of load operation
 		 */
@@ -70,14 +70,14 @@ namespace Mini2D {
 		/*
 		 * Load:
 		 *		Load TTF font
-		 * 
+		 *
 		 * buffer:
 		 *		Buffer containing TTF font
 		 * size:
 		 * 		Size of buffer
 		 * r:
 		 *		Pixel resolution of character loaded into RSX
-		 * 
+		 *
 		 * Return:
 		 *		Result of load operation
 		 */
@@ -86,7 +86,7 @@ namespace Mini2D {
 		/*
 		 * PrintLine:
 		 *		Print the first line in string from the index held in startIndex
-		 * 
+		 *
 		 * string:
 		 *		Buffer containing std::wstring to print
 		 * startIndex:
@@ -103,7 +103,7 @@ namespace Mini2D {
 		/*
 		 * PrintLines:
 		 *		Prints all the lines in string from the index lineStart onward
-		 * 
+		 *
 		 * string:
 		 *		Buffer containing std::wstring to print
 		 * lineStart:
@@ -153,7 +153,7 @@ namespace Mini2D {
 		 *		Image to draw
 		 * yCorrection:
 		 *		Y offset from top
-		 * 
+		 *
 		 * Return:
 		 *		True if successful. False if unsuccessful.
 		 */
@@ -171,7 +171,7 @@ namespace Mini2D {
 		 *		Offset in string to start calculating width from
 		 */
 		float GetWidth(const std::wstring& string, float size, int offset = 0);
-		
+
 		/*
 		 * GetWidth:
 		 *		Returns the width of chr
