@@ -5,11 +5,9 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <sysutil/sysutil.h>					// sysUtilCheckCallback()
-#include <stdio.h>
+#include <sysutil/sysutil.h>                     // sysUtilCheckCallback()
 
-#include <tiny3d.h>
-#include <Mini2D/Dialog.hpp>					// Class definition
+#include <Mini2D/Dialog.hpp>                     // Class definition
 
 namespace Mini2D {
 

@@ -5,13 +5,13 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <sysutil/osk.h>					// On-screen keyboard functions
-#include <sysutil/sysutil.h>				// SysUtil Callback status definitions
-#include <io/camera.h>						// sysMemContainerCreate(), sysMemContainerDestroy()
-#include <wchar.h>							// wprintf
+#include <sysutil/osk.h>                         // On-screen keyboard functions
+#include <sysutil/sysutil.h>                     // SysUtil Callback status definitions
+#include <io/camera.h>                           // sysMemContainerCreate(), sysMemContainerDestroy()
+#include <wchar.h>                               // wprintf
 
 
-#include <Mini2D/Keyboard.hpp>				// Class definition
+#include <Mini2D/Keyboard.hpp>                   // Class definition
 
 namespace Mini2D {
 
@@ -120,7 +120,7 @@ namespace Mini2D {
 
 		// Set maxlength
 		inputFieldInfo.maxLength = MaxLength;
-		
+
 		// If a title is given, copy it to a new buffer
 		if (tLen>0) {
 			if (_newMessage && inputFieldInfo.message)
@@ -148,7 +148,7 @@ namespace Mini2D {
 		}
 		else {
 			inputFieldInfo.startText = (u16*)L"";
-			_newStart = 0;	
+			_newStart = 0;
 		}
 
 		if (result.str)
@@ -298,7 +298,7 @@ namespace Mini2D {
 				oskOpen = 1;
 				break;
 			default:
-				break; 
+				break;
 		}
 	}
 

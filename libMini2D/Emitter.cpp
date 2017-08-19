@@ -5,11 +5,11 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <time.h>							// time()
-#include <math.h>							// Trig
+#include <time.h>                                // time()
+#include <math.h>                                // Trig
 
-#include <Mini2D/Emitter.hpp>				// Class definition
-#include <Mini2D/Units.hpp>					// vector2
+#include <Mini2D/Emitter.hpp>                    // Class definition
+#include <Mini2D/Units.hpp>                      // vector2
 
 #define PI 3.14159265
 #define DEG2RAD(x) ((x*PI)/180.0)

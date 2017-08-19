@@ -8,7 +8,7 @@
 #ifndef SOUND_HPP_
 #define SOUND_HPP_
 
-#include <Mini2D/Mini.hpp>					// Class definition
+#include <Mini2D/Mini.hpp>                       // Class definition
 
 namespace Mini2D {
 
@@ -36,14 +36,14 @@ namespace Mini2D {
 		/*
 		 * Load:
 		 * 		Load MP3/OGG
-		 * 
+		 *
 		 * buffer:
 		 * 		Array containing MP3/OGG
 		 * size:
 		 * 		Size of buffer
 		 * seconds:
 		 * 		How many seconds of the audio to load
-		 * 
+		 *
 		 * Return:
 		 * 		Result of the load operation
 		 */
@@ -52,12 +52,12 @@ namespace Mini2D {
 		/*
 		 * Load:
 		 * 		Load MP3/OGG
-		 * 
+		 *
 		 * filepath:
 		 * 		Path to MP3/OGG
 		 * seconds:
 		 * 		How many seconds of the audio to load
-		 * 
+		 *
 		 * Return:
 		 * 		Result of the load operation
 		 */
@@ -66,7 +66,7 @@ namespace Mini2D {
 		/*
 		 * PlayOnce:
 		 * 		Play a sound once
-		 * 
+		 *
 		 * leftVolume:
 		 * 		Volume from left speaker
 		 * rightVolume:
@@ -75,7 +75,7 @@ namespace Mini2D {
 		 * 		How many seconds to wait before playing the sound
 		 * length:
 		 *		How many seconds of the audio to play
-		 * 
+		 *
 		 * Return:
 		 * 		The index of the used voice
 		 */
@@ -84,7 +84,7 @@ namespace Mini2D {
 		/*
 		 * PlayInfinite:
 		 * 		Play a sound on a loop
-		 * 
+		 *
 		 * leftVolume:
 		 * 		Volume from left speaker
 		 * rightVolume:
@@ -93,7 +93,7 @@ namespace Mini2D {
 		 * 		How many seconds to wait before playing the sound
 		 * length:
 		 *		How many seconds of the audio to play
-		 * 
+		 *
 		 * Return:
 		 * 		The index of the used voice
 		 */
@@ -102,10 +102,10 @@ namespace Mini2D {
 		/*
 		 * Status:
 		 * 		Get the status of a voice
-		 * 
+		 *
 		 * voice:
 		 * 		Voice
-		 * 
+		 *
 		 * Return:
 		 * 		Status of voice
 		 */
@@ -114,7 +114,7 @@ namespace Mini2D {
 		/*
 		 * Stop:
 		 * 		Stop a voice from playing
-		 * 
+		 *
 		 * voice:
 		 * 		Voice
 		 */
@@ -123,7 +123,7 @@ namespace Mini2D {
 		/*
 		 * Pause:
 		 * 		Pause a voice
-		 * 
+		 *
 		 * voice:
 		 * 		Voice
 		 */
@@ -132,7 +132,7 @@ namespace Mini2D {
 		/*
 		 * Resume:
 		 * 		Resume a voice
-		 * 
+		 *
 		 * voice:
 		 * 		Voice
 		 */
@@ -141,11 +141,11 @@ namespace Mini2D {
 	private:
 		Mini * _mini;
 
-		int _freq;								// Frequency of sample audio
-		int _stereo;							// Whether sample is stereo or mono
-		int _sampleSize;						// Size of sample
-		float _seconds;							// Length of sample in seconds
-		short * _sample;						// Sample
+		int _freq;                               // Frequency of sample audio
+		int _stereo;                             // Whether sample is stereo or mono
+		int _sampleSize;                         // Size of sample
+		float _seconds;                          // Length of sample in seconds
+		short * _sample;                         // Sample
 
 		// Play a sound
 		int Play(int leftVolume, int rightVolume, float delay, float length, int loop);

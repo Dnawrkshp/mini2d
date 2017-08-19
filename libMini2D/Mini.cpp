@@ -5,21 +5,21 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <string.h>							// memcpy
-#include <stdio.h>							// printf
-#include <sys/time.h>						// gettimeofday
-#include <malloc.h>							// memalign
-#include <math.h>							// Trig functions
+#include <string.h>                              // memcpy
+#include <stdio.h>                               // printf
+#include <sys/time.h>                            // gettimeofday
+#include <malloc.h>                              // memalign
+#include <math.h>                                // Trig functions
 
-#include <sysutil/sysutil.h>				// Register sysutil callback (when program exits, xmb menu opens/closes, etc)
-#include <sysmodule/sysmodule.h>			// Load and unload PNG,JPG modules
-#include <lv2/process.h>					// sysProcessExit()
+#include <sysutil/sysutil.h>                     // Register sysutil callback (when program exits, xmb menu opens/closes, etc)
+#include <sysmodule/sysmodule.h>                 // Load and unload PNG,JPG modules
+#include <lv2/process.h>                         // sysProcessExit()
 
-#include <lv2/spu.h>						// SPU related
-#include "spu_soundmodule_bin.h"			// Sound module from PSL1GHT
+#include <lv2/spu.h>                             // SPU related
+#include "spu_soundmodule_bin.h"                 // Sound module from PSL1GHT
 
-#include <tiny3d.h>							// Tiny3D functions
-#include <Mini2D/Mini.hpp>					// Class definition
+#include <tiny3d.h>                              // Tiny3D functions
+#include <Mini2D/Mini.hpp>                       // Class definition
 
 
 #define ANA_DIF_SHIFT(a,b,d,r) ((a==b) ? 0 : ((a<b) ? ((b-a)>=d ? r : 0) : (((a-b)>=d ? r : 0))))
@@ -46,7 +46,7 @@ namespace Mini2D {
 	//---------------------------------------------------------------------------
 	// Init Functions
 	//---------------------------------------------------------------------------
-	Mini::Mini(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f eCallback) : 
+	Mini::Mini(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f eCallback) :
 					MAXW(_maxW), MINW(_minW), MAXH(_maxH), MINH(_minH),
 					_padCallback(pCallback), _drawCallback(dCallback)
 					 {
@@ -97,11 +97,11 @@ namespace Mini2D {
 	    u32 entry = 0;
 	    u32 segmentcount = 0;
 	    sysSpuSegment* segments;
-	    
+
 	    sysSpuInitialize(6, 5);
 	    sysSpuRawCreate(&_spu, NULL);
 	    sysSpuElfGetInformation(spu_soundmodule_bin, &entry, &segmentcount);
-	    
+
 	    size_t segmentsize = sizeof(sysSpuSegment) * segmentcount;
 	    segments = (sysSpuSegment*)memalign(128, SPU_SIZE(segmentsize)); // must be aligned to 128 or it break malloc() allocations
 	    memset(segments, 0, segmentsize);
@@ -111,7 +111,7 @@ namespace Mini2D {
 	    sysSpuImageImport(&_spuImage, spu_soundmodule_bin, 0);
 
 	    sysSpuRawImageLoad(_spu, &_spuImage);
-	    
+
 	    _spuInited |= INITED_SPU;
 	    if(SND_Init(_spu) == 0)
 	        _spuInited |= INITED_SOUNDLIB;
@@ -122,7 +122,7 @@ namespace Mini2D {
 	Mini::~Mini() {
 		if(_spuInited & INITED_AUDIOPLAYER)
 	        StopAudio();
-	    
+
 	    if(_spuInited & INITED_SOUNDLIB)
 	        SND_End();
 
@@ -152,12 +152,12 @@ namespace Mini2D {
 			case SYSUTIL_EXIT_GAME: //0x0101
 				// tiny3d_Exit();
 				unload();
-					
+
 				if (_exitCallback != NULL)
 					_exitCallback();
 
 				sysProcessExit(1);
-				break;  
+				break;
 			case SYSUTIL_MENU_OPEN: //0x0131
 
 				break;
@@ -173,7 +173,7 @@ namespace Mini2D {
 					mini->XMB = 0;
 				break;
 			default:
-				break; 
+				break;
 		}
 	}
 
@@ -251,7 +251,7 @@ namespace Mini2D {
 		padInfo padinfo;
 		padData pData;
 		int changed;
-		
+
 		// Check the pads.
 		ioPadGetInfo(&padinfo);
 		for (p=0;p<MAX_PORT_NUM;p++) {
@@ -310,7 +310,7 @@ namespace Mini2D {
 	}
 
 	void Mini::DrawTexture(u32 textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgbaTL, unsigned int rgbaTR, unsigned int rgbaBR, unsigned int rgbaBL, float angle, unsigned int colorFormat) {
-		tiny3d_SetTextureWrap(0, textureOff, width, height, pitch,  
+		tiny3d_SetTextureWrap(0, textureOff, width, height, pitch,
 			(text_format)colorFormat, TEXTWRAP_CLAMP, TEXTWRAP_CLAMP, TEXTURE_LINEAR);
 		drawSpriteRot(xAnchor, yAnchor, x, y, z, w, h, rgbaTL, rgbaTR, rgbaBR, rgbaBL, angle);
 	}
@@ -332,7 +332,7 @@ namespace Mini2D {
 		angle = degToRad(angle);
 		matrix = MatrixRotationZ(angle);
 		matrix = MatrixMultiply(matrix, MatrixTranslation(xAnchor, yAnchor, 0.0f));
-		
+
 		// Translate relative to anchor point based on angle
 		x-=xAnchor;
 		y-=yAnchor;
@@ -369,7 +369,7 @@ namespace Mini2D {
 
 		// fix ModelView Matrix
 		tiny3d_SetMatrixModelView(&matrix);
-	   
+
 		tiny3d_SetPolygon(TINY3D_QUADS);
 
 		tiny3d_VertexPos(x-dx, y-dy, layer);

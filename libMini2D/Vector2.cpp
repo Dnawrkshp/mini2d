@@ -5,9 +5,9 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <math.h>							// pow()
+#include <math.h>                                // pow()
 
-#include <Mini2D/Units.hpp>					// class definition
+#include <Mini2D/Units.hpp>                      // class definition
 
 #define PI 3.14159265
 #define DEG2RAD(x) ((x*PI)/180.0)
@@ -114,7 +114,7 @@ namespace Mini2D {
 	}
 
 	float Vector2::CrossProduct(Vector2 * p, Vector2 * q, Vector2 * r) {
-		return (q->Y - p->Y) * (r->X - q->X) - 
+		return (q->Y - p->Y) * (r->X - q->X) -
 			   (q->X - p->X) * (r->Y - q->Y);
 	}
 

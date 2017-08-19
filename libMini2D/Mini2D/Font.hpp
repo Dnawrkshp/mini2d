@@ -8,12 +8,12 @@
 #ifndef MINI2D_FONT_HPP_
 #define MINI2D_FONT_HPP_
 
-#include <vector>							// std::vector<>
-#include <string>							// std::wstring
+#include <vector>                                // std::vector<>
+#include <string>                                // std::wstring
 
-#include <Mini2D/Mini.hpp>						// Class definition
-#include <Mini2D/Image.hpp>					// Image class
-#include <Mini2D/Units.hpp>						// Vector2
+#include <Mini2D/Mini.hpp>                       // Class definition
+#include <Mini2D/Image.hpp>                      // Image class
+#include <Mini2D/Units.hpp>                      // Vector2
 
 namespace Mini2D {
 
@@ -39,15 +39,15 @@ namespace Mini2D {
 			PRINT_ALIGN_BOTTOMRIGHT
 		} FontPrintAlign;
 
-		u32 BackColor;							// RGBA background color of text
-		u32 ForeColor;							// RGBA text color
+		u32 BackColor;                           // RGBA background color of text
+		u32 ForeColor;                           // RGBA text color
 
-		float ZIndex;							// Z coordinate
-		float SpacingOffset;					// Offset added to draw location after each character
+		float ZIndex;                            // Z coordinate
+		float SpacingOffset;                     // Offset added to draw location after each character
 
-		FontPrintAlign TextAlign;				// Text alignment
+		FontPrintAlign TextAlign;                // Text alignment
 
-		RectangleF Container;					// Print container. Text only prints in here (default is full screen)
+		RectangleF Container;                    // Print container. Text only prints in here (default is full screen)
 
 		// Constructors
 		Font(Mini * mini);
@@ -185,18 +185,18 @@ namespace Mini2D {
 
 	private:
 		typedef struct _fontChar_t {
-			wchar_t chr;							// Character code
-			u32 rsx;								// Offset in RSX
-			u32 format;								// Color format of image
-			u16 fr;									// Original resolution of char
-			u16 fw;									// Character width
-			u16 fy;									// Y correction
-			u16 w;									// Width of image
-			u16 h;									// Height of image
-			u16 p;									// Pitch of image
+			wchar_t chr;                         // Character code
+			u32 rsx;                             // Offset in RSX
+			u32 format;                          // Color format of image
+			u16 fr;                              // Original resolution of char
+			u16 fw;                              // Character width
+			u16 fy;                              // Y correction
+			u16 w;                               // Width of image
+			u16 h;                               // Height of image
+			u16 p;                               // Pitch of image
 		} FontChar;
 
-		std::vector<FontChar*> CharMap;				// List of characters
+		std::vector<FontChar*> CharMap;          // List of characters
 
 		Mini * _mini;
 

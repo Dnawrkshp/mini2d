@@ -8,16 +8,16 @@
 #ifndef MINI2D_MINI_HPP_
 #define MINI2D_MINI_HPP_
 
-#include <io/pad.h>							// Pad functions
-#include <sys/time.h>						// For FPS / deltaTime calculation
-#include <sys/spu.h>						// sysSpuImage type
+#include <io/pad.h>                              // Pad functions
+#include <sys/time.h>                            // For FPS / deltaTime calculation
+#include <sys/spu.h>                             // sysSpuImage type
 
 extern "C" {
-	#include <soundlib/audioplayer.h>		// SPU sound playback
+    #include <soundlib/audioplayer.h>            // SPU sound playback
 }
 
-#include <ft2build.h>						// Freetype header
-#include <freetype/freetype.h> 				// FT_Library
+#include <ft2build.h>                            // Freetype header
+#include <freetype/freetype.h>                   // FT_Library
 
 #define SPU_SIZE(x) (((x)+127) & ~127)
 
@@ -57,9 +57,9 @@ namespace Mini2D {
 		} PadChangedInfo;
 
 		/*
-		 * PadCallback_f: 
+		 * PadCallback_f:
 		 * 		Callback when pad updates or changes
-		 * 
+		 *
 		 * int:
 		 * 		What has changed (if any). Perform an AND operation with Mini2D::PadChangedInfo enum elements
 		 * int:
@@ -69,15 +69,15 @@ namespace Mini2D {
 		 */
 		typedef void (*PadCallback_f) (int, int, padData);
 
-		/* 
+		/*
 		 * DrawCallback_f:
 		 * 		Callback when on draw (user should insert draw logic here)
-		 * 
+		 *
 		 * float:
 		 * 		Delta time. Amount of time passed since last frame
 		 * unsigned long:
 		 * 		Frame.
-		 * 
+		 *
 		 * Return:
 		 * 		If return is less than 0 the draw loop stops
 		 */
@@ -90,13 +90,13 @@ namespace Mini2D {
 		typedef void (*ExitCallback_f) ();
 
 
-		u32 * TexturePointer;					// Active pointer to unused texture vram
-		bool XMB;								// Whether or not the in-game XMB is currently being displayed
+		u32 * TexturePointer;                    // Active pointer to unused texture vram
+		bool XMB;                                // Whether or not the in-game XMB is currently being displayed
 
-		const float &MAXW;						// Max width of screen
-		const float &MINW;						// Min width of screen
-		const float &MAXH;						// Max height of screen
-		const float &MINH;						// Min height of screen
+		const float &MAXW;                       // Max width of screen
+		const float &MINW;                       // Min width of screen
+		const float &MAXH;                       // Max height of screen
+		const float &MINH;                       // Min height of screen
 
 		// Constructor
 		Mini(PadCallback_f pCallback, DrawCallback_f dCallback, ExitCallback_f eCallback);
@@ -123,7 +123,7 @@ namespace Mini2D {
 		/*
 		 * SetAnalogDeadzone:
 		 * 		Set the deadzone Pad() uses to detect whether the analog sticks have changed
-		 * 
+		 *
 		 * deadzone:
 		 * 		The unsigned 8-bit deadzone
 		 */
@@ -132,7 +132,7 @@ namespace Mini2D {
 		/*
 		 * SetClearColor:
 		 * 		Sets the clear color used to flush the display buffers every frame
-		 * 
+		 *
 		 * color:
 		 * 		ARGB color
 		 */
@@ -141,7 +141,7 @@ namespace Mini2D {
 		/*
 		 * SetAlphaState:
 		 * 		Enable or disable alpha testing
-		 * 
+		 *
 		 * enable:
 		 * 		True to enable alpha blending
 		 */
@@ -156,14 +156,14 @@ namespace Mini2D {
 		/*
 		 * AddTexture:
 		 *		Copy raw ARGB pixel data into RSX
-		 * 
+		 *
 		 * pixelData:
 		 * 		Pointer to an array of ARGB values
 		 * pitch:
 		 * 		Number of bytes per row
 		 * height:
 		 * 		Height of the texture
-		 * 
+		 *
 		 * Return:
 		 * 		Texture offset in RSX (do not directly access this offset)
 		 */
@@ -172,7 +172,7 @@ namespace Mini2D {
 		/*
 		 * DrawTexture:
 		 * 		Draws the texture onto the currect frame
-		 * 
+		 *
 		 * textureOff:
 		 * 		RSX offset to texture
 		 * pitch:
@@ -205,11 +205,11 @@ namespace Mini2D {
 		void DrawTexture(u32 textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgbaTL, unsigned int rgbaTR, unsigned int rgbaBR, unsigned int rgbaBL, float angle, unsigned int colorFormat);
 		void DrawTexture(unsigned int textureOff, int pitch, int width, int height, float xAnchor, float yAnchor, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat);
 		void DrawTexture(unsigned int textureOff, int pitch, int width, int height, float x, float y, float z, float w, float h, unsigned int rgba, float angle, unsigned int colorFormat);
-		
+
 		/*
 		 * DrawRectangle:
 		 *		Draws the rectangle onto the current frame
-		 * 
+		 *
 		 * xAnchor:
 		 *		X coordinate to rotate around
 		 * yAnchor:
@@ -236,32 +236,32 @@ namespace Mini2D {
 		PadCallback_f _padCallback;
 		DrawCallback_f _drawCallback;
 
-		unsigned int _clearColor;				// Value to clear screen to on every draw
-		int _alphaEnabled;						// Whether alpha testing is enabled
+		unsigned int _clearColor;                // Value to clear screen to on every draw
+		int _alphaEnabled;                       // Whether alpha testing is enabled
 
-		float _maxW;							// MAXW refers to
-		float _minW;							// MINW refers to
-		float _maxH;							// MAXH refers to
-		float _minH;							// MINH refers to
+		float _maxW;                             // MAXW refers to
+		float _minW;                             // MINW refers to
+		float _maxH;                             // MAXH refers to
+		float _minH;                             // MINH refers to
 
-		unsigned long _maxFrameCount;			// Max value of _frameCount before reset. Value is divisible by 10
-		unsigned long _frameCount;				// Number of frames drawn, resets on _maxFrameCount
-		struct timeval _start;					// Start of draw
-		struct timeval _end;						// End of draw
-		float _deltaTime;						// Time between start and end of draw
+		unsigned long _maxFrameCount;            // Max value of _frameCount before reset. Value is divisible by 10
+		unsigned long _frameCount;               // Number of frames drawn, resets on _maxFrameCount
+		struct timeval _start;                   // Start of draw
+		struct timeval _end;                     // End of draw
+		float _deltaTime;                        // Time between start and end of draw
 
-		padData _padData[MAX_PORT_NUM];			// Pad data
-		unsigned short _analogDeadzone;			// Deadzone of analog sticks
+		padData _padData[MAX_PORT_NUM];          // Pad data
+		unsigned short _analogDeadzone;          // Deadzone of analog sticks
 
-		void * _textureMem;						// Pointer to vram
+		void * _textureMem;                      // Pointer to vram
 
-		u32 _spu;								// 
-		u32 _spuInited;							// SPU Init status
-		sysSpuImage _spuImage;					// Image holding sound module
+		u32 _spu;                                //
+		u32 _spuInited;                          // SPU Init status
+		sysSpuImage _spuImage;                   // Image holding sound module
 
 		// Draw texture with rotation
 		void drawSpriteRot(float xAnchor, float yAnchor, float x, float y, float layer, float dx, float dy, u32 rgba0, u32 rgba1, u32 rgba2, u32 rgba3, float angle);
-		
+
 		// Initialize SPU and sound modules
 		void initSPU();
 	};

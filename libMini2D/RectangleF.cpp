@@ -5,11 +5,11 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <stdlib.h>							// abs()
-#include <math.h>							// Trig functions
-#include <stdio.h>							// printf()
+#include <stdlib.h>                              // abs()
+#include <math.h>                                // Trig functions
+#include <stdio.h>                               // printf()
 
-#include <Mini2D/Units.hpp>					// Class definition
+#include <Mini2D/Units.hpp>                      // Class definition
 
 namespace Mini2D {
 
@@ -60,7 +60,7 @@ namespace Mini2D {
 		float w2, h2;
 		if (_lastX == Location.X && _lastY == Location.Y &&
 			_lastAX == Anchor.X && _lastAY == Anchor.Y &&
-			_lastA == AnchorAngle && _lastUA == UseAnchor && 
+			_lastA == AnchorAngle && _lastUA == UseAnchor &&
 			_lastRA == RectangleAngle)
 			return;
 
@@ -153,7 +153,7 @@ namespace Mini2D {
 	bool RectangleF::Contain(RectangleF * rectangle) {
 		update();
 		rectangle->GetRotatedCenter();
-		
+
 		if (TopLeft.X <= rectangle->TopLeft.X &&
 			BottomRight.X >= rectangle->BottomRight.X &&
 			TopLeft.Y <= rectangle->TopLeft.Y &&

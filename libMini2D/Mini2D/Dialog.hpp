@@ -8,15 +8,15 @@
 #ifndef DIALOG_HPP_
 #define DIALOG_HPP_
 
-#include <sysutil/msg.h>					// Message dialog functions/enums
+#include <sysutil/msg.h>                         // Message dialog functions/enums
 
-#include <Mini2D/Mini.hpp>					// Class definition
+#include <Mini2D/Mini.hpp>                       // Class definition
 
 namespace Mini2D {
 
 	class Dialog {
 	public:
-		msgButton DialogResponse;				// Response from msgDialogCallback (0 if no response)
+		msgButton DialogResponse;                // Response from msgDialogCallback (0 if no response)
 
 		// Constructors
 		Dialog(Mini * mini);
@@ -25,7 +25,7 @@ namespace Mini2D {
 		/*
 		 * Pop:
 		 * 		Displays a message dialog
-		 * 
+		 *
 		 * type:
 		 * 		Message dialog type to pass to msgDialogOpen2
 		 * message:
@@ -34,7 +34,7 @@ namespace Mini2D {
 		 * 		Whether or not to wait for the dialog to close before returning
 		 * ms:
 		 * 		Time (in milliseconds) to wait before automatically closing the dialog
-		 * 
+		 *
 		 * Return:
 		 * 		The response from the message dialog if wait is true. 0 otherwise
 		 */
@@ -44,14 +44,14 @@ namespace Mini2D {
 		/*
 		 * PopError:
 		 * 		Displays an error dialog
-		 * 
+		 *
 		 * errorCode:
 		 * 		Error code to display
 		 * wait:
 		 * 		Whether or not to wait for the dialog to close before returning
 		 * ms:
 		 * 		Time (in milliseconds) to wait before automatically closing the dialog
-		 * 
+		 *
 		 * Return:
 		 * 		The response from the message dialog if wait is true. 0 otherwise
 		 */
@@ -61,7 +61,7 @@ namespace Mini2D {
 		/*
 		 * PopSingleProgressBar:
 		 * 		Displays a single progress bar dialog
-		 * 
+		 *
 		 * dialogMessage:
 		 * 		Main dialog messaage
 		 * progressMessage:
@@ -74,7 +74,7 @@ namespace Mini2D {
 		/*
 		 * PopDoubleProgressBar:
 		 * 		Displays a single progress bar dialog
-		 * 
+		 *
 		 * dialogMessage:
 		 * 		Main dialog messaage
 		 * progressMessage1:
@@ -89,7 +89,7 @@ namespace Mini2D {
 		/*
 		 * ProgressBarIncrease:
 		 * 		Increases the progress bar percent
-		 * 
+		 *
 		 * index:
 		 * 		Increase the first or second progress bar
 		 * percent:
@@ -100,7 +100,7 @@ namespace Mini2D {
 		/*
 		 * ProgressBarSet:
 		 * 		Set the progress bar percent
-		 * 
+		 *
 		 * index:
 		 * 		Set the first or second progress bar
 		 * percent:
@@ -111,7 +111,7 @@ namespace Mini2D {
 		/*
 		 * ProgressBarSetMessage:
 		 * 		Set the progress bar message
-		 * 
+		 *
 		 * index:
 		 * 		Set the first or second progress bar message
 		 * progressMessage:
@@ -122,7 +122,7 @@ namespace Mini2D {
 		/*
 		 * ProgressBarReset:
 		 * 		Reset the progress bar percent to 0%
-		 * 
+		 *
 		 * index:
 		 * 		Reset the first or second progress bar
 		 */
@@ -137,9 +137,9 @@ namespace Mini2D {
 	private:
 		Mini * _mini;
 
-		unsigned int _msAfterComplete;			// Time (in milliseconds) to wait before automatically closing the dialog AFTER the progress bar reaches 100%
+		unsigned int _msAfterComplete;           // Time (in milliseconds) to wait before automatically closing the dialog AFTER the progress bar reaches 100%
 
-		unsigned int _progressBarPercent[2];	// Current percent of progress bars
+		unsigned int _progressBarPercent[2];     // Current percent of progress bars
 
 		// Check sysutil callback and flip frame
 		void Flip(bool flip = 0);

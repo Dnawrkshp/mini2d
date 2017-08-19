@@ -8,7 +8,7 @@
 #ifndef UNITS_HPP_
 #define UNITS_HPP_
 
-#include <stdlib.h>							// NULL
+#include <stdlib.h>                              // NULL
 
 namespace Mini2D {
 
@@ -89,14 +89,14 @@ namespace Mini2D {
 	class CircleF {
 	public:
 
-		Vector2 Location;						// Center of circle
-		Vector2 Anchor;							// Point to rotate around
+		Vector2 Location;                        // Center of circle
+		Vector2 Anchor;                          // Point to rotate around
 
-		float Radius;							// Radius of circle
-		float AnchorAngle;						// Angle of rotation around anchor point (degrees)
-		float CircleAngle;						// Angle of rotation around circle center (degrees)
+		float Radius;                            // Radius of circle
+		float AnchorAngle;                       // Angle of rotation around anchor point (degrees)
+		float CircleAngle;                       // Angle of rotation around circle center (degrees)
 
-		bool UseAnchor;							// Whether or not to use anchor point in rotation calculation
+		bool UseAnchor;                          // Whether or not to use anchor point in rotation calculation
 
 		CircleF();
 		CircleF(Vector2 center, float radius);
@@ -122,16 +122,16 @@ namespace Mini2D {
 		Vector2 *GetRotatedCenter();
 
 	private:
-		Vector2 _cCenter;						// Center of rotated circle
+		Vector2 _cCenter;                        // Center of rotated circle
 
-		float _lastX;							// X value from last Update()
-		float _lastY;							// Y value from last Update()
-		float _lastR;							// Radius value from last Update()
-		float _lastUA;							// UseAnchor value from last Update()
-		float _lastAX;							// Anchor X value from last Update()
-		float _lastAY;							// Anchor Y value from last Update()
-		float _lastA;							// AnchorAngle from last Update()
-		float _lastCA;							// CircleAngle from last Update()
+		float _lastX;                            // X value from last Update()
+		float _lastY;                            // Y value from last Update()
+		float _lastR;                            // Radius value from last Update()
+		float _lastUA;                           // UseAnchor value from last Update()
+		float _lastAX;                           // Anchor X value from last Update()
+		float _lastAY;                           // Anchor Y value from last Update()
+		float _lastA;                            // AnchorAngle from last Update()
+		float _lastCA;                           // CircleAngle from last Update()
 
 		// Load
 		void Init(float x, float y, float r);
@@ -144,20 +144,20 @@ namespace Mini2D {
 	class RectangleF {
 	public:
 		// Variables
-		Vector2 Location;						// Center of rectangle
-		Vector2 Dimension;						// Size of rectangle
-		Vector2 Anchor;							// Point to rotate around
+		Vector2 Location;                        // Center of rectangle
+		Vector2 Dimension;                       // Size of rectangle
+		Vector2 Anchor;                          // Point to rotate around
 
 		// Points
-		Vector2 TopLeft;						// Top Left corner of rectangle (for reading)
-		Vector2 TopRight;						// Top Right corner of rectangle (for reading)
-		Vector2 BottomLeft;						// Bottom Left corner of rectangle (for reading)
-		Vector2 BottomRight;					// Bottom Right corner of rectangle (for reading)
+		Vector2 TopLeft;                         // Top Left corner of rectangle (for reading)
+		Vector2 TopRight;                        // Top Right corner of rectangle (for reading)
+		Vector2 BottomLeft;                      // Bottom Left corner of rectangle (for reading)
+		Vector2 BottomRight;                     // Bottom Right corner of rectangle (for reading)
 
-		float AnchorAngle;						// Angle of rotation around anchor point (degrees)
-		float RectangleAngle;					// Angle of rotation around rectangle center (degrees)
+		float AnchorAngle;                       // Angle of rotation around anchor point (degrees)
+		float RectangleAngle;                    // Angle of rotation around rectangle center (degrees)
 
-		bool UseAnchor;							// Whether or not to use anchor point in rotation calculation
+		bool UseAnchor;                          // Whether or not to use anchor point in rotation calculation
 
 		// Constructors
 		RectangleF();
@@ -216,15 +216,15 @@ namespace Mini2D {
 		bool operator==(const RectangleF& r) const;
 		bool operator!=(const RectangleF& r) const;
 	private:
-		Vector2 _rCenter;						// Center of rotated rectangle
+		Vector2 _rCenter;                        // Center of rotated rectangle
 
-		float _lastX;							// X value from last Update()
-		float _lastY;							// Y value from last Update()
-		float _lastA;							// AnchorAngle from last Update()
-		float _lastRA;							// RectangleAngle from last Update()
-		float _lastAX;							// Anchor X value from last Update()
-		float _lastAY;							// Anchor Y value from last Update()
-		float _lastUA;							// UseAnchor value from last Update()
+		float _lastX;                            // X value from last Update()
+		float _lastY;                            // Y value from last Update()
+		float _lastA;                            // AnchorAngle from last Update()
+		float _lastRA;                           // RectangleAngle from last Update()
+		float _lastAX;                           // Anchor X value from last Update()
+		float _lastAY;                           // Anchor Y value from last Update()
+		float _lastUA;                           // UseAnchor value from last Update()
 
 		// Load
 		void init(float x, float y, float w, float h, bool init = 1);

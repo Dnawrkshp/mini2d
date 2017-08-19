@@ -8,11 +8,11 @@
 #ifndef EMITTER_HPP_
 #define EMITTER_HPP_
 
-#include <vector>                           // std::vector<>
+#include <vector>                                // std::vector<>
 
-#include <Mini2D/Mini.hpp>                  // Mini class
-#include <Mini2D/Image.hpp>                 // Image class
-#include <Mini2D/Units.hpp>                 // RectangleF, Vector2
+#include <Mini2D/Mini.hpp>                       // Mini class
+#include <Mini2D/Image.hpp>                      // Image class
+#include <Mini2D/Units.hpp>                      // RectangleF, Vector2
 
 namespace Mini2D {
 
@@ -33,18 +33,18 @@ namespace Mini2D {
 		Vector2 RangeDimensionH;                  // Minimum and maximum Height
 		Vector2 RangeTTL;                         // Minimum and maximum lifetime of particles
 		Vector2 RangeRotation;                    // Minimum and maximum rotation (degrees)
-		Vector2 RangeColorRed;				// Minimum and maximum red
-		Vector2 RangeColorGreen;				// Minimum and maximum green
-		Vector2 RangeColorBlue;				// Minimum and maximum blue
-		Vector2 RangeColorAlpha;				// Minimum and maximum alpha
-		RectangleF Clip;					// Particle draw region. Any particles outside this box will not be drawn
+		Vector2 RangeColorRed;                    // Minimum and maximum red
+		Vector2 RangeColorGreen;                  // Minimum and maximum green
+		Vector2 RangeColorBlue;                   // Minimum and maximum blue
+		Vector2 RangeColorAlpha;                  // Minimum and maximum alpha
+		RectangleF Clip;                          // Particle draw region. Any particles outside this box will not be drawn
 
-		float ZIndex;						// Z coordinate
-		unsigned int MinParticles;				// Minimum number of particles
-		bool Revive;						// If particle dies before timeToLive hits 0, restart particle
-		bool SkipExplosion;					// Skip initial explosion of particles (pair with revive)
+		float ZIndex;                             // Z coordinate
+		unsigned int MinParticles;                // Minimum number of particles
+		bool Revive;                              // If particle dies before timeToLive hits 0, restart particle
+		bool SkipExplosion;                       // Skip initial explosion of particles (pair with revive)
 
-		Image * ParticleImage;				// Optional image to draw particles with. Otherwise RGBA will be used
+		Image * ParticleImage;                    // Optional image to draw particles with. Otherwise RGBA will be used
 
 
 		// Constructors
@@ -110,18 +110,17 @@ namespace Mini2D {
 
 		Mini * _mini;
 
-		bool _pause;							// Whether or not to update the particle locations/angles
-		bool _loop;								// Whether or not to continuously draw particles
+		bool _pause;                              // Whether or not to update the particle locations/angles
+		bool _loop;                               // Whether or not to continuously draw particles
 
-		int _maxP;								// Maximum number of particles
-		int _activeP;							// Current number of particles
+		int _maxP;                                // Maximum number of particles
+		int _activeP;                             // Current number of particles
 
-		float _timeLeft;						// Number of seconds before draw is finished
+		float _timeLeft;                          // Number of seconds before draw is finished
 
-		Vector2 _startLocation;					// Start location for the given emission session
+		Vector2 _startLocation;                   // Start location for the given emission session
 
-		//EmitterParticle * _particles;			// Array of particles
-		std::vector<EmitterParticle> _particles;
+		std::vector<EmitterParticle> _particles;  // Particle collection
 
 		// Create particle
 		void createParticle(Vector2 location);

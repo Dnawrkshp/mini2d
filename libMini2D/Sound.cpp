@@ -5,10 +5,10 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <malloc.h>							// memalign()
-#include <math.h>							// floor()
+#include <malloc.h>                              // memalign()
+#include <math.h>                                // floor()
 
-#include <Mini2D/Sound.hpp>					// Class definition
+#include <Mini2D/Sound.hpp>                      // Class definition
 
 namespace Mini2D {
 
@@ -205,7 +205,7 @@ namespace Mini2D {
 			(int)((float)soundInfo->freq * (soundInfo->stereo ? 4.f : 2.f) * soundInfo->length),
 			soundInfo->lv,
 			soundInfo->rv,
-			setVoiceCallback);	
+			setVoiceCallback);
 	}
 
 	static void setVoiceCallback(int voice) {

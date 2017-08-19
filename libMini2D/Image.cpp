@@ -5,12 +5,12 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <sysmodule/sysmodule.h>			// Load and unload PNG,JPG modules
-#include <string.h>							// memcpy, memset
-#include <math.h>							// Trig functions
+#include <sysmodule/sysmodule.h>                 // Load and unload PNG,JPG modules
+#include <string.h>                              // memcpy, memset
+#include <math.h>                                // Trig functions
 
-#include <tiny3d.h>							// Tiny3D functions
-#include <Mini2D/Image.hpp>					// Class definition
+#include <tiny3d.h>                              // Tiny3D functions
+#include <Mini2D/Image.hpp>                      // Class definition
 
 #define PI 3.14159265
 #define DEG2RAD(x) ((x*PI)/180.0)
@@ -178,7 +178,7 @@ namespace Mini2D {
 		}
 
 		float ax = nx, ay = ny;
-		
+
 		_mini->DrawTexture(_textureOff, _pitch, _width, _height, ax, ay, nx, ny, ZIndex, w, h, rgbaTL, rgbaTR, rgbaBR, rgbaBL, -DrawRegion.RectangleAngle, TINY3D_TEX_FORMAT_A8R8G8B8);
 	}
 

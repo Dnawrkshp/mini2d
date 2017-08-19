@@ -8,11 +8,11 @@
 #ifndef IMAGE_HPP_
 #define IMAGE_HPP_
 
-#include <pngdec/pngdec.h>					// PNG load functions
-#include <jpgdec/jpgdec.h>					// JPG load functions
+#include <pngdec/pngdec.h>                       // PNG load functions
+#include <jpgdec/jpgdec.h>                       // JPG load functions
 
-#include <Mini2D/Mini.hpp>					// Mini class
-#include <Mini2D/Units.hpp>					// Vector2
+#include <Mini2D/Mini.hpp>                       // Mini class
+#include <Mini2D/Units.hpp>                      // Vector2
 
 namespace Mini2D {
 
@@ -30,10 +30,10 @@ namespace Mini2D {
 			IMAGE_INVALID_MINI2D
 		} ImageLoadStatus;
 
-		unsigned int * TexturePointer;			// Pointer to texture in RSX memory
+		unsigned int * TexturePointer;           // Pointer to texture in RSX memory
 
-		RectangleF DrawRegion;					// Where to draw image to
-		float ZIndex;							// Z coordinate (lower numbers are drawn over higher numbers)
+		RectangleF DrawRegion;                   // Where to draw image to
+		float ZIndex;                            // Z coordinate (lower numbers are drawn over higher numbers)
 
 		// Constructors
 		Image(Mini * mini);
@@ -42,10 +42,10 @@ namespace Mini2D {
 		/*
 		 * Load:
 		 *		Load PNG/JPG image
-		 * 
+		 *
 		 * filepath:
 		 *		Path to image
-		 * 
+		 *
 		 * Return:
 		 *		Result of load operation
 		 */
@@ -54,14 +54,14 @@ namespace Mini2D {
 		/*
 		 * Load:
 		 *		Load PNG/JPG image
-		 * 
+		 *
 		 * buffer:
 		 *		Buffer containing image
 		 * size:
 		 *		Size of buffer
 		 * type:
 		 *		Type of image the buffer contains
-		 * 
+		 *
 		 * Return:
 		 *		Result of load operation
 		 */
@@ -70,7 +70,7 @@ namespace Mini2D {
 		/*
 		 * Load:
 		 *		Load ARGB image from buffer
-		 * 
+		 *
 		 * argbBuffer:
 		 *		Array of ARGB pixels
 		 * w:
@@ -83,7 +83,7 @@ namespace Mini2D {
 		/*
 		 * Draw:
 		 * 		Draws the image onto the current frame
-		 * 
+		 *
 		 * rgba:
 		 *		Color
 		 */
@@ -111,9 +111,9 @@ namespace Mini2D {
 	private:
 		Mini * _mini;
 
-		int _width, _height, _pitch;			// Width, height, and pitch of loaded image
-		float _sWidth, _sHeight;				// Width and height in terms of screen scale
-		unsigned int _textureOff;				// RSX offset to texture
+		int _width, _height, _pitch;             // Width, height, and pitch of loaded image
+		float _sWidth, _sHeight;                 // Width and height in terms of screen scale
+		unsigned int _textureOff;                // RSX offset to texture
 
 		// Load PNG and JPG dec modules
 		void loadModules();

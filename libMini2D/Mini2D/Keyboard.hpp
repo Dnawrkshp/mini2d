@@ -8,10 +8,10 @@
 #ifndef KEYBOARD_HPP_
 #define KEYBOARD_HPP_
 
-#include <string>							// wstring
+#include <string>                                // wstring
 
-#include <Mini2D/Mini.hpp>					// Mini definition
-#include <Mini2D/Units.hpp>					// Vector2
+#include <Mini2D/Mini.hpp>                       // Mini definition
+#include <Mini2D/Units.hpp>                      // Vector2
 
 namespace Mini2D {
 
@@ -81,17 +81,17 @@ namespace Mini2D {
 		Keyboard(Mini * mini);
 		~Keyboard();
 
-		int MaxLength;							// Max number of characters					(default is 0)
-		bool MaskPad;							// OSK Device mask (maskpad = 0xff)			(default is false)
-		bool Dim;								// Whether or not to dim the background		(default is true)
-		int KeyPanel;							// Key panel displayed						(default is KEYPANEL_FULL|KEYPANEL_10)
-		int LayoutMode;							// Vertical and Horizontal alignment		(default is V_CENTER|H_CENTER)
-		int Prohibit;							// Prohibit flags							(default is PROHIBIT_RETURN)
-		KBPanelType InitialPanel;				// Panel to display when keyboard opens 	(default is PANEL_DEFAULT)
-		unsigned int AllowedPanels;				// Panels keyboard may use 					(default is PANEL_DEFAULT)
-		unsigned int Languages;					// Supported Languages						(default is PANEL_DEFAULT)
+		int MaxLength;                           // Max number of characters                    (default is 0)
+		bool MaskPad;                            // OSK Device mask (maskpad = 0xff)            (default is false)
+		bool Dim;                                // Whether or not to dim the background        (default is true)
+		int KeyPanel;                            // Key panel displayed                         (default is KEYPANEL_FULL|KEYPANEL_10)
+		int LayoutMode;                          // Vertical and Horizontal alignment           (default is V_CENTER|H_CENTER)
+		int Prohibit;                            // Prohibit flags                              (default is PROHIBIT_RETURN)
+		KBPanelType InitialPanel;                // Panel to display when keyboard opens        (default is PANEL_DEFAULT)
+		unsigned int AllowedPanels;              // Panels keyboard may use                     (default is PANEL_DEFAULT)
+		unsigned int Languages;                  // Supported Languages                         (default is PANEL_DEFAULT)
 
-		Vector2 Location;						// Where to pop the keyboard
+		Vector2 Location;                        // Where to pop the keyboard
 
 		/*
 		 * Display:
@@ -187,12 +187,12 @@ namespace Mini2D {
 		 *		Sets OSK parameters to disable multiline text input
 		 */
 		void SetSingleline();
-		
+
 	private:
 		Mini * _mini;
 
-		bool _newMessage;						// Whether or not inputFieldInfo.message points to dynamically allocated memory
-		bool _newStart;							// Whether or not inputFieldInfo.startText points to dynamically allocated memory
+		bool _newMessage;                        // Whether or not inputFieldInfo.message points to dynamically allocated memory
+		bool _newStart;                          // Whether or not inputFieldInfo.startText points to dynamically allocated memory
 
 		// Closes OSK politely
 		void Close();

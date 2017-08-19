@@ -5,11 +5,11 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <freetype/ftglyph.h>				// For loading TTF character and converting to raw RGBA
-#include <wchar.h>							// wcslen(), wprintf()
+#include <freetype/ftglyph.h>                    // For loading TTF character and converting to raw RGBA
+#include <wchar.h>                               // wcslen(), wprintf()
 
-#include <tiny3d.h>							// Tiny3D functions
-#include <Mini2D/Font.hpp>					// Class definition
+#include <tiny3d.h>                              // Tiny3D functions
+#include <Mini2D/Font.hpp>                       // Class definition
 
 namespace Mini2D {
 
@@ -73,7 +73,7 @@ namespace Mini2D {
 
 	    PrintLines(string, 0, location, size, useContainer, wordWrap);
 
-	    
+
 	    return result;
 	}
 
@@ -296,7 +296,7 @@ namespace Mini2D {
 	}
 
 	//---------------------------------------------------------------------------
-	// 
+	//
 	//---------------------------------------------------------------------------
 	bool Font::AddChar(wchar_t chr, Image * image, int yCorrection) {
 		FontChar * fontChar = NULL;
@@ -393,8 +393,8 @@ namespace Mini2D {
 		u8 * bitmap;
 		FontChar * fontChar = NULL;
 
-		unloadCharMap(); 
-		
+		unloadCharMap();
+
 		chr = FT_Get_First_Char(face, &index);
 		while (index > 0) {
 			fontChar = new FontChar();
@@ -407,7 +407,7 @@ namespace Mini2D {
 			fontChar->fy = 0;
 			fontChar->rsx = 0;
 			fontChar->format = TINY3D_TEX_FORMAT_A4R4G4B4;
-			
+
 			// If the bitmap contains opaque pixels then add to rsx
 			if (ttfToBitmap(face, chr, &bitmap, &fontChar->w, &fontChar->h, &fontChar->fw, &fontChar->fy)) {
 				texture = (u8 *) ((((long) texture) + 15) & ~15);
@@ -465,7 +465,7 @@ namespace Mini2D {
 		// Update width and height
 		*w = slot->bitmap.width;
 		*h = slot->bitmap.rows;
-		
+
 		// Check if this has any pixels
 		// We compare 8 bytes at a time for speed
 		size = slot->bitmap.pitch * slot->bitmap.rows;

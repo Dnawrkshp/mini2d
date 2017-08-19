@@ -5,9 +5,9 @@
  *  Author: Daniel Gerendasy
  */
 
-#include <stdlib.h>							// abs()
+#include <stdlib.h>                              // abs()
 
-#include <Mini2D/Units.hpp>					// Class definition
+#include <Mini2D/Units.hpp>                      // Class definition
 
 namespace Mini2D {
 
@@ -51,7 +51,7 @@ namespace Mini2D {
 	void CircleF::Update() {
 		if (_lastX == Location.X && _lastY == Location.Y &&
 			_lastAX == Anchor.X && _lastAY == Anchor.Y &&
-			_lastA == AnchorAngle && _lastUA == UseAnchor && 
+			_lastA == AnchorAngle && _lastUA == UseAnchor &&
 			_lastCA == CircleAngle && _lastR == Radius)
 			return;
 
