@@ -25,7 +25,7 @@ int infiniteVoice = -1;
 int status;
 
 // Font sizes
-Vector2 FONT_MEDIUM;
+float FONT_LARGE;
 // Font locations
 Vector2 PRINT_ITEM0;
 Vector2 PRINT_ITEM1;
@@ -41,7 +41,7 @@ int main(s32 argc, const char* argv[]) {
 	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
-	FONT_MEDIUM = Vector2(0.04*mini->MAXW, 0.04*mini->MAXH);
+	FONT_LARGE = 0.02*mini->MAXW;
 
 	PRINT_ITEM0 = Vector2(0.5*mini->MAXW, 0.5*mini->MAXH);
 	PRINT_ITEM1 = Vector2(PRINT_ITEM0.X, 0.55*mini->MAXH);
@@ -72,19 +72,19 @@ int main(s32 argc, const char* argv[]) {
 int drawUpdate(float deltaTime, unsigned long frame) {
 	if (infiniteVoice >= 0 && status == Sound::VOICE_RUNNING) {
 		font1->ForeColor = 0x800000FF;
-		font1->PrintLine(NULL, &TEXT_PAUSEAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
+		font1->PrintLine(NULL, &TEXT_PAUSEAUDIO, NULL, PRINT_ITEM0, FONT_LARGE);
 	}
 	else if (infiniteVoice < 0) {
 		font1->ForeColor = 0x000080FF;
-		font1->PrintLine(NULL, &TEXT_STARTAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
+		font1->PrintLine(NULL, &TEXT_STARTAUDIO, NULL, PRINT_ITEM0, FONT_LARGE);
 	}
 	else {
 		font1->ForeColor = 0x000080FF;
-		font1->PrintLine(NULL, &TEXT_RESUMEAUDIO, NULL, PRINT_ITEM0, FONT_MEDIUM);
+		font1->PrintLine(NULL, &TEXT_RESUMEAUDIO, NULL, PRINT_ITEM0, FONT_LARGE);
 	}
 
 	font1->ForeColor = 0x000000FF;
-	font1->PrintLine(NULL, &TEXT_SNARE, NULL, PRINT_ITEM1, FONT_MEDIUM);	
+	font1->PrintLine(NULL, &TEXT_SNARE, NULL, PRINT_ITEM1, FONT_LARGE);	
 
 	return doExit;
 }

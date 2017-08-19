@@ -22,7 +22,7 @@ Font * font1 = NULL;
 int doExit = 0, doDialog = 0;
 float doProgress[2];
 
-Vector2 FONT_MEDIUM;
+float FONT_LARGE;
 
 Vector2 PRINT_ITEM0;
 Vector2 PRINT_ITEM1;
@@ -40,7 +40,7 @@ int main(s32 argc, const char* argv[]) {
 	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
-	FONT_MEDIUM = Vector2(0.04*mini->MAXW, 0.04*mini->MAXH);
+	FONT_LARGE = 0.02*mini->MAXW;
 
 	PRINT_ITEM0 = Vector2(0.15*mini->MAXW, 0.45*mini->MAXH);
 	PRINT_ITEM1 = Vector2(PRINT_ITEM0.X,  0.50*mini->MAXH);
@@ -67,10 +67,10 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned long frame) {
-	font1->PrintLine(NULL, &TEXT_MESSAGE, NULL, PRINT_ITEM0, FONT_MEDIUM);
-	font1->PrintLine(NULL, &TEXT_ERROR, NULL, PRINT_ITEM1, FONT_MEDIUM);
-	font1->PrintLine(NULL, &TEXT_SINGLE, NULL, PRINT_ITEM2, FONT_MEDIUM);
-	font1->PrintLine(NULL, &TEXT_DOUBLE, NULL, PRINT_ITEM3, FONT_MEDIUM);
+	font1->PrintLine(NULL, &TEXT_MESSAGE, NULL, PRINT_ITEM0, FONT_LARGE);
+	font1->PrintLine(NULL, &TEXT_ERROR, NULL, PRINT_ITEM1, FONT_LARGE);
+	font1->PrintLine(NULL, &TEXT_SINGLE, NULL, PRINT_ITEM2, FONT_LARGE);
+	font1->PrintLine(NULL, &TEXT_DOUBLE, NULL, PRINT_ITEM3, FONT_LARGE);
 
 	switch (doDialog) {
 		case 0:

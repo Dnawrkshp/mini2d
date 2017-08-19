@@ -22,7 +22,7 @@ int doExit = 0;
 bool kbWait = 0;
 
 // Font sizes
-Vector2 FONT_SMALL;
+float FONT_LARGE;
 // Font locations
 Vector2 LOC_TEXT;
 // Font containers
@@ -38,7 +38,7 @@ int main(s32 argc, const char* argv[]) {
 	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
-	FONT_SMALL = Vector2(0.03*mini->MAXW, 0.03*mini->MAXH);
+	FONT_LARGE = 0.02*mini->MAXW;
 
 	LOC_CONTAINER = Vector2(0.5*mini->MAXW, 0.5*mini->MAXH);
 	SIZE_CONTAINER = Vector2(0.5*mini->MAXW, 0.25*mini->MAXH);
@@ -47,7 +47,7 @@ int main(s32 argc, const char* argv[]) {
 
 	// Load Open Sans font
 	OpenSans = new Font(mini);
-	if (OpenSans->Load((void*)OpenSans_Regular_ttf, OpenSans_Regular_ttf_size, 64, 64))
+	if (OpenSans->Load((void*)OpenSans_Regular_ttf, OpenSans_Regular_ttf_size))
 		printf("error loading font\n");
 
 	// Set container
@@ -88,7 +88,7 @@ int main(s32 argc, const char* argv[]) {
 
 int drawUpdate(float deltaTime, unsigned long frame) {
 	mini->DrawRectangle(OpenSans->Container.X(), OpenSans->Container.Y(), OpenSans->Container.X(), OpenSans->Container.Y(), 0, OpenSans->Container.W(), OpenSans->Container.H(), 0xC0C0C0FF, 0);
-	OpenSans->PrintLines(NULL, &start, 0, LOC_TEXT, FONT_SMALL, 1, 1);
+	OpenSans->PrintLines(NULL, &start, 0, LOC_TEXT, FONT_LARGE, 1, 1);
 	
 	if (kbWait && !kb1->Alive()) {
 		// If user submitted the text

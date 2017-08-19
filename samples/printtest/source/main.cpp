@@ -17,7 +17,7 @@ Font * font1 = NULL;
 int doExit = 0;
 
 // Font sizes
-Vector2 FONT_SMALL;
+float FONT_LARGE;
 // Font locations
 Vector2 PRINT_TOPLEFT;
 Vector2 PRINT_CENTER;
@@ -33,7 +33,7 @@ int main(s32 argc, const char* argv[]) {
 	mini = new Mini2D((Mini2D::PadCallback_f)&padUpdate, (Mini2D::DrawCallback_f)&drawUpdate, (Mini2D::ExitCallback_f)&exit);
 
 	// Initialize location and size vectors
-	FONT_SMALL = Vector2(0.03*mini->MAXW, 0.03*mini->MAXH);
+	FONT_LARGE = 0.02*mini->MAXW;
 
 	PRINT_TOPLEFT = Vector2(0,0);
 	PRINT_CENTER = Vector2(0.5*mini->MAXW, 0.5*mini->MAXH);
@@ -41,7 +41,8 @@ int main(s32 argc, const char* argv[]) {
 
 	// Load comfortaa font
 	font1 = new Font(mini);
-	if (font1->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size))
+	font1->SpacingOffset = 1;
+	if (font1->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size, 64))
 		printf("error loading font\n");
 
 	mini->SetAnalogDeadzone(15);
@@ -54,13 +55,13 @@ int main(s32 argc, const char* argv[]) {
 
 int drawUpdate(float deltaTime, unsigned long frame) {
 	font1->TextAlign = Font::PRINT_ALIGN_TOPLEFT;
-	font1->PrintLine(NULL, &TEXT_LEFT, NULL, PRINT_TOPLEFT, FONT_SMALL);
+	font1->PrintLine(NULL, &TEXT_LEFT, NULL, PRINT_TOPLEFT, FONT_LARGE);
 
 	font1->TextAlign = Font::PRINT_ALIGN_BOTTOMRIGHT;
-	font1->PrintLine(NULL, &TEXT_RIGHT, NULL, PRINT_BOTTOMRIGHT, FONT_SMALL);
+	font1->PrintLine(NULL, &TEXT_RIGHT, NULL, PRINT_BOTTOMRIGHT, FONT_LARGE);
 
 	font1->TextAlign = Font::PRINT_ALIGN_CENTER;
-	font1->PrintLine(NULL, &TEXT_CENTER, NULL, PRINT_CENTER, FONT_SMALL);
+	font1->PrintLine(NULL, &TEXT_CENTER, NULL, PRINT_CENTER, FONT_LARGE);
 	
 	return doExit;
 }

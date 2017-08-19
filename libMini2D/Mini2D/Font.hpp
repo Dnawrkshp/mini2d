@@ -37,8 +37,8 @@ public:
 		PRINT_ALIGN_BOTTOMRIGHT
 	} FontPrintAlign;
 
-	unsigned int BackColor;					// RGBA background color of text
-	unsigned int ForeColor;					// RGBA text color
+	u32 BackColor;							// RGBA background color of text
+	u32 ForeColor;							// RGBA text color
 
 	float ZIndex;							// Z coordinate
 	float SpacingOffset;					// Offset added to draw location after each character
@@ -57,15 +57,13 @@ public:
 	 * 
 	 * filepath:
 	 *		Path to TTF
-	 * w:
-	 *		Width of character loaded into RSX (you should set this higher if you want to print with a large font size)
-	 * h:
-	 *		Height of character loaded into RSX (should match w)
+	 * r:
+	 *		Pixel resolution of character loaded into RSX
 	 * 
 	 * Return:
 	 * 		Result of load operation
 	 */
-	FontLoadStatus Load(char * filepath, short w = 32, short h = 32);
+	FontLoadStatus Load(const char * filepath, u16 r = 32);
 
 	/*
 	 * Load:
@@ -75,15 +73,13 @@ public:
 	 *		Buffer containing TTF font
 	 * size:
 	 * 		Size of buffer
-	 * w:
-	 *		Width of character loaded into RSX (you should set this higher if you want to print with a large font size)
-	 * h:
-	 *		Height of character loaded into RSX (should match w)
+	 * r:
+	 *		Pixel resolution of character loaded into RSX
 	 * 
 	 * Return:
 	 *		Result of load operation
 	 */
-	FontLoadStatus Load(void * buffer, unsigned int size, short w = 32, short h = 32);
+	FontLoadStatus Load(const void * buffer, u32 size, u16 r = 32);
 
 	/*
 	 * PrintLine:
@@ -98,11 +94,11 @@ public:
 	 * location:
 	 * 		Where to print text
 	 * size:
-	 * 		Width and height of each character
+	 * 		Pixel size per character
 	 * useContainer:
 	 *		Whether or not to use container to clip printed text
 	 */
-	void PrintLine(const wchar_t * cString, std::wstring * string, int * startIndex, Vector2 location, Vector2 size, bool useContainer = 0);
+	void PrintLine(const wchar_t * cString, const std::wstring * string, int * startIndex, const Vector2& location, float size, bool useContainer = 0);
 
 	/*
 	 * PrintLines:
@@ -117,13 +113,13 @@ public:
 	 * location:
 	 * 		Where to print text
 	 * size:
-	 * 		Width and height of each character
+	 * 		Pixel size per character
 	 * useContainer:
 	 *		Whether or not to use container to clip printed text
 	 * wordWrap:
 	 *		If useContainer is true. Whether or not to wrap characters drawn outside the container to a new line
 	 */
-	void PrintLines(const wchar_t * cString, std::wstring * string, int lineStart, Vector2 location, Vector2 size, bool useContainer = 0, bool wordWrap = 0);
+	void PrintLines(const wchar_t * cString, const std::wstring * string, int lineStart, const Vector2& location, float size, bool useContainer = 0, bool wordWrap = 0);
 
 	/*
 	 * PrintFormat:
@@ -132,7 +128,7 @@ public:
 	 * location:
 	 * 		Where to print text
 	 * size:
-	 * 		Width and height of each character
+	 * 		Pixel size per character
 	 * useContainer:
 	 *		Whether or not to use container to clip printed text
 	 * wordWrap:
@@ -147,7 +143,7 @@ public:
 	 * Return:
 	 *		Negative value if failed. Otherwise, number of characters written
 	 */
-	int PrintFormat(Vector2 location, Vector2 size, bool useContainer, bool wordWrap, std::size_t len, const wchar_t * format, ...);
+	int PrintFormat(const Vector2& location, float size, bool useContainer, bool wordWrap, std::size_t len, const wchar_t * format, ...);
 
 	/*
 	 * AddChar:
@@ -173,12 +169,12 @@ public:
 	 *		wide char array (If calculating width of std::wstring, make NULL)
 	 * string:
 	 *		wide string (If calculating width of wchar_t*, make NULL)
-	 * w:
-	 *		Width scale (equivalent to the X value of the size Vector2 passed to PrintLine)
+	 * size:
+	 *		Pixel size per character
 	 * offset:
 	 *		Offset in string to start calculating width from
 	 */
-	float GetWidth(const wchar_t * cString, std::wstring * string, float w, int offset = 0);
+	float GetWidth(const wchar_t * cString, const std::wstring * string, float size, int offset = 0);
 	
 	/*
 	 * GetWidth:
@@ -186,21 +182,22 @@ public:
 	 *
 	 * chr:
 	 *		The wide character to determine the length of
-	 * w:
-	 *		Width scale (equivalent to the X value of the size Vector2 passed to PrintLine)
+	 * size:
+	 *		Pixel size per character
 	 */
-	float GetWidth(wchar_t chr, float w);
+	float GetWidth(wchar_t chr, float size);
 
 private:
 	typedef struct _fontChar_t {
 		wchar_t chr;							// Character code
 		u32 rsx;								// Offset in RSX
 		u32 format;								// Color format of image
-		u8 fw;									// Width of char
-		u8 fy;									// Y correction
-		u8 w;									// Width of image
-		u8 h;									// Height of image
-		short p;								// Pitch of image
+		u16 fr;									// Original resolution of char
+		u16 fw;									// Character width
+		u16 fy;									// Y correction
+		u16 w;									// Width of image
+		u16 h;									// Height of image
+		u16 p;									// Pitch of image
 	} FontChar;
 
 	std::vector<FontChar*> CharMap;				// List of characters
@@ -208,17 +205,21 @@ private:
 	Mini2D * _mini;
 
 	// Load font
-	FontLoadStatus loadFont(char * path, void * buffer, int size, short w, short h);
+	FontLoadStatus loadFont(const char * path, const void * buffer, int size, u16 r);
+	// Get the scale dimension of given the image dimension, load resolution, and the font size
+	float getDimension(float d, float r, float s);
+	// Get the fontChar associated with chr
+	FontChar * getFontChar(wchar_t chr);
 	// Draw character to frame
-	float printChar(FontChar * fontChar, float x, float y, float w, float h);
+	float printChar(FontChar * fontChar, float x, float y, float size);
 	// Determine if the character denotes a line break
-	bool isNewline(const wchar_t * cString, std::wstring * string, int strLen, int * index);
+	bool isNewline(const wchar_t * cString, const std::wstring * string, int strLen, int * index);
 	// Prints line
-	int printLine(const wchar_t * cString, std::wstring * string, int * startIndex, Vector2 location, Vector2 size, bool useContainer, bool draw);
+	int printLine(const wchar_t * cString, const std::wstring * string, int * startIndex, const Vector2& location, float size, bool useContainer, bool draw);
 	// Convert the glyph into a bitmap and load into the RSX
-	bool ttfToBitmap(FT_Face face, unsigned int chr, u8 * bitmap, u8 *w, short *h, u8 *yCorrection);
+	bool ttfToBitmap(FT_Face face, u32 chr, u8 ** bitmap, u16 * w, u16 * h, u16 * fw, u16 * yCorrection);
 	// Load all glyphs into rsx
-	u8 * addFontFromTTF(FT_Face face, u8 *texture, short w, short h);
+	u8 * addFontFromTTF(FT_Face face, u8 *texture, u16 w, u16 h);
 	// Unload all FontChars
 	void unloadCharMap();
 };

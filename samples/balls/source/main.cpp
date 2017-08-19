@@ -60,7 +60,7 @@ Vector2 CENTER;
 Vector2 BALL_START;
 
 // Font sizes
-Vector2 FONT_MEDIUM;
+float FONT_XLARGE;
 // Font locations
 Vector2 PRINT_FPS;
 Vector2 PRINT_COUNT;
@@ -81,7 +81,7 @@ int main(s32 argc, const char* argv[]) {
 	CENTER = Vector2(						0.5*mini->MAXW,					0.5*mini->MAXH);
 	BALL_START = Vector2(					CENTER.X+SIZE_CANNON.X/2,		CENTER.Y-SIZE_CANNON.Y/2);
 
-	FONT_MEDIUM = Vector2(					0.04*mini->MAXW,				0.04*mini->MAXH);
+	FONT_XLARGE = 							0.03*mini->MAXW;
 
 	PRINT_FPS = Vector2(					0.1*mini->MAXW,					0.05*mini->MAXH);
 	PRINT_COUNT = Vector2(					0.9*mini->MAXW,					0.05*mini->MAXH);
@@ -145,15 +145,15 @@ int drawUpdate(float deltaTime, unsigned long frame) {
 
  	// Print FPS
  	openSansRegular->TextAlign = Font::PRINT_ALIGN_CENTERLEFT;
-	openSansRegular->PrintFormat(PRINT_FPS, FONT_MEDIUM, 0, 0, 11, L"FPS: %.2f", 1/deltaTime);
+	openSansRegular->PrintFormat(PRINT_FPS, FONT_XLARGE, 0, 0, 11, L"FPS: %.2f", 1/deltaTime);
 
 	// Print number of drawn balls
 	openSansRegular->TextAlign = Font::PRINT_ALIGN_CENTERRIGHT;
-	openSansRegular->PrintFormat(PRINT_COUNT, FONT_MEDIUM, 0, 0, 10, L"Balls: %d", count);
+	openSansRegular->PrintFormat(PRINT_COUNT, FONT_XLARGE, 0, 0, 10, L"Balls: %d", count);
 
 	// Print power %
 	openSansRegular->TextAlign = Font::PRINT_ALIGN_CENTER;
-	openSansRegular->PrintFormat(PRINT_SLIDER_POWER, FONT_MEDIUM, 0, 0, 12, L"Power: %.0f%%", scaleW * 100);
+	openSansRegular->PrintFormat(PRINT_SLIDER_POWER, FONT_XLARGE, 0, 0, 12, L"Power: %.0f%%", scaleW * 100);
 
 	return doExit;
 }

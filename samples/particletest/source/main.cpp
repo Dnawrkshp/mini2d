@@ -26,7 +26,7 @@ unsigned int emitterBackgroundPixel = 0xFF000000;
 Vector2 CENTER;
 
 // Font sizes
-Vector2 FONT_SMALL;
+float FONT_LARGE;
 // Font locations
 Vector2 PRINT_ITEM;
 Vector2 PRINT_INC;
@@ -43,7 +43,7 @@ int main(s32 argc, const char* argv[]) {
 	// Initialize location and size vectors
 	CENTER = Vector2(mini->MAXW*0.5, mini->MAXH*0.5);
 
-	FONT_SMALL = Vector2(0.03*mini->MAXW,0.03*mini->MAXH);
+	FONT_LARGE = 0.02*mini->MAXW;
 
 	PRINT_ITEM = Vector2(CENTER.X,0.07*mini->MAXH);
 	PRINT_INC = Vector2(0,0.04*mini->MAXH);
@@ -72,7 +72,7 @@ int main(s32 argc, const char* argv[]) {
 
 	// Load comfortaa font
 	comfortaa = new Font(mini);
-	comfortaa->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size);
+	comfortaa->Load((void*)comfortaa_regular_ttf, comfortaa_regular_ttf_size, 64);
 	comfortaa->TextAlign = Font::PRINT_ALIGN_CENTER;
 
 	mini->SetAnalogDeadzone(15);
@@ -84,10 +84,10 @@ int main(s32 argc, const char* argv[]) {
 }
 
 int drawUpdate(float deltaTime, unsigned long frame) {
-	comfortaa->PrintLine(NULL, &TEXT_START, NULL, PRINT_ITEM, FONT_SMALL);
-	comfortaa->PrintLine(NULL, &TEXT_PAUSERESUME, NULL, PRINT_ITEM + PRINT_INC, FONT_SMALL);
-	comfortaa->PrintLine(NULL, &TEXT_STOP, NULL, PRINT_ITEM + (PRINT_INC*2.f), FONT_SMALL);
-	comfortaa->PrintLine(NULL, &TEXT_DIRECT, NULL, PRINT_ITEM + (PRINT_INC * 3.f), FONT_SMALL);
+	comfortaa->PrintLine(NULL, &TEXT_START, NULL, PRINT_ITEM, FONT_LARGE);
+	comfortaa->PrintLine(NULL, &TEXT_PAUSERESUME, NULL, PRINT_ITEM + PRINT_INC, FONT_LARGE);
+	comfortaa->PrintLine(NULL, &TEXT_STOP, NULL, PRINT_ITEM + (PRINT_INC*2.f), FONT_LARGE);
+	comfortaa->PrintLine(NULL, &TEXT_DIRECT, NULL, PRINT_ITEM + (PRINT_INC * 3.f), FONT_LARGE);
 
 	emitterBackground->Draw(0xFFFFFFFF);
 	if (emitter1->Status())
