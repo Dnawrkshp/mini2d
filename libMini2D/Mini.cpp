@@ -378,15 +378,15 @@ namespace Mini2D {
 
 		tiny3d_VertexPos(x+dx, y-dy, layer);
 		tiny3d_VertexColor(rgba1);
-		tiny3d_VertexTexture(0.99f, 0.0f);
+		tiny3d_VertexTexture(0.999999f, 0.0f);
 
 		tiny3d_VertexPos(x+dx, y+dy, layer);
 		tiny3d_VertexColor(rgba2);
-		tiny3d_VertexTexture(0.99f, 0.99f);
+		tiny3d_VertexTexture(0.999999f, 0.999999f);
 
 		tiny3d_VertexPos(x-dx, y+dy, layer);
 		tiny3d_VertexColor(rgba3);
-		tiny3d_VertexTexture(0.0f, 0.99f);
+		tiny3d_VertexTexture(0.0f, 0.999999f);
 
 		tiny3d_End();
 
