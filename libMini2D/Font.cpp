@@ -213,14 +213,16 @@ namespace Mini2D {
 		if (!fontChar->rsx)
 			return dx2;
 
+        // Mini2D draws textures around center
 		x+=dx2/2;
 		y+=dy2/2;
+
+        // Y correction
+        y += (float)fontChar->fy * (size / (float)fontChar->fr);
 
 		// Draw background
 		if (BackColor)
 			_mini->DrawRectangle(x, y, x, y, ZIndex, dx2, dy2, BackColor, 0);
-
-		 y += (float)fontChar->fy * (size / (float)fontChar->fr);
 
 		_mini->DrawTexture(fontChar->rsx,
 						fontChar->p,
