@@ -404,31 +404,21 @@ namespace Mini2D {
 			fontChar->fr = h;
 			fontChar->w = w;
 			fontChar->h = h;
-			fontChar->p = w*2;
+			fontChar->p = w;
 			fontChar->fw = w;
 			fontChar->fy = 0;
 			fontChar->rsx = 0;
-			fontChar->format = TINY3D_TEX_FORMAT_A4R4G4B4;
+			fontChar->format = TINY3D_TEX_FORMAT_L8;
 
 			// If the bitmap contains opaque pixels then add to rsx
 			if (ttfToBitmap(face, chr, &bitmap, &fontChar->w, &fontChar->h, &fontChar->fw, &fontChar->fy)) {
 				texture = (u8 *) ((((long) texture) + 15) & ~15);
 				fontChar->rsx = tiny3d_TextureOffset(texture);
-				fontChar->p = fontChar->w * 2;
+				fontChar->p = fontChar->w;
 
-				// Convert to A4R4G4B4
-				for(a = 0; a < fontChar->h; a++) {
-					for(b = 0; b < fontChar->w; b++) {
-						if(bitmap[b])
-							*(u16*)texture = ((bitmap[b]>>4)<<12) | 0xFFF;
-						else
-							texture[0] = texture[1] = 0x0;
-
-						texture += 2;
-					}
-
-					bitmap += (short)fontChar->w;
-				}
+				// Move buffer into VRAM
+				memcpy(texture, bitmap, fontChar->p * fontChar->h);
+				texture += fontChar->p * fontChar->h;
 			}
 
 			CharMap.push_back(fontChar);
