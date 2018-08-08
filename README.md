@@ -11,6 +11,9 @@ A 2D graphics library for the PS3 that runs on top of [Tiny3D](https://github.co
 - [x] Play Audio (MP3/OGG)
 - [x] Display On-screen Keyboard
 
+# Samples
+![balls](./samples/balls/demo.gif "balls")
+
 # Installation
 In order to build and install Mini 2D, you must have an up-to-date version of the PSL1GHT SDK.
 ~~~~
